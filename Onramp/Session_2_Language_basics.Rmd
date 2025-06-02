@@ -1,0 +1,632 @@
+---
+title: "R Data Types & Language Basics"
+author: "Nancy Carmona"
+date: "2024-03-21"
+output: pdf_document
+---
+
+```{r set_knitr_options, echo=FALSE, message=FALSE, warning=FALSE}
+suppressMessages(library(knitr))
+opts_chunk$set(tidy=FALSE, cache=TRUE, echo=TRUE, message=FALSE)
+```
+
+# Session 2. R Language Basics - Learning Objectives
+
+By the end of this session you will learn:
+
+* The basics of R "data objects" and "classes"
+* The basic "primitive" data types in R
+* How to inspect the properties of data objects
+* How to create categorical variables in R
+* How to convert data objects to other types
+* How to access, assign and display data in R
+* How to call functions
+* How to use vectorized operations
+* How to store, load, and remove data
+* How to make comments in R code
+* What is unusual about R
+* The overall structure of the R language
+* The basic "higher order" data structures in R
+
+
+## A) Data types & Classes 
+
+### What are Data Objects?
+
+R is an *object oriented* language - everything in R is an *object*. What 
+this means is that all of your data and code structures are stored in your 
+computer's memory using the same framework. 
+
+There are a core set of basic object types and classes built into R. All other
+objects are built upon these.
+
+*Data objects* are those structures which you use to store data. Objects can 
+also store functions, packages, connections, and other structures intended for 
+other uses. 
+
+Like other objects, data objects have a *type* and a *class*. The type defines
+*how* the data are stored, while the class defines *what* data are contained 
+within an object.
+
+
+### Accessing Data
+
+If you just enter a value at the R command prompt, R will print out the value 
+to your screen:
+
+```{r}
+68.1
+```
+
+Or you can call the `print()` function instead (to be explicit about it):
+
+```{r}
+print('A')
+```
+
+
+### Data Types and Classes
+
+The most basic data types are `numeric` (`double` and `integer`), `complex`, 
+`logical` (Boolean), and `character` (string).
+
+```{r}
+typeof(1)       # "double"    -- double precision floating point number
+typeof(1L)      # "integer"   -- "L" after one or more digits makes it an integer
+typeof(TRUE)    # "logical"   -- either TRUE or FALSE
+```
+
+### Data Types and Classes: Character
+
+Characters are entered with quotes around them (single or double quotes).
+
+```{r}
+typeof('abcd')  # "character" -- a non-numeric "string" of text characters
+```
+
+If you omit the quotes of an alphanumeric string, R will assume you are 
+referring to a variable name.
+
+```{r}
+val <- 1234
+typeof(val)
+```
+
+### Data Types and Classes
+
+You can show the "higher order" (if any) type of a data object with `class()`.
+
+```{r}
+typeof(1234)        # double  (the more basic "primitive" type)
+class(1234)         # numeric (the more general "higher order" type)
+typeof('abcd')      # character
+class('abcd')       # character
+```
+
+
+### Dates and Times
+
+There are special classes for dates and time to allow for date/time arithmetic 
+and formatting.
+
+```{r}
+# Class: "Date"
+my_date <- as.Date("2020-09-30", format = '%Y-%m-%d')
+
+# Class: "POSIXct" (date, time, timezone, etc.) and "difftime"
+my_datetime <- as.POSIXct("2020-09-30 12:00:", tz = "US/Pacific")
+```
+
+### Single-Value (Scalar) Data Types
+
+Data types consisting of only a single value are also called "scalar" types.
+
+Example    | Type      | Class             | Storage Mode
+-----------|-----------|-------------------|-------------
+1L         | integer   | integer           | numeric
+1          | double    | numeric           | numeric
+'1'        | character | character         | character
+TRUE       | logical   | logical           | logical
+Sys.Date() | double    | Date              | numeric 
+Sys.time() | double    | POSIXct,  POSIXlt | numeric 
+
+### Data Types and Classes: Factors
+
+Factors are categorical variables. Let's create an example and explore its 
+properties.
+
+```{r}
+country <- factor(c("usa", "canada", "mexico", "usa", "mexico"))
+country
+class(country)
+```
+
+This looks like a character variable with the additional attribute of "Levels", 
+where the levels are the unique values. But how is this implemented?
+
+### Factors
+
+```{r}
+typeof(country)
+str(country)
+attributes(country)
+```
+
+So factors in R are objects of class "factor" composed of an integer vector and 
+a `$class` attribute and a `$levels` attribute containing a character vector.
+
+
+# B) Creating Data 
+
+### Variable assignment with `<-`
+
+The `<-` (arrow) symbol is the primary assignment operator in R.
+
+To store data in memory (in the environment) *assign* values to variables (using `<-`).
+
+```{r}
+number <- 68.1
+number
+```
+
+This value will be stored in your computer's memory for the duration of the 
+current session, or until it is modified or deleted by you, your code, or your
+environment (execution context).
+
+### Argument assignment with `=`
+
+The `=` symbol is an additional assignment operator, most generally used within function calls.
+
+The `=` symbol tells R that the expected argument (parameter) `x` should take 
+the value of our `number` variable.
+
+```{r}
+print(x = number)
+```
+
+This assignment takes place within the function call and is not available 
+outside of the function or after the function call has competed.
+
+### Implicit (unnamed) function arguments
+
+Since the `x` argument is the first parameter expected by the function, we do
+not have to explicitly assign our value as a named argument, if we supply our
+value as the first (or only) argument.
+
+```{r}
+print(number)
+```
+
+### Assignment operators
+
+Just remember: 
+
+* use `<-` for variable assignment (but you may also see `=` here too)
+
+```{r, eval = FALSE}
+number <- 68.1
+```
+
+* use `=` for argument assignment within function calls (almost never `<-`)
+
+```{r, eval = FALSE}
+print(x = number)
+```
+
+### C) Data Structure
+
+### Data Structures: Vector
+
+In R, a vector is a group of values or variables. You can create a vector from a 
+collection of data values using the `c()` (combine) function.
+
+```{r}
+id <- c('A', 'B', 'C', 'D')
+origin <- factor(c("usa", "canada", "mexico", "canada"))
+height <- c(68.1, 69.4, 71.2, 68.9)
+weight <- c(159.2, 162.3, 203.5, 181.3)
+```
+
+Here, we created three vectors, which we may describe as follows:
+
+* `id` is a character vector containing alphabetic identifiers
+* `origin` is a factor vector containing countries of origin
+* `height` is a numeric vector containing heights in inches
+* `weight` is a numeric vector containing weights in pounds
+
+More technically speaking, a vector is an ordered collection of one or more 
+individual values of the same data type. 
+
+In other computer languages this data structure would be called an array or a 
+list, but R uses those terms for other, more complex data structures.
+
+### Data Structures: Matrix
+
+A Matrix is a two-dimensional structure of values, all of the same data type. 
+It can be constructed from a Vector, as supplied by the "data" argument for the 
+`matrix()` function.
+
+```{r}
+mat <- matrix(data = 1:9, nrow = 3)
+mat
+```
+
+### Data Structures: Data Frame
+
+You can store a two dimensional collection of data (a "table") as a data frame. This
+is the most common way to work with data in R. A data frame is often constructed
+from one or more vectors, where each vector becomes a column.
+
+```{r}
+df <- data.frame(id, origin, height, weight)
+df
+```
+
+The rows represent observations or cases and the columns represent variables.
+
+We can see that our data frame, `df`, is a data frame by using the `class()` function.
+
+```{r}
+class(df)
+```
+
+
+### Data Structures: List 
+
+Lists are objects that can contain elements of different types (i.e. elements  may be heterogeneous or "non-atomic"). This is a complicated but very powerful idea. We can put any object in a list.
+
+```{r}
+l <- list(x = 1:3, z = LETTERS[1:2], df = df, frml = formula(height~origin))
+l
+```
+
+### Data Structures: List
+
+For example, this list was created with several named objects: 
+
+* vectors of different lengths (`x` and `z`) 
+* a data frame (`df`) 
+* a formula (`frml`)
+
+We can even include things like graphics (plot objects).
+
+Let's use `sapply()` to see the class of each list item.
+
+```{r}
+sapply(X = l, FUN = class)
+```
+
+### Data Structures: List
+
+Because a list is non-atomic, it can contain other non-atomic objects. 
+
+```{r}
+is.atomic(l)
+```
+
+Let's use `sapply()` to see if each list item is atomic or not.
+
+```{r}
+sapply(X = l, FUN = is.atomic)
+```
+
+The two vectors are atomic data types because each item they store can only be an individual value, like a single number or character string. 
+
+The data frame and formula are not atomic because they can store items containing multiple values.
+
+### Viewing data
+
+You can see data frames in a grid format by using the `View()` function.
+
+```{r, eval = FALSE}
+View(df)
+```
+
+This will open the data frame in a new window or tab and display it like a 
+spreadsheet.
+
+However, unlike a spreadsheet, you will not be able to manipulate
+your data in this display.
+
+### Accessing Data Elements: Indexing
+
+Data are accessed though ["indexing."](https://cran.r-project.org/doc/manuals/R-lang.html#Indexing) Today, we'll learn two primary methods.
+
+Using our matrix example, `mat`, you can access data in the matrix by position 
+using single brackets, `[`. 
+
+```{r}
+# Display the 4th element (which in this case is 4).
+mat[4]
+
+# Display the element in the first row and second column.
+mat[1, 2]
+
+# Display all of the rows of the second column.
+mat[ , 2] 
+```
+
+### Accessing Data Elements by Variable Names
+
+You can access data in data frames based on their position using double brackets (`[[`), 
+but also with variable names using the `$` operator. 
+
+```{r, eval = FALSE}
+# Using position 
+df[[1]]
+df[[3]]
+ 
+# Using variable names
+df[['id']]
+df[['height']]
+
+# Using variable names
+df$id
+df$height
+```
+
+What is an advantage to indexing by column name?
+
+### Performing calculations
+
+R is basically a calculator. You can use many built-in operators and functions.
+
+```{r}
+2*2
+2/2
+2^2
+sqrt(2)
+```
+
+Additional math functions that are useful:
+* min(), max(). Calculates the minimum and maximum of a numeric vector
+* sum(). Calculates the sum of a numeric vector
+* mean(). Calculates the mean of a numeric vector
+* range(). Calculates the minimum and maximum values of a numeric vector
+
+
+
+### Vectorized operations
+
+R allows you to perform calculations on all items in a vector or all rows of a 
+data frame at the same time. 
+
+Operations that allow this are called *vectorized* operations. They may be 
+much faster than the alternatives (e.g. "loops"). 
+
+```{r}
+# Add a new column for adult BMI calculated from the weight and height columns
+df$bmi <- (df$weight / df$height ^ 2) * 703
+df
+```
+
+
+### Removing data
+
+You can remove a data object from your working (volatile) memory with `rm()`.
+
+```{r}
+rm(df)
+```
+
+
+
+# D) Commenting
+
+### Code Comments in R
+
+The `#` is used for comments. Everything on a line of code after the `#` will be ignored by R.
+
+```{r}
+# Assign a value to "val".
+val <- 1234
+val    # This is a bad name for a variable because it is not very descriptive.
+```
+
+It's usually better to put comments on their own line, as in the first example. 
+If comments are added to a line of code, as in the second example, both comments and code can be harder to read.
+
+It's common to indent the comment to line up with the code it's commenting.
+
+It's also common for the comment to read like a spoken-language command 
+(e.g., "Do this"), so that it's like a verbal command you are giving to 
+the computer. Then the code implements what the comment says to do.
+
+
+
+
+
+# E) Demo
+
+
+Now let's create new variables that will be stored in our environment.
+
+```{r}
+# Creating variables for height 
+height1 <- 1.6
+
+# creating variables for weight 
+weight1 <- 50
+```
+
+Instead of creating individual variables we can create vectors with multiple elements Let's consider we have anthropometric data (noninvasive quantitative measurements of the body) from four individuals. 
+
+
+
+```{r}
+# Creating vectors for height and weight 
+# height is in meters
+# weight in kilograms 
+
+height <- c(1.6, 1.8, 2.0, 2.5)
+weight <- c(50, 60, 64, 95)
+
+
+```
+
+In R, you create a vector with the combine function c(). You place the vector elements separated by a comma between the parentheses. This is an atomic vector with elements of the same type. 
+
+We can create a data frame in R by passing the vectors into the data.frame() function. Now let's combine those vectors above into a data frame with columns for height and weight. 
+
+```{r}
+# Creating a data frame by joining vectors of variables  
+health_df <- data.frame(height, weight)
+health_df
+
+```
+
+Let's view different features of that new data frame we just created. 
+
+```{r}
+# str() Displays the structure of an R object
+
+str(health_df)
+
+# ncol() Returns the number of columns of a matrix or a data frame
+
+ncol(health_df)
+
+# length() Returns the number of items in an R object, such as a vector, a list, and a matrix.
+
+length(health_df)
+
+# dim() Returns the dimensions of the data frame (ie. number of rows and number of columns)
+
+dim(health_df)
+
+```
+
+
+We can also create new variables empty and add them into an existing data frame. 
+
+```{r}
+# We can add this empty vector the data frame
+# This is just a place holder for the BMI variable we will calculate
+health_df$BMI <- NA
+
+# We can print the data fame and see the empty column
+
+print(health_df)
+```
+
+Let's calculate BMI using the height and weight data we created above. We will add this new column to the existing data frame.   
+
+```{r}
+# We calculate BMI using the vectors we created above 
+
+# BMI equation for reference: BMI = Weight / (Height ^ 2)
+# ^ is used for exponents 
+
+health_df$BMI <- (health_df$weight) / (height^2)
+ 
+# We can also View the data frame in another tab of the Source pane 
+View(health_df)
+
+```
+
+
+We can also use a function to round the values to a specific number of significance digits or decimal places. 
+
+```{r}
+# We can round values to 3 decimal places
+round(health_df, digits = 3)
+
+# We can also round our values to 3 significant values
+signif(health_df, digits = 3)
+```
+
+
+##### Some Helpful Hints... 
+
+```{r}
+# You can use the template to create a data frame
+
+first_column <- c("value_1", "value_2", "value_3")
+second_column <- c("value_A", "value_B", "value_C")
+
+df <- data.frame(first_column, second_column)
+
+print(df)
+```
+
+```{r}
+# You can use the template to create a data frame
+
+df <- data.frame(first_column = c("value_1", "value_2", "value_3"),
+                 second_column = c("value_A", "value_B", "value_C")
+                 )
+
+print(df)
+```
+
+
+
+
+# F) Activity
+
+Create your own Data! 
+
+**Hello World** in R Programming
+
+When we start to learn any programming languages we do follow a tradition to begin HelloWorld as our first basic program. Here we are going to learn that tradition.
+
+For the HelloWorld program, we just need a print function. No need of any packages or main functions, just a simple print function is enough.
+
+
+```{r}
+print("HelloWorld")
+```
+
+print() is a function which is used to print the values on to the output screen. It also has arguments, we can use it if needed. For example, in the above program, the output is printed with quotes by default we can remove it if needed. We passed the argument named quote in print function which value is set to be false to remove the quotes.
+
+
+#### Create and retrieve information about variables in R 
+
+Double check that you do not have stored objects in your current session with the following command. This will list all objects that you have in your current R session.
+
+```{r}
+ls()
+```
+
+
+1) Create three vectors a, b, c with three integers each. 
+
+```{r}
+
+
+```
+
+
+2) Check the data class and type for each vector. 
+
+```{r}
+
+```
+
+
+3) Calculate the mean, median, and mode of each vector. 
+
+
+```{r}
+
+
+```
+
+
+4) Combine the three vectors into a data frame. 
+
+
+```{r}
+
+```
+
+
+5) Print the content of the data frame. 
+
+
+```{r}
+
+```
+
+
+

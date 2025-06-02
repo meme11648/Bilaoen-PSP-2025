@@ -1,0 +1,310 @@
+---
+title: "Introduction to Statistical Analysis"
+author: "Nancy Carmona & Rochelle-Jan Reyes"
+date: "2024-5-10"
+output: pdf_document
+---
+
+```{r set_knitr_options, echo=FALSE, message=FALSE, warning=FALSE}
+suppressMessages(library(knitr))
+opts_chunk$set(tidy=FALSE, cache=TRUE, echo=TRUE, message=FALSE)
+```
+
+
+# **Session 6 - Introduction to Statistical Analysis in R**
+
+In this session you will learn:
+
+* Utilize base R functions and packages for statistical analyses.
+* Implement different types of statistical analyses methods, including simple analytics and comparative tests.
+* Complete a statistical analysis in a real-world context through examples and demos.
+
+
+## [***PPT Materials***]{.underline}
+
+Here is the link to the Session 6 PPT. Feel free to use it as a reference when going through this RMD file: <https://docs.google.com/presentation/d/1dRIoI1cY5FXBbT89_Q4IsfuMQlqnlm34hY7UsrZ4NI8/edit?usp=sharing>
+
+## [***R Functions***]{.underline}
+
+Here is the link to the R Function Dictionary, with all of the functions you will need for this session under the Session 5 header: <https://docs.google.com/document/d/1z6agvbE-X70prlIdyFpU4-WkyI0IGI0WL5meEaQYz3o/edit?usp=sharing>
+
+
+## A) Statistis Review
+
+"Health statistics are numbers that summarize information related to health." (National Library of Medicine)
+
+* Understand risk factors for communities
+* Track and monitor health events
+* See impacts of policy changes
+* Assess the quality and safety of health care
+* Used for evidence-informed policy making and evidence-based medicine
+
+* Statistics is a branch of mathematics that deals with the manipulation, analysis, and interpretation of data (Merriam-Webster)
+
+* Used in many different fields, including public health, epidemiology, and social sciences among other fields
+
+Types of Statistical Studies
+* Descriptive statistics
+* Inferential statistics
+
+
+## [***Activity 1 -  Descriptive Statistics in Base R***]{.underline} 
+
+First, as always, let's load in our data and libraries (if any).
+
+```{r}
+ncha <- read.csv("NCHA2021_Session3_5_Subset.csv")
+```
+
+Okay, now we can go through some descriptive statistics.
+
+Remember that descriptive statistics [*describe*]{.underline} what the data is. Inferential statistics is used to [*infer (draw) conclusions*]{.underline} from the data.
+
+Let's look at the dataset really quickly. How do we *view* the data?
+
+```{r}
+
+```
+
+Now let's look at age. What *class* is the variable AGE?
+
+ANSWER:
+
+Time to use some functions we've learned in section A to describe the data.
+
+### Mean, Median, and Mode
+
+First, let's look at mean (average). Which function can you use for finding the average value in the variable AGE?
+
+```{r}
+
+```
+
+*Note*: will need to include na.rm = TRUE.
+
+Now, we can look at the median.
+
+```{r}
+
+```
+
+Lastly, we can look at mode. Normally, functions of what you need are named simply, like mean = mean() and median = median(). Mode is one of the few that aren't. You can find the mode (most of the same number of that variable) by using the *table()* function.
+
+```{r}
+table(ncha$AGE)
+```
+
+Is the mean, median, and mode the same number? If it's not the same number, then the data may be skewed! We can visualize this by using the base R plotting function, *hist()*.
+
+```{r}
+
+```
+
+Which way is it skewed?
+
+### Standard Deviation and Variance
+
+Standard deviation (SD): how dispersed the data is in relation to the mean
+
+```{r}
+
+```
+
+Variance: expected value of the squared deviation from the mean
+
+```{r}
+
+```
+
+Great job! That's it for Activity 1 in Session 6.
+
+
+## B) Statistical Analyses in R
+
+_Key Steps for your Analysis_ 
+* Set up analysis code
+* Exploratory Analysis
+* Data Wrangling
+* Conduct descriptive analysis
+* Conduct inferential analysis
+* Document your analysis!
+
+
+## C) Demo & Activity: Applying Descriptive Statistics
+
+Install & Load *tidyverse* package
+
+```{r}
+
+# load the package "tidyverse" to wrangle data
+
+library(tidyverse)
+
+```
+
+Explore the NCHA dataset! What does your data structure look like? 
+
+```{r}
+
+# View the structure of the dataset after it has been imported and saved to your working environment
+
+glimpse(ncha)
+
+```
+
+Explore the NCHA dataset! What does your data structure look like? 
+
+
+# Tidyverse also has functions which we can use to "summarize" our data 
+
+```{r}
+
+# we can use statistical functions and combine them together 
+
+# summarise is a tidyverse functions 
+
+# we can save our table in an object
+
+ncha_summary_table <- ncha %>% 
+  
+  # group by and calculate summary statistics
+  summarise(Min = min(MIN_MOD_PA, na.rm = TRUE), 
+            Max = max(MIN_MOD_PA, na.rm = TRUE), 
+            Mean = mean(MIN_MOD_PA, na.rm = TRUE),
+            Median = median(MIN_MOD_PA, na.rm = TRUE), 
+            missing = sum(is.na(MIN_MOD_PA)), 
+            .groups = "drop") %>% 
+  
+  # round by mutating on a predicate function
+  mutate_if(is.numeric, round, 3)
+
+```
+
+
+## D) Demo & Activity: Applying Inferential Statistics
+
+Now, let's say I am working on a project examining if there is a relationship between cannabis and alcohol use among college students at SFSU. I can use data from the American College Health Association – National College Health Assessment (ACHA-NCHA) which we used in Session 5. 
+
+I have two variables of interest: 
+
+_1_"Substances ever used - Alcoholic beverages (beer, wine, liquor, etc.)"
+
+_2_"Substances ever used - Cannabis (marijuana, weed, hash, edibles, vaped cannabis, etc.) [nonmedical use]"
+
+
+For categorical variables we can use "contingency tables" as part of the descriptive statistics step. I will create data table with our two variables of interest. 
+
+I will need this table to use base R to visualize the data after we conduct a chi-squared test. 
+
+```{r}
+
+# Create a contingency table with alcohol ever and cannabis ever         
+alcohol_cannabis_tbl <-
+  table(ncha$SUB_ANY_ALCOHOL,
+        ncha$SUB_ANY_CANNABIS)
+                 
+print(alcohol_cannabis_tbl)
+
+```
+
+
+I can create data subset with our two variables of interest that I will use for our inferential statistics. 
+
+```{r}
+# create a data subset from the main data set
+
+alcohol_cannabis_df  <-
+  data.frame(ncha$SUB_ANY_ALCOHOL, ncha$SUB_ANY_CANNABIS)
+
+# view your new data subset 
+
+print(table(alcohol_cannabis_df))
+
+```
+
+
+Now let's conduct the chi-square test! 
+ 
+```{r}
+
+# conduct Chi-square test 
+
+chisq.test(alcohol_cannabis_df$ncha.SUB_ANY_ALCOHOL,
+           alcohol_cannabis_df$ncha.SUB_ANY_CANNABIS, 
+           correct=FALSE)
+
+```
+
+* What is the p-value? 
+* Are the result's statistically significant? 
+
+
+We can also make a barplot to visualize the chi-square data 
+
+```{r}
+
+# plot of Chi-Square test using base R plotting
+
+barplot(
+  alcohol_cannabis_tbl,
+  beside = TRUE,
+  col = c("lightblue", "lightgreen"),
+  main = "Alcohol Use vs. Cannabis Use among SFSU Students in 2021",
+  xlab = "Cannabis Use",
+  ylab = "Number of Students"
+)
+# add legend to bar plot 
+legend(
+  "center",
+  title = "Alcohol Use",
+  legend = rownames(alcohol_cannabis_tbl),
+  fill = c("lightblue", "lightgreen")
+)
+
+```
+
+
+
+### Quick peak: Making tables easily in R
+
+```{r}
+
+# install packages for creating table 1 (descriptive stats table)
+install.packages("table1")
+
+# load the library into 
+library(table1)
+
+```
+
+
+```{r}
+
+# We can create a "table 1" with your original dataset, typically we will include all of the variables in our primary analysis 
+
+table1( ~ SUB_ANY_ALCOHOL + SUB_ANY_CANNABIS +
+          MIN_MOD_PA +
+          MIN_VIG_PA,
+          dat = ncha)
+
+
+```
+
+
+
+# Session Information and Code
+
+The next two chunks should be included in the appendix of every R Markdown so  that you document your session information, and code in the document. This supports the reproducibility of your work!
+
+```{r session.info}
+#-----session information: beginning of Appendix -----------
+# This promotes reproducibility by documenting the version of R and every package
+# you used.
+sessionInfo()
+```
+
+
+```{r appendix, ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE, include=TRUE}
+#-----appendix------------
+```
+

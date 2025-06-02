@@ -1,0 +1,288 @@
+---
+title: "Session3_Packages-Libraries"
+author: "Rochelle-Jan Reyes"
+date: "2024-03-21"
+output: pdf_document
+---
+
+The block of code below is intended for creating the output of RMD files. When working with RMD files, make sure you do keep this, as it will help you output a document with all of the work you've done.
+
+When you output a document to a Word or PDF file, the below code block will not show up.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Oooooh, spooky!
+
+Now let's begin with the R Onramp Session 3.
+
+# Session 3 - R Sessions, Packages & Scripts, and R File Types (Importing & Exporting) 
+
+## [***PPT Materials***]{.underline}
+
+Here is the link to the Session 3 PPT. Feel free to use it as a reference when going through this RMD file: <https://docs.google.com/presentation/d/1s0w6SGL0bXBA8rpm0CFzqwYtMAF4wIhEAREOph6Q9-s/edit?usp=sharing>
+
+## [***Session 3 Content***]{.underline}
+
+### A. R Sessions & RStudio Projects
+
+[**R session**]{.underline}: an instance of R running for a certain amount of time in a certain context
+
+[**RStudio Projects**]{.underline}: an easy way to divide work into multiple contexts 
+
+### B. *Activity 1:* Create an RStudio Project for the Workshop
+
+**Instructions:** 
+
+1.  Go to *File*
+
+2.  Select *New Project*
+
+3.  Select *New Directory*
+
+4.  Select *New Project*
+
+5.  Change name to \"r_onramp\"
+
+6.  Change working directory to desired computer location
+
+7.  Press button on \"Open in New Session\"
+
+8.  Create that new project!
+
+### C. Packages and Libraries
+
+#### Definitions
+
+***Packages***: Collections of code (functions), data (for examples), and documentation
+
+***Libraries***: Collection of packages
+
+#### Code
+
+When you have a package you've never installed on your computer before, you will use the following code to install it:
+
+```{r}
+
+install.packages("tidyverse")
+```
+
+Yay! The package you just installed will be one of the primary packages used in the workshop.
+
+When you've successfully installed a package, you can call it into your RStudio Session by using the following code:
+
+```{r}
+library(tidyverse)
+```
+
+Notice that you no longer need to use the "" to reference the package in R. This will be the formatting for calling in and loading in all packages.
+
+For every session you start RStudio, you need call in the library.
+
+### D. R files
+
+There are many types of files related to R and RStudio. Let's break it down.
+
+These files are associated with your RStudio workspace and are the files that you can access the session:
+
+-   R Session history is stored in the *.Rhistory* file
+
+-   R Session workspace is stored in the *.Rdata* file
+
+    -   Default data file in R
+
+There are many files that can be read into or exported out of R. Here are the common types you'll see:
+
+#### [Files where you can write in R code]{.underline}
+
+-   **R Script (.R)**
+
+A simple file where you can write code and comments. You would see only the comments and code. Any outputs would be displayed either in the Console or the Plot tab.
+
+-   **RMD File (.Rmd)**
+
+A little more complex file where you can write the code, comments, AND regular sentences (this file!!!). These files have **code blocks**, where you input the code and any comments for the code. Unlike the R Scripts, you can run the code within the RMD file and see the output in the same panel below the code block.
+
+![](Session3_VennDiagram.png){width="549"}
+
+#### [Files of data that can be used for analysis or visualization]{.underline}
+
+-   CSV Files (.csv)
+-   Text Files (.txt)
+-   Excel Files (.xlsx)
+
+#### Reading in data files
+
+Typically, this is the format of how you would read in a file:
+
+```{r, general data file code format}
+#Don't have to run, it will not output anything
+name <- function("FileName.xxx", #name of the file as named on your computer
+                 header = TRUEorFALSE, #if your file has a header (variable name listed)
+                 sep = "SEPARATOR") #if using a function that doesn't include file type
+  
+```
+
+Here is how you can read in data files:
+
+```{r}
+# TXT files
+df_txt <- read.table("TXTFile_Template.txt", header = TRUE)
+
+# Excel files
+df_exc <- read_xlsx("EXCELFile_Template.xlsx", header = FALSE)
+##function is from readxl package, will need to load in that library first
+
+# CSV files
+df_csv <- read.csv("CSVFile_Template.csv", header = TRUE)
+
+
+```
+
+#### Looking into the files
+
+Looking into the imported file is important because we have to make sure that the data loaded in correctly.
+
+One of the first things you can do to check if everything loaded in correctly is to view the data frame inside RStudio, using the View() function.
+
+```{r}
+View()
+```
+
+You can also check the internal structure of the data set you imported in by using the str() function.
+
+```{r}
+str()
+```
+
+Lastly, for each variable, you can check how many values there are in by using the table() function. Inside the table function, you will call in the dataframe and the variable by using this format: dataframe\$variable
+
+```{r}
+table(df$variable)
+```
+
+#### Exporting Data files
+
+Exporting data files is important because it allows us to keep the data we curated. Let's say you made a dataframe with results in RStudio and you need to provide that data to your PI or supervisor.
+
+You can output the data frame into any of the file types we explored earlier, by using one of the following functions.
+
+```{r}
+# TXT files
+write.table(mtcars, file = "mtcars.txt", sep = "\t",
+            row.names = TRUE, col.names = NA)
+
+# CSV files
+write.csv(mtcars, file = "mtcars.csv")
+
+```
+
+### E. Demo
+
+1.  Let's call in the readxl library.
+
+```{r}
+library(readxl)
+```
+
+2.  Now, we can import in the Excel file with our data!
+
+```{r}
+ncha_demo <- read_xlsx("NCHA2021_RWS_Subset.xlsx", col_names = TRUE)
+```
+
+3.  Time to check if the data loaded in correctly.
+
+```{r}
+View(ncha_demo)
+```
+
+4.  We can also check the internal structure of the dataframe.
+
+```{r}
+str(ncha_demo)
+```
+
+5.  Great! Now, let's find out the number of different values of a variable.
+
+```{r}
+table()
+```
+
+6.  What values are we interested in? Pick 3!
+
+7.  Alright, now let's create a NEW data frame with the data from just those 3 variables.
+
+```{r}
+ncha_new <- data.frame()
+```
+
+8.  Lastly, let's export that new data frame into a CSV file!
+
+```{r}
+write.csv()
+```
+
+### F. *Activity 2:* Importing, Viewing, and Exporting
+
+Now it's your turn to import and export data, with a little bit of functions we learned from last session! [Remember to write your code in the pre-loaded coding blocks]{.underline}.
+
+#### Importing the Data
+
+First, let's import the data set. *The dataset is downloadable from Module 3's Workshop Materials on Canvas. Hint: the dataset is in a CSV file form and we need to **read** it into the Session environment.*
+
+```{r}
+#insert the code here
+
+```
+
+#### Working with the Data
+
+Great! Now you have the data in your environment! The next step of this activity is to view the data set.
+
+```{r}
+# view the data set
+
+```
+
+Questions:
+
+```{r}
+# you can use this space to answer the questions below
+```
+
+1.  How many variables are in the data set? *Hint: you can use either View() or str() to answer this question!*
+
+2.  What two types/classes of data are present in the data set? *Hint: use the function str() to answer the questions.*
+
+Next, we are going to look at the values in the variable OVRL_HEALTH. How do we view the number of different values in a variable?
+
+```{r}
+# Input code here
+
+```
+
+Questions:
+
+1.  How many different values does the variable OVRL_HEALTH have?
+
+#### Creating a data frame with the current data set
+
+We can create a data frame with data from the current data set by using the function, data.frame(). Select two or more variables from the current data set and create a new data frame.
+
+```{r}
+# Insert code below
+
+```
+
+#### Exporting the Data
+
+Great! Now, let's export that data frame you made as a .txt file. *Hint: use the write.table() function.*
+
+```{r}
+# Insert code below
+
+```
+
+Great job! You're done with Session 3!

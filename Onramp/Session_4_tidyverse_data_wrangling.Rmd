@@ -1,0 +1,458 @@
+---
+title: "Introduction to the Tidyverse and Data Wrangling"
+author: "Nancy Carmona"
+date: "2024-04-25"
+output: pdf_document
+---
+
+```{r set_knitr_options, echo=FALSE, message=FALSE, warning=FALSE}
+suppressMessages(library(knitr))
+opts_chunk$set(tidy=FALSE, cache=TRUE, echo=TRUE, message=FALSE)
+```
+
+# Session 4. Introduction to the Tidyverse and Data Wrangling - Learning Objectives
+
+You will learn:
+
+* What the "tidyverse" is
+* What data "wrangling" is
+* Packages and functions used to tidy and wrangle data in R
+* How to tidy and wrangle data with R
+
+## A) Introduction to the Tidyverse Package
+
+Before we get into data wrangling, let's look at the [Tidyverse](https://www.tidyverse.org/)
+
+```{r}
+library(tidyverse)
+
+tidyverse_logo()
+```
+
+- "The tidyverse is an opinionated collection of R packages designed for data science." 
+- "All packages share an underlying design philosophy, grammar, and data structures."
+- There are tidyverse packages for data wrangling, modeling, and visualization.
+
+
+### Why would you want to use the tidyverse?
+
+One of the biggest reasons to learn the tidyverse is consistency. Throughout these packages, consistency comes in three primary forms:
+
+1. The first formal argument of tidyverse functions is always a data frame that provides the function’s input.
+2. The idea of tidy data: a data frame where each row is an observation and each column contains the value of a single variable.
+3. The pipe operator, %>%, guides the flow of operations on data. (more on this soon..)
+
+
+### What are "Pipes"?
+
+Pipes let you compose a sequence of function calls in a more readable way. The following two examples of code do the same thing.
+
+```{r}
+
+# First, let’s look at the standard functional form in R using nested functions:
+
+print(head(iris))
+
+# Using pipes makes this more readable as a sequence of operations:
+
+iris %>% head() %>% print()
+
+```
+
+The pipe supplies the result of the previous function as the first argument to the next function. 
+
+
+### Activity 1: Installing tidyverse
+
+```{r}
+# Install from CRAN
+
+install.packages("tidyverse")
+
+# Load the package into your current session
+
+library(tidyverse)
+
+```
+
+
+### What lives in the tidyverse package?
+
+
+The tidyverse package actually contains other packages (dplyr,tidyr, ggplot2, etc.) and you’ll see that when you load the tidyverse package using library(). 
+
+Remember the package must be installed to your device before it can be loaded into your libraries!
+
+### Core Packages in Tidyverse 
+
+* dplyr provides a grammar of data manipulation
+* set of “verbs” that solve most common data manipulation challenges 
+
+* tidyr provides a set of functions that help you get to tidy data
+* tidy data = every variable goes in a column, and every column is a variable.
+
+* ggplot2 is a system for declaratively creating graphics
+* based on The Grammar of Graphics. You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details. 
+* Next week! 
+
+
+## B) Data Wrangling
+
+### What does "data wrangling" mean?
+
+“The process of of getting your data into a useful structured format.” This can include _tidying_ and transforming.
+Prepare data for further analysis including:
+* Summarizing data
+* Modeling data
+* Visualizing data 
+
+### Why would you need to "wrangle" data?
+
+Many datasets, especially if you were involved in the data collection, will have exactly the variables you need in exactly the right format and data type. 
+
+But often we import data from the electronic medical record, a database, or the Centers for Disease Control, and the data may not be in quite the format we want.
+
+
+### What is tidy data? 
+
+While messy data can be messy in myriad ways, all tidy data follows the same structure, allowing us to easily manipulate and transform our data however we want. 
+
+For a dataset to be considered tidy, it needs to follow 3 key rules:
+1) Every different variable in our dataset gets a column to itself.
+2) Every different observation or object measured in our dataset gets a row to itself.
+3) Every different value in our dataset gets its own cell.
+
+
+## C) Tidyverse Functions 
+
+
+### Data wrangling with the package *dplyr*
+
+"[*dplyr*](https://dplyr.tidyverse.org/) is a grammar of data manipulation, 
+providing a consistent set of verbs that help you solve the most common data 
+manipulation challenges"
+
+Common functions include:
+ 
+* Choosing variables based on their name with `select()` 
+* Choosing rows based on a condition with `filter()`
+* Creating new variables or changing old variables with `mutate()`
+* Rneaming existing variables with `rename()`
+
+
+## D) Wrangling Demo & Activity
+
+Let's say I am working on a project on physical activity among college students at SFSU. I can use data from the American College Health Association – National College Health Assessment (ACHA-NCHA) which I have saved as an Excel file. 
+
+While file types like *.csv and *.tsv are common, it is also common to use Microsoft Excel or an equivalent for data entry. There are a lot of reasons that this is not a great idea, but Excel is so ubiquitous that it is often used for data entry.
+
+Step 1) Install & Load the *readxl* package 
+
+```{r}
+
+# install package for reading Excel files
+
+install.packages("readxl")
+
+# load the package "readxl" which is used to import excel documents
+
+library(readxl)
+
+```
+
+
+Step 2) Once you have your new data file in your "Data" folder you are ready to read the data. Read in the data subset that is stored as an Excel file. This will load the file into your environment. 
+
+```{r}
+
+# read the excel file and assign the name "NCHA2021_RWS_Subset" to the new dataset in your environment 
+
+NCHA2021_RWS_Subset <- read_excel("Data/NCHA2021_RWS_Subset.xlsx")
+
+```
+
+
+```{r}
+
+# OR name it a shorter name when you load it so that it is easy to use for coding!
+# ncha_subset <- read_excel("Data/NCHA2021_RWS_Subset.xlsx")
+
+```
+
+What do you see in your Environment pane when you open the dataset?
+
+
+Step 3) Explore the NCHA dataset! What does your data structure look like?
+
+```{r}
+
+# View the structure of the dataset after it has been imported and saved to your working environment
+
+str(NCHA2021_RWS_Subset)
+
+```
+
+
+Step 4) Does the dataset need to be changed to a different type? Yes, a "data.frame" will be easier to wrangle than a "tibble" 
+
+To continue our wrangling, we should transform our “tibble” into a “data.frame”
+
+```{r}
+
+# use the base function "data.frame" to transform a "tibble" into a "data.frame" class
+
+ncha_df <- data.frame(NCHA2021_RWS_Subset)
+
+```
+
+
+Step 5) Check that the dataset is now a "data.frame" using the function `class()`
+
+```{r}
+
+# use the base function "class" to make sure your transformation worked
+
+class(ncha_df)
+
+```
+
+
+Step 6) Continue exploring the new data frame object. In addition to `str()` and `class()` we can explore the data with `dim()` and `head()`:
+
+```{r}
+
+# View the dimensions of the new data frame 
+
+dim(ncha_df)
+
+# View the first 6 rows of the new data frame 
+
+head(ncha_df)
+
+```
+
+
+Step 7)  Do the variable names make sense? They seem a bit cumbersome...
+
+```{r}
+
+# Using the function "names()" we can view a list of all of the variable names within the entire data frame
+names(ncha_df)
+
+```
+
+Step 8) Let's rename the variables to make it easier to code. The simplified names will improve our workflow if we are not typing out complex names that require us to use single quotes when variables have a space. 
+
+```{r}
+
+# rename variables with a simpler name using "rename()"
+
+ncha_df <- rename(ncha_df, 
+	"leisure_sports" = "Leisure.time.activities...Participating.in.physical.exercise..team.sports..recreational.sports..or.physically.active.hobbies") 
+
+
+# We can also rename multiple variables at the same time
+
+ncha_df <- rename(ncha_df,
+                              "overall_health" = "Overall.Health",
+                              "exercise_mod_min" = "Minutes.Moderate.PA...minutes",
+                              "exercise_vig_min" = "Minutes.Vigorous.PA...minutes")
+
+
+```
+
+Step 9) Let's check the variable names and see if our transformation worked. 
+
+```{r}
+
+# view names of variables in the data frame
+
+names(ncha_df)
+
+# Or View the entire data frame 
+
+View(ncha_df)
+
+```
+
+Yes, it is a much more tidy name! 
+
+
+Step 10) Let's use the function `select()` to only keep the columns (variables) we are interested in analyzing. 
+
+
+```{r}
+
+# create a data subset by selecting variables with cleaned up names
+# we can use pipes [%>%] (shortcut for pipes = command + shift + M)  
+
+ncha_df_sub <- ncha_df %>% select(overall_health, leisure_sports, exercise_mod_min, exercise_vig_min) 
+
+
+```
+
+
+
+Step 11) Let's use the function `filter()` to only keep rows (observations) for students who self-reported 0 hours of leisure sports. 
+
+
+```{r}
+# select observations for students who self-reported 0 hours of leisure sports
+ncha_df_sub <- filter(ncha_df_sub, leisure_sports == "0 hours")
+
+# we can look at a table of two variables, to see how they overlap 
+# check what the overlap is between overall health categories and minutes of leisure sports 
+table(ncha_df_sub$leisure_sports, ncha_df_sub$overall_health)
+
+```
+
+
+Step 11) Let's create a new variable using `mutate()`
+
+```{r}
+
+# view a summary of the observations for "exercise_mod_min"
+summary(ncha_df_sub$exercise_mod_min)
+
+# make a new variable that will be part of the existing data frame 
+# we can make a variable for the number of hours of activity 
+
+ncha_df_sub <- ncha_df_sub %>% mutate(mod_activity_hour = exercise_mod_min / 60 )
+                                
+# check what the updated data frame looks like
+
+View(ncha_df_sub)
+
+```
+
+
+Step 12) Let's create a simple plot to visualize our exercise data.
+
+We can make a bivariate plot to look at the relationship between overall health and hours of moderate physical activity. 
+
+```{r}
+
+# make a simple plot can be made using ggplot2 package
+
+ggplot(data = ncha_df_sub, aes (x = overall_health, y = mod_activity_hour, colour) ) + 
+    geom_boxplot() 
+
+# OR you can use pipes instead of [+] symbol 
+
+ggplot(ncha_df_sub, aes(overall_health, mod_activity_hour) ) %>% 
+          geom_boxplot()
+
+
+```
+
+We can also make univariate plots to look the distribution of our data. 
+
+```{r}
+
+# make a simple histogram plot using ggplot2 package
+
+ggplot(ncha_df_sub, aes(mod_activity_hour) ) + geom_histogram()
+
+```
+
+
+
+## E) Activity: Data Wrangle using Tidyverse! 
+
+
+- Start with a clean version of the data! 
+
+```{r}
+
+# load the original data subset 
+
+NCHA2021_RWS_Subset <- read_excel("Data/NCHA2021_RWS_Subset.xlsx")
+
+# make the tibble into a data frame 
+
+ncha_df <- data.frame(NCHA2021_RWS_Subset)
+
+```
+
+
+- Check that your data import went well – typically done in an “exploratory analysis” – should always do this! 
+
+* What class is the data?
+* How many rows?
+* How many columns?
+* How many observations? 
+
+```{r}
+
+# Check that your data import worked as intended
+
+
+
+```
+
+
+
+- Rename the variables: “Overall.Health”, “Minutes.Moderate.PA..minutes”, “Minutes.Vigorous.PA..minutes”
+
+```{r}
+
+# We can rename one variable at a time, OR we can also rename multiple variables at the same time
+
+
+```
+
+
+- Select the newly renamed variables: “overall_health”, “exercise_mod_min”, “exercise_vig_min”
+
+```{r}
+
+# Select the variables using pipes [ %>% ]
+
+
+
+```
+
+
+- Check to see what our new smaller data frame looks like!
+
+```{r}
+
+# View the data frame in a pop up window 
+
+
+```
+
+
+- Filter the dataset to only keep rows for students with self-reported "Excellent" overall health.
+
+```{r}
+
+# Only keep observations for students who self-report "Excellent" health 
+
+
+```
+
+
+- Make a new variable: make a new variable from "exercise_vig_min" to "vig_activity_hour". 
+
+
+```{r}
+
+# make a new variable using mutate()
+
+```
+
+
+- Make a simple univariate plot of “mod_activity_hour” 
+
+```{r}
+
+# make a simple plot using ggplot()
+
+
+
+
+```
+
+
+

@@ -1,0 +1,209 @@
+---
+title: "R Data Types & Language Basics"
+author: "Nancy Carmona"
+date: "2024-03-21"
+output: pdf_document
+---
+
+```{r set_knitr_options, echo=FALSE, message=FALSE, warning=FALSE}
+suppressMessages(library(knitr))
+opts_chunk$set(tidy=FALSE, cache=TRUE, echo=TRUE, message=FALSE)
+```
+
+# Session 2. R Language Basics - Learning Objectives
+
+
+# E) Demo
+
+
+Now let's create new variables that will be stored in our environment.
+
+```{r}
+# Creating variables for height 
+height1 <- 1.6
+
+# creating variables for weight 
+weight1 <- 50
+```
+
+Instead of creating individual variables we can create vectors with multiple elements Let's consider we have anthropometric data (noninvasive quantitative measurements of the body) from four individuals. 
+
+
+
+```{r}
+# Creating vectors for height and weight 
+# height is in meters
+# weight in kilograms 
+
+height <- c(1.6, 1.8, 2.0, 2.5)
+weight <- c(50, 60, 64, 95)
+
+
+```
+
+In R, you create a vector with the combine function c(). You place the vector elements separated by a comma between the parentheses. This is an atomic vector with elements of the same type. 
+
+We can create a data frame in R by passing the vectors into the data.frame() function. Now let's combine those vectors above into a data frame with columns for height and weight. 
+
+```{r}
+# Creating a data frame by joining vectors of variables  
+health_df <- data.frame(height, weight)
+health_df
+
+```
+
+Let's view different features of that new data frame we just created. 
+
+```{r}
+# str() Displays the structure of an R object
+
+str(health_df)
+
+# ncol() Returns the number of columns of a matrix or a data frame
+
+ncol(health_df)
+
+# length() Returns the number of items in an R object, such as a vector, a list, and a matrix.
+
+length(health_df)
+
+# dim() Returns the dimensions of the data frame (ie. number of rows and number of columns)
+
+dim(health_df)
+
+```
+
+
+We can also create new variables empty and add them into an existing data frame. 
+
+```{r}
+# We can add this empty vector the data frame
+# This is just a place holder for the BMI variable we will calculate
+health_df$BMI <- NA
+
+# We can print the data fame and see the empty column
+
+print(health_df)
+```
+
+Let's calculate BMI using the height and weight data we created above. We will add this new column to the existing data frame.   
+
+```{r}
+# We calculate BMI using the vectors we created above 
+
+# BMI equation for reference: BMI = Weight / (Height ^ 2)
+# ^ is used for exponents 
+
+health_df$BMI <- (health_df$weight) / (height^2)
+ 
+# We can also View the data frame in another tab of the Source pane 
+View(health_df)
+
+```
+
+
+We can also use a function to round the values to a specific number of significance digits or decimal places. 
+
+```{r}
+# We can round values to 3 decimal places
+round(health_df, digits = 3)
+
+# We can also round our values to 3 significant values
+signif(health_df, digits = 3)
+```
+
+
+##### Some Helpful Hints... 
+
+```{r}
+# You can use the template to create a data frame
+
+first_column <- c("value_1", "value_2", "value_3")
+second_column <- c("value_A", "value_B", "value_C")
+
+df <- data.frame(first_column, second_column)
+
+print(df)
+```
+
+```{r}
+# You can use the template to create a data frame
+
+df <- data.frame(first_column = c("value_1", "value_2", "value_3"),
+                 second_column = c("value_A", "value_B", "value_C")
+                 )
+
+print(df)
+```
+
+
+
+
+# F) Activity
+
+Create your own Data! 
+
+**Hello World** in R Programming
+
+When we start to learn any programming languages we do follow a tradition to begin HelloWorld as our first basic program. Here we are going to learn that tradition.
+
+For the HelloWorld program, we just need a print function. No need of any packages or main functions, just a simple print function is enough.
+
+
+```{r}
+print("HelloWorld")
+```
+
+print() is a function which is used to print the values on to the output screen. It also has arguments, we can use it if needed. For example, in the above program, the output is printed with quotes by default we can remove it if needed. We passed the argument named quote in print function which value is set to be false to remove the quotes.
+
+
+#### Create and retrieve information about variables in R 
+
+Double check that you do not have stored objects in your current session with the following command. This will list all objects that you have in your current R session.
+
+```{r}
+ls()
+```
+
+
+1) Create three vectors a, b, c with three integers each. 
+
+```{r}
+
+
+```
+
+
+2) Check the data class and type for each vector. 
+
+```{r}
+
+```
+
+
+3) Calculate the mean, median, and mode of each vector. 
+
+
+```{r}
+
+
+```
+
+
+4) Combine the three vectors into a data frame. 
+
+
+```{r}
+
+```
+
+
+5) Print the content of the data frame. 
+
+
+```{r}
+
+```
+
+
+

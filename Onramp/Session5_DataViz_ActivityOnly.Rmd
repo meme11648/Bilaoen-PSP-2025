@@ -1,0 +1,97 @@
+---
+title: "Session 5 - Data Visualization (Activity Only)"
+author: "Rochelle-Jan Reyes"
+date: "2024-05-03"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# **Session 5 - Introduction to Data Visualization & ggplot2**
+
+## [***PPT Materials***]{.underline}
+
+Here is the link to the Session 5 PPT. Feel free to use it as a reference when going through this RMD file: <https://docs.google.com/presentation/d/1f6Rf-Z_BJFmi6_P08fBiLW6MoTTbNMOjV9DGOUH2LGM/edit?usp=sharing>
+
+## [***R Functions***]{.underline}
+
+Here is the link to the R Function Dictionary, with all of the functions you will need for this session under the Session 5 header: <https://docs.google.com/document/d/1z6agvbE-X70prlIdyFpU4-WkyI0IGI0WL5meEaQYz3o/edit?usp=sharing>
+
+## [***Activity***]{.underline}
+
+First, make sure that you have the ggplot2 package AND the data loaded in to your R Session
+
+```{r}
+# load in the packages ggplot2 (for plotting) and RColorBrewer (for colors)
+library(ggplot2)
+#alternate option: library(tidyverse)
+
+install.packages("RColorBrewer")
+library(RColorBrewer)
+
+# load in the data
+ncha <- read.csv(file = "NCHA2021_Session3_5_Subset.csv", header = TRUE, na.strings=c("","NA"))
+
+```
+
+Next, let's view the data. How do we view the data?
+
+```{r}
+
+```
+
+Now, let's check the class of each variable.
+
+```{r}
+
+```
+
+Great! Now let's start plotting.
+
+Age is a continuous variable. How can we plot age to see the ages of the participants in the survey in base R?
+
+```{r}
+
+```
+
+How about in ggplot?
+
+```{r}
+
+```
+
+Now, let's try to figure out whether there is a difference of minutes of moderate physical activity (continuous variable) among the different values of overall health (discrete variable) with a boxplot.
+
+```{r}
+
+```
+
+Next, let's look at the age (continuous variable) of survey respondents and their minutes of vigorous physical activity (continuous variable) with the scatterplot function.
+
+Note: in the plot type function, include the following: position = "jitter"
+
+```{r}
+
+```
+
+Amazing! Okay, now let's start customizing. Select a plot that you've made, copy and paste that code into the code block below, and start customizing to your heart's desire!
+
+Things you can do:
+
+-   Add a fill or color variable inside the aes() function
+
+-   Label your axes and titles (should do!)
+
+-   Scale the x- or y-axes
+
+-   Change the aesthetics with a theme preset or theme()
+
+Keep running the code every once in awhile to check if your code works!
+
+```{r}
+
+```
+
+Great job! You just learned how to plot data for visualization!!!

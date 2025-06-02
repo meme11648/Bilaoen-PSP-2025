@@ -1,0 +1,319 @@
+---
+title: "Session5_DataViz-ggplot2"
+author: "Rochelle-Jan Reyes"
+date: "2024-03-27"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Welcome to Session 5! Today, we will be going over data visualization in R and the package ggplot2.
+
+# **Session 5 - Introduction to Data Visualization & ggplot2**
+
+## [***PPT Materials***]{.underline}
+
+Here is the link to the Session 5 PPT. Feel free to use it as a reference when going through this RMD file: <https://docs.google.com/presentation/d/1f6Rf-Z_BJFmi6_P08fBiLW6MoTTbNMOjV9DGOUH2LGM/edit?usp=sharing>
+
+## [***R Functions***]{.underline}
+
+Here is the link to the R Function Dictionary, with all of the functions you will need for this session under the Session 5 header: <https://docs.google.com/document/d/1z6agvbE-X70prlIdyFpU4-WkyI0IGI0WL5meEaQYz3o/edit?usp=sharing>
+
+## [***Session 5 Content***]{.underline}
+
+### Set-Up
+
+Let's load in the data that we will use in this session
+
+```{r}
+ncha <- read.csv(file = "NCHA2021_Session3_5_Subset.csv", header = TRUE, na.strings=c("","NA"))
+```
+
+### A. Data Visualization (Data Viz) in R
+
+*Definition*: Representation of data through use of common graphics, such as plots, infographics, and animations
+
+*Purpose*: communicate complex data relationships and data-driven insights in a way that is easy to understand
+
+Data visualization can be done in R through base R functions or through many different packages, including the ggplot2 package in Tidyverse.
+
+### B. Data: Discrete v. Continuous
+
+**Discrete:** data type that is counted, with typically integer values
+
+**Continuous**: data type that is measured, which can typically go to infinity and/or be values in between whole numbers
+
+### C. Base R Plots
+
+Base R provides an easy way to make simple plots. No packages are needed to carry out data viz! You can create different types of plots via base R functions, including barplots, histograms, box plots, and scatterplots.
+
+#### General Plot Functions
+
+```{r}
+#Barplot Function
+barplot(table(data$var1))
+```
+
+```{r}
+#Histogram Function
+hist(data$var1)
+
+#Changing bin breaks
+hist(data$var1, breaks = 10)
+```
+
+```{r}
+#Boxplot Function
+boxplot(data$var1, data$var2)
+```
+
+```{r}
+#Scatterplot Function
+plot(data$var1, data$var2)
+```
+
+#### *Code*: Dissecting parts of the function
+
+```{r}
+plot(data$var1, data$var2, #2 variables you want to visualize
+     main = "Title", #Title of the plot
+     sub = "Subtitle", #Subtitle of the plot
+     xlab = "x-axis variable name", #Name of the x-axis
+     ylab = "y-axis variable name", #Name of the y-axis
+     xlim = c(0, 100), #Range to view for x-axis
+     ylim = c(0, 100)) #Range to view for y-axis
+
+```
+
+### D. ggplot2 Plots
+
+First, we need to load in the library
+
+```{r}
+library(ggplot2)
+#OR you can load in the tidyverse package that contains ggplot2
+#library(tidyverse)
+```
+
+#### What the code can look like
+
+Simple code
+
+```{r}
+ggplot(ncha) + 
+  geom_histogram(aes(x = AGE))
+```
+
+Complex code
+
+```{r}
+ggplot(ncha) + 
+  geom_histogram(aes(x = AGE, fill = OVRL_HEALTH), bins = 20, col="white") +
+  scale_x_continuous(n.breaks = 20) + 
+  scale_y_log10() +
+  scale_fill_brewer(palette = "Set2") + 
+  xlab("Age") +
+  ylab("Number of Students") +
+  ggtitle("The number of Students by Age and Overall Health") +
+  theme_light()
+
+```
+
+#### Plot Types
+
+There are many plot types. The type of plot you choose is dependent on the variables you'd like to explore (i.e., discrete or continuous?)
+
+```{r}
+#Bar Plot Function
+geom_col(aes(x = x))
+```
+
+```{r}
+# Histogram Function
+geom_histogram(aes(x = x))
+```
+
+```{r}
+# Boxplot Function
+geom_boxplot(aes(x = x, y = y))
+```
+
+```{r}
+# Scatterplot Function
+geom_point(aes(x = x, y = y))
+```
+
+#### Code: Dissecting parts of the function
+
+```{r}
+#calling in the ggplot function
+ggplot(ncha) +
+  #select the plot type
+  geom_boxplot(
+    #use aes to call in the variables
+    aes(x = OVRL_HEALTH, y = SUGAR_7D)) +
+  #Name the x-axis
+  xlab("Reported Overall Health") + 
+  #Name the y-axis
+  ylab("# of Sugar-Sweetened Beverages (last 7 days)") + 
+  #Name the plot
+  ggtitle("Sugar-Sweetened Beverages in the last 7 days and Reported Overall Health")
+
+```
+
+#### Fill Variable
+
+The fill() function can allow you to have an additional, discrete variable to categorize your data in the figure.
+
+```{r}
+ggplot(data) +
+  geom_col(aes(x = var1, fill = var2))
+```
+
+#### Scales
+
+Scales in ggplot allow you to make changes to your x- and y- axes.
+
+```{r}
+#this is the base part of the plot 
+p <- ggplot() + geom_point(aes())
+
+# x-axis scales
+p + scale_x_discrete(breaks = c(), labels = c())
+p + scale_x_continuous(breaks = c(), labels = c())
+p + scale_x_log10()
+
+# y-axis scales
+p + scale_y_discrete(breaks = c(), labels = c())
+p + scale_y_discrete(breaks = c(), labels = c())
+p + scale_y_log10()
+
+# fill scales
+p + scale_fill_brewer(labels = c(), palette = "nameofpalette")
+```
+
+#### Themes
+
+Change the aesthetic of your plot(s)
+
+```{r}
+#to fully customize your plot, use this function after your base ggplot code
++ theme()
+
+#what it would look like with the base ggplot code
+ggplot() + geom_point(aes()) + 
+  theme()
+```
+
+See all the things you can change in the theme function here: <https://www.rdocumentation.org/packages/ggplot2/versions/3.5.0/topics/theme> 
+
+##### Preset Themes
+
+```{r}
+#light grey background
+theme_grey()
+
+#outlined part of the plot
+theme_bw()
+
+# inner grid lines are black
+theme_linedraw()
+
+# white background and light grey lines
+theme_light()
+
+#dark grey background
+theme_dark()
+
+#white background, no outline
+theme_minimal()
+
+# no inner gridlines
+theme_classic()
+
+# no axes titles, ticks, or inner gridlines
+theme_void()
+
+```
+
+### E. Examples
+
+See PPT for examples
+
+### F. Activity
+
+First, make sure that you have the ggplot2 package AND the data loaded in to your R Session
+
+```{r}
+# load in the packages ggplot2 (for plotting) and RColorBrewer (for colors)
+library(ggplot2)
+#alternate option: library(tidyverse)
+
+install.packages("RColorBrewer")
+library(RColorBrewer)
+
+# load in the data
+ncha <- read.csv(file = "NCHA2021_Session3_5_Subset.csv", header = TRUE, na.strings=c("","NA"))
+```
+
+Next, let's view the data. How do we view the data?
+
+```{r}
+
+```
+
+Now, let's check the class of each variable.
+
+```{r}
+
+```
+
+Great! Now let's start plotting.
+
+Age is a continuous variable. How can we plot age to see the ages of the participants in the survey in base R?
+
+```{r}
+
+```
+
+How about in ggplot?
+
+```{r}
+
+```
+
+Now, let's try to figure out whether there is a difference of minutes of moderate physical activity (continuous variable) among the different values of overall health (discrete variable) with a boxplot.
+
+```{r}
+
+```
+
+Next, let's look at the age (continuous variable) of survey respondents and their minutes of vigorous physical activity (continuous variable) with the scatterplot function.
+
+Note: in the plot type function, include the following: position = "jitter"
+
+```{r}
+
+```
+
+Amazing! Okay, now let's start customizing. Select a plot that you've made, copy and paste that code into the code block below, and start customizing to your heart's desire!
+
+Things you can do:
+
+-   Add a fill or color variable inside the aes() function
+
+-   Label your axes and titles (should do!)
+
+-   Scale the x- or y-axes
+
+-   Change the aesthetics with a theme preset or theme()
+
+Keep running the code every once in awhile to check if your code works!
+
+```{r}
+
+```
+
+Great job! You just learned how to plot data for visualization!!!

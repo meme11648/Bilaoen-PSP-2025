@@ -1,0 +1,145 @@
+---
+title: "Session3_Packages-Scripts_ActivityONLY"
+author: "Rochelle-Jan Reyes"
+date: "2024-03-28"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Session 3 - R Sessions, Packages & Scripts, and R File Types (Importing & Exporting) --- ACTIVITIES ONLY
+
+## Functions Addressed
+
+Installing Packages
+
+```{r}
+install.packages("")
+
+```
+
+Reading in the package to the library
+
+```{r}
+library()
+```
+
+Importing in data sets / data files
+
+```{r}
+# EXCEL or TXT files
+df_txt <- read.table("TXTFile_Template.txt", header = TRUE)
+df_exc <- read.table("EXCELFile_Template.xlsx", header = FALSE)
+
+# CSV files
+df_csv <- read.csv("CSVFile_Template.csv", header = TRUE)
+```
+
+Accessing Infromation from the dataset
+
+```{r}
+# Viewing the data frame
+View() #note that it's a capital V
+
+# View the internal structure of the data frame
+str()
+
+# Find the number of different values in a variable
+table(df$variable)
+```
+
+Exporting data sets into files
+
+```{r}
+# TXT files
+write.table(mtcars, file = "mtcars.txt", sep = "\t",
+            row.names = TRUE, col.names = NA)
+
+# CSV files
+write.csv(mtcars, file = "mtcars.csv")
+```
+
+## *Activity 1:* Create an RStudio Project for the Workshop
+
+**Instructions:** 
+
+1.  Go to *File*
+
+2.  Select *New Project*
+
+3.  Select *New Directory*
+
+4.  Select *New Project*
+
+5.  Change name to \"r_onramp\"
+
+6.  Change working directory to desired computer location
+
+7.  Press button on \"Open in New Session\"
+
+8.  Create that new project!
+
+## *Activity 2*: Importing, Viewing, and Exporting
+
+Now it's your turn to import and export data, with a little bit of functions we learned from last session! [Remember to write your code in the pre-loaded coding blocks]{.underline}.
+
+#### Importing the Data
+
+First, let's import the data set. *The dataset is downloadable from Module 3's Workshop Materials on Canvas. Hint: the dataset is in a CSV file form and we need to **read** it into the Session environment.*
+
+```{r}
+#insert the code here
+
+```
+
+#### Working with the Data
+
+Great! Now you have the data in your environment! The next step of this activity is to view the data set.
+
+```{r}
+# view the data set
+
+```
+
+Questions:
+
+```{r}
+# you can use this space to answer the questions below
+```
+
+1.  How many variables are in the data set? *Hint: you can use either View() or str() to answer this question!*
+
+2.  What two types/classes of data are present in the data set? *Hint: use the function str() to answer the questions.*
+
+Next, we are going to look at the values in the variable OVRL_HEALTH. How do we view the number of different values in a variable?
+
+```{r}
+# Input code here
+
+```
+
+Questions:
+
+1.  How many different values does the variable OVRL_HEALTH have?
+
+#### Creating a data frame with the current data set
+
+We can create a data frame with data from the current data set by using the function, data.frame(). Select two or more variables from the current data set and create a new data frame.
+
+```{r}
+# Insert code below
+
+```
+
+#### Exporting the Data
+
+Great! Now, let's export that data frame you made as a .txt file. *Hint: use the write.table() function.*
+
+```{r}
+# Insert code below
+
+```
+
+# **Great job, you finished Session 3!**
