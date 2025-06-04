@@ -625,11 +625,11 @@ DescTools::Mode(a)
 
 mean(b)
 median(b)
-frequency(b)
+DescTools::Mode(b)
 
 mean(c)
 median(c)
-frequency(c)
+DescTools::Mode(c)
 ```
 
 
@@ -637,7 +637,7 @@ frequency(c)
 
 
 ```{r}
-activity_df <- df(a,b,c)
+activity_df <- data.frame(a,b,c)
 
 ```
 
