@@ -517,7 +517,7 @@ Let's calculate BMI using the height and weight data we created above. We will a
 # BMI equation for reference: BMI = Weight / (Height ^ 2)
 # ^ is used for exponents 
 
-health_df$BMI <- (health_df$weight) / (height^2)
+health_df$BMI <- (health_df$weight) / (health_df$height^2)
  
 # We can also View the data frame in another tab of the Source pane 
 View(health_df)
@@ -585,6 +585,7 @@ print() is a function which is used to print the values on to the output screen.
 Double check that you do not have stored objects in your current session with the following command. This will list all objects that you have in your current R session.
 
 ```{r}
+remove(health_df,height,height1,weight,weight1)
 ls()
 ```
 
@@ -592,24 +593,43 @@ ls()
 1) Create three vectors a, b, c with three integers each. 
 
 ```{r}
-
-
+a <- c(1,2,3)
+b <- c(1,2,3)
+c <- c(1,2,3)
 ```
 
 
 2) Check the data class and type for each vector. 
 
 ```{r}
-
+class(a)
+class(b)
+class(c)
 ```
 
 
 3) Calculate the mean, median, and mode of each vector. 
 
+#need to dl DescTools first to find mode 
+#mode is not found in base R
+```{r}
+#install.packages("DescTools")
+library("DescTools")
+```
+
 
 ```{r}
+mean(a)
+median(a)
+DescTools::Mode(a)
 
+mean(b)
+median(b)
+frequency(b)
 
+mean(c)
+median(c)
+frequency(c)
 ```
 
 
@@ -617,6 +637,7 @@ ls()
 
 
 ```{r}
+activity_df <- df(a,b,c)
 
 ```
 
@@ -625,7 +646,7 @@ ls()
 
 
 ```{r}
-
+print(activity_df)
 ```
 
 
