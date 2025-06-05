@@ -1,0 +1,277 @@
+---
+title: "Literate Programming & Introduction to R Markdown"
+author: "Eddie Kasner"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: html_document
+---
+
+```{r set.knitr.options, echo=FALSE, message=FALSE, warning=FALSE}
+#-----set knitr options-----
+
+# knitr options
+suppressMessages(library(knitr))
+opts_chunk$set(tidy = FALSE, echo = TRUE, message = FALSE)
+
+# Load pacman, installing if needed and other packages as needed
+if (!require("pacman")) { install.packages("pacman", repos = "http://cran.r-project.org") }
+
+# Load other packages, installing as needed.
+pacman::p_load(dplyr, ggplot2)
+
+# set working directory
+work_dir <- getwd()
+
+# name and create output directory
+output_dir <- file.path(work_dir, "output")
+dir.create(output_dir, showWarnings = TRUE, recursive = TRUE)
+
+```
+
+# Learning Objectives
+
+Today we will:
+
+* What literate programming is and why it's important 
+* How to use R Markdown for literate programming
+* Use a built-in dataset to practice Rmarkdown
+
+<!-- Note: The images for this document have been "commented out" to simplify the "knitting" features. If you would like to practice working with image files in R Markdown, the images for this document can be found here: https://github.com/deohs/r_onramp/tree/master/images. -->
+
+# Reproducibility 
+
+For the purpose of this discussion, let's define:
+
+* **_Replicate_**: to repeat a study (with new samples and data)
+* **_Reproduce_**: to regenerate the results of an analysis (with the same data)
+
+Our studies may be difficult to fully *replicate* ... but our analysis should always be *reproducible*.
+
+Or in other words:
+
+We should always be able to go from raw data to final results at any time ...
+*and always get the same results* from the same data and the same analysis*.
+
+`*` Even if you are doing modeling with randomly-generated values, you can set
+the *seed* to produce the same values each time you run the analysis. There are situations where you may encounter small rounding differences, however.
+
+# Literate Programming
+
+In the light of reproducibility, Literate Programming is:
+
+Interspersing explanatory text with code to make a report that is executable 
+and improves reproducibility. 
+
+It allows a recipient to re-render the report to review the code/analysis and 
+verify the results (including plots and figures).
+
+# Literate Programming Tools
+
+There are two main platforms for literate programming:
+
+* **_Python_** and other languages: Jupyter Notebook (a future topic!)
+* **_R_**: R Markdown with *knitr* (today's focus) and [R Notebooks](https://blog.rstudio.com/2016/10/05/r-notebooks)
+
+Both platforms can be used with other programming languages or a mix of them.
+
+# R Markdown
+
+> "R Markdown was designed for easier reproducibility, since both the computing code and narratives are in the same document, and results are automatically generated from the source code. R Markdown supports dozens of static and dynamic/interactive output formats."
+
+* See ["basics" of R Markdown page](https://bookdown.org/yihui/rmarkdown/basics.html)
+
+
+# R Markdown and *knitr*
+
+To use R Markdown and *knitr* for Literate Programming, all you need is a text
+editor, R, and a few packages such as *knitr*. These tools are well integrated into 
+RStudio.
+
+* R Markdown: The text notation you use for formatting, based on Markdown
+* *knitr*: A package by Yihui Xie used to render R Markdown documents
+* Check out [Yihui Xie's *R Markdown: The Definitive Guide* e-book](https://bookdown.org/yihui/rmarkdown/)
+
+# Installing R Markdown and *knitr*
+
+You need the R packages *htmltools*, *rmarkdown* and *knitr*.
+
+The first time to try to "knit" in RStudio, you will likely be prompted to 
+install these packages. If so, go ahead and install them as prompted.
+
+Otherwise, you can install them manually:
+
+```{r install.new.packages, eval=FALSE}
+#-----install new packages------
+
+install.packages(c("htmltools", "rmarkdown", "knitr"), dependencies = TRUE)
+```
+
+# R Markdown Syntax
+
+[R Markdown](https://rmarkdown.rstudio.com/) is a "wiki" syntax based on 
+[Markdown](https://daringfireball.net/projects/markdown/). Here is an 
+example:
+
+<!-- ![](images/rmarkdown_document.png) -->
+
+# R Markdown Cheat Sheet
+
+[R Markdown cheat sheet](https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf)
+
+<!-- ![](images/cheatsheet.png)  -->
+
+# *knitr*
+
+The R package which renders the R Markdown document is *knitr*. It uses other 
+packages and utilities as needed to produce different document formats.
+
+In RStudio, you would normally run *knitr* using the *Knit* button. 
+
+If your document has been configured in R Markdown to generate a PDF document,
+pressing the *Knit* button will create a `.pdf` file.
+
+If you click the little black arrow button next to the *Knit* button, you can
+select alternative output options.
+
+You can also use the *File* -> *Knit Document* or *File* -> *Compile Notebook*
+menu options.
+
+# Creating an `.Rmd` file
+
+Let's make our first `.Rmd` file. This is similar to making a script:
+
+      File -> New File -> R Markdown...
+
+<!-- ![](images/Rmd_save.png) -->
+
+Be sure to save it! The filename "example_markdown.Rmd" will work for now.
+
+# Features of the Markdown Document 
+
+* YAML Header
+* Text
+* Code chunks
+
+
+# Practice Rmarkdown with Example Dataset `airquality`
+Let's practice using Rmarkdown with one of R's many built-in datasets - an air quality dataset from New York in 1973. 
+
+```{r load.df}
+#-----load df------
+
+# Load the "airquality" dataset into the environment.
+airquality <- datasets::airquality
+```
+
+Show the structure of the dataset with `str()` or `head()`:
+
+```{r inspect.df}
+#-----inspect df------
+
+# Show the head of the dataframe
+head(airquality)
+
+# Show the structure of the dataset
+str(airquality)
+```
+
+
+## Wrangle *airquality*
+We've previously wrangled `airquality` wih `dplyr` - we'll repeat a few basic steps to practice with `Rmarkdown`. Using the pipe operator, `%>%`, will help us streamline operations so they are clear and succinct. The pipe operator feeds the output of one function into the input of the next, avoiding having to make multiple assignments.
+
+```{r make.may.airquality}
+#-----make may airquality-----
+
+# Wrangle airquality with pipe operators starting with original dataframe.
+airquality_may <- airquality %>% 
+  
+  # Add year and date variables using mutate.
+  mutate(Year = 1973,
+         Date_char = paste(Year, Month, Day, sep = "-"), 
+         Date = as.Date(Date_char, format = "%Y-%m-%d")) %>% 
+  
+  # Filter dataframe to the month of May.
+  filter(Month == 5) %>% 
+  
+  # Select the variables of interest.
+  select(Ozone, Temp, Date)
+
+# Show the dataframe.
+head(airquality_may)
+```
+
+
+What if we're interested in the average ozone and temperature by month? Would we have to repeat this process for each month? *dplyr* has easy and powerful functions to perform data wrangling tasks on groups: `group_by()` and `summarise()`
+
+```{r create.df.by.mnth}
+#-----create df by month-------
+
+# Average by month, using the argument `na.rm = TRUE` to ignore the NA values.
+# If you omit `na.rm = TRUE`, then any NAs will cause the mean to be NA. 
+airquality_by_month <- airquality %>% 
+  
+  # Group dataframe by month.
+  group_by(Month) %>% 
+  
+  # Calculate average ozone concentration and temperature.
+  summarise(Ozone_avg = mean(Ozone, na.rm = TRUE), 
+            Temp_avg = mean(Temp, na.rm = TRUE),
+            .groups = "keep")
+
+# Show dataframe
+airquality_by_month
+
+```
+
+The last argument of `summarise()`, `.groups` specifies how to leave the grouping when the 
+operation is finished. In this case, we "keep" the grouping as it is. (This is 
+an "experimental" feature as of *dplyr* 1.0.2.)
+
+
+## Make a plot using *ggplot2*
+
+Now let's make a simple plot so we have an example for our rendered document. 
+
+```{r make.plot}
+#-----make plot------
+
+# Create a ggplot object and save it as "p".
+p <- ggplot(data = airquality_may) + 
+  
+  # Specify the type of geometry and the aesthetic features.
+  geom_line(aes(x = Date, y = Ozone)) + 
+  
+  # Specify the labels.
+  labs(y = "Ozone Conc. (ppb)") + 
+  
+  # Choose the theme.
+  theme_classic()
+
+# show plot
+p
+```
+
+
+```{r save.plot, include=FALSE}
+#-----save plot-----
+
+# save figures as ".png", ".jpg", or ".pdf" (and more) using ggsave
+# units can be specified as "in", "cm"
+ggsave(filename = file.path(output_dir, "airquality_may.png"), plot = p, 
+         width = 8, height = 6, units = "in", dpi = "print")
+```
+
+
+## Session Information
+It's a good idea to include the session information in your report.
+
+```{r session.info, echo=FALSE}
+#-----session info-----
+
+sessionInfo()
+```
+
+
+## Render Markdown Document
+
+Next, let's render the document using the "Knit" button!
+
