@@ -1,0 +1,11 @@
+---
+title: "example_markdown"
+author: mahal bilaoen 
+date: 06/05/2025
+output: html_document
+---
+
+```{r}
+airquality <-datasets::airquality
+```
+
