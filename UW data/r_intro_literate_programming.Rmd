@@ -2,7 +2,10 @@
 title: "Literate Programming & Introduction to R Markdown"
 author: "Eddie Kasner"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
-output: html_document
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r set.knitr.options, echo=FALSE, message=FALSE, warning=FALSE}
@@ -177,6 +180,10 @@ str(airquality)
 
 ## Wrangle *airquality*
 We've previously wrangled `airquality` wih `dplyr` - we'll repeat a few basic steps to practice with `Rmarkdown`. Using the pipe operator, `%>%`, will help us streamline operations so they are clear and succinct. The pipe operator feeds the output of one function into the input of the next, avoiding having to make multiple assignments.
+```{r}
+library(dplyr)
+```
+
 
 ```{r make.may.airquality}
 #-----make may airquality-----
@@ -228,6 +235,10 @@ an "experimental" feature as of *dplyr* 1.0.2.)
 
 
 ## Make a plot using *ggplot2*
+
+```{r}
+library(ggplot2)
+```
 
 Now let's make a simple plot so we have an example for our rendered document. 
 

@@ -13,16 +13,16 @@ setwd("/Users/username/path/to/file")
 #Read in your data and save it as an object
 beach <- read.csv("beach_data.csv") #check environment to see if it loaded
 
+
 #---------Part 2--------------#
 #OK. Now that we've got our data loaded in, let's start answering questions!
 
 #QUESTION 1: What is the standard deviation of the weight?
-ANSWER GOES HERE
+15.21705 
 
 
 #QUESTION 2: plot the weight using the barplot() function
-ANSWER GOES HERE
-
+http://127.0.0.1:36025/chunk_output/E3FBE22F9eae939f/EF2BE090/ccrr66i80qbno/000014.png
 
 #Great, you just generated your first plot! Now let's customize
 #Remember in the R Basics videos the function w/ setting format? I never covered
@@ -38,6 +38,7 @@ fx(argument, setting1, setting2, setting3, etc)
 barplot(argument, names = )
 #What should come after the equal sign if we want the names to be the sample
 #names from our beach data?
+Beach$animal
 
 #QUESTION 3: Plot the barplot with Sample names
 #Hint: Click on the "zoom" button above the plot to see all the names
@@ -48,7 +49,7 @@ ANSWER GOES HERE
 #because...design. Add the col setting with the desired color enclosed in quotes
 barplot(argument, names = , )
 #What should come after the commma to change the color of the bars?
-
+col="pink"
 #QUESTION 5: Plot the barplot with a different color
 ANSWER GOES HERE
 
@@ -92,7 +93,7 @@ aov(arg1 ~ arg2)
 #The critical value is under Pr(>F)!
 
 #QUESTION 6: Is there a difference in weight between the animals?
-ANSWER GOES HERE
+Yes 
 
 #Congrats! You just ran a two-way ANOVA test! These are the results papers are
 #written off of!
