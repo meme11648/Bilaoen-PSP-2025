@@ -1,0 +1,23 @@
+---
+title: "Cheat Sheet"
+author: "Mahal Bilaoen"
+date: "2025-06-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#directory = folder 
+getwd <- 
+
+#setting the working directory 
+setwd("~/Desktop/[insert folder/file path in here]")
+
+#reading data 
+dataset.name <- read.csv() [insert the dataset file]
+
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
