@@ -3,9 +3,9 @@ title: "Literate Programming & Introduction to R Markdown"
 author: "Eddie Kasner"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
-  word_document: default
-  html_document: default
   pdf_document: default
+  html_document: default
+  word_document: default
 ---
 
 ```{r set.knitr.options, echo=FALSE, message=FALSE, warning=FALSE}

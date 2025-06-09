@@ -189,7 +189,8 @@ library(readxl)
 2.  Now, we can import in the Excel file with our data!
 
 ```{r}
-ncha_demo <- read_xlsx("NCHA2021_RWS_Subset.xlsx", col_names = TRUE)
+
+ncha_demo <- read_xlsx("~/PINC 2025/Bilaoen-PSP-2025/Onramp/Data/NCHA2021_RWS_Subset.xlsx", col_names = TRUE)
 ```
 
 3.  Time to check if the data loaded in correctly.
@@ -207,7 +208,7 @@ str(ncha_demo)
 5.  Great! Now, let's find out the number of different values of a variable.
 
 ```{r}
-table()
+table(ncha_demo$`Overall Health`)
 ```
 
 6.  What values are we interested in? Pick 3!
@@ -215,13 +216,17 @@ table()
 7.  Alright, now let's create a NEW data frame with the data from just those 3 variables.
 
 ```{r}
-ncha_new <- data.frame()
+ncha_new <- data.frame(
+  "Overall_Health"  = ncha_demo$`Overall Health`,
+  "Working_for_pay" = ncha_demo$`Leisure time activities - Working for pay`,
+  "Unpaid_household_responsibilities" = ncha_demo$`Leisure time activities - Performing unpaid household responsibilities`
+)
 ```
 
 8.  Lastly, let's export that new data frame into a CSV file!
 
 ```{r}
-write.csv()
+write.csv(ncha_new)
 ```
 
 ### F. *Activity 2:* Importing, Viewing, and Exporting
@@ -234,7 +239,7 @@ First, let's import the data set. *The dataset is downloadable from Module 3's W
 
 ```{r}
 #insert the code here
-
+ncha_session3 <- read_csv("~/PINC 2025/Bilaoen-PSP-2025/Onramp/Data/NCHA2021_Session3_5_Subset.csv", col_names = TRUE)
 ```
 
 #### Working with the Data
@@ -243,29 +248,34 @@ Great! Now you have the data in your environment! The next step of this activity
 
 ```{r}
 # view the data set
-
+View(ncha_session3)
 ```
 
 Questions:
 
 ```{r}
 # you can use this space to answer the questions below
+str(ncha_session3)
 ```
 
 1.  How many variables are in the data set? *Hint: you can use either View() or str() to answer this question!*
+13 variables
 
 2.  What two types/classes of data are present in the data set? *Hint: use the function str() to answer the questions.*
+Numbers and Characters 
 
 Next, we are going to look at the values in the variable OVRL_HEALTH. How do we view the number of different values in a variable?
 
 ```{r}
 # Input code here
-
+table(ncha_session3$OVRL_HEALTH)
 ```
 
 Questions:
 
 1.  How many different values does the variable OVRL_HEALTH have?
+
+5
 
 #### Creating a data frame with the current data set
 
@@ -273,7 +283,10 @@ We can create a data frame with data from the current data set by using the func
 
 ```{r}
 # Insert code below
-
+weight_overallhealth <- data.frame(
+  "Weight" = ncha_session3$SELFDESC_WEIGHT,
+  "Overall Health" = ncha_session3$OVRL_HEALTH
+)
 ```
 
 #### Exporting the Data
@@ -282,7 +295,7 @@ Great! Now, let's export that data frame you made as a .txt file. *Hint: use the
 
 ```{r}
 # Insert code below
-
+write.table(weight_overallhealth,file="Weight_OverallHealth", quote = FALSE, row.names = TRUE, col.names = TRUE,sep = "\t" )
 ```
 
 Great job! You're done with Session 3!
