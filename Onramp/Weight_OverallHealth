@@ -1,0 +1,2359 @@
+Weight	Overall.Health
+1	About the right weight	Excellent
+2	Very underweight	Good
+3	About the right weight	Good
+4	Slightly overweight	Good
+5	About the right weight	Good
+6	About the right weight	Very Good
+7	About the right weight	Very Good
+8	About the right weight	Fair
+9	Slightly overweight	Good
+10	About the right weight	Good
+11	Very overweight	Good
+12	Slightly overweight	Good
+13	Very overweight	Fair
+14	Slightly overweight	Fair
+15	About the right weight	Excellent
+16	Slightly overweight	Fair
+17	Slightly overweight	Fair
+18	About the right weight	Very Good
+19	About the right weight	Excellent
+20	Very overweight	Poor
+21	Slightly overweight	Good
+22	About the right weight	Good
+23	Very overweight	Good
+24	Slightly overweight	Very Good
+25	About the right weight	Excellent
+26	Slightly overweight	Very Good
+27	Slightly overweight	Very Good
+28	Slightly overweight	Good
+29	About the right weight	Very Good
+30	Slightly overweight	Good
+31	Slightly overweight	Very Good
+32	About the right weight	Good
+33	About the right weight	Very Good
+34	Slightly overweight	Very Good
+35	About the right weight	Good
+36	Very overweight	Poor
+37	Very overweight	Very Good
+38	About the right weight	Very Good
+39	Slightly underweight	Very Good
+40	Very underweight	Excellent
+41	About the right weight	Very Good
+42	Slightly overweight	Good
+43	About the right weight	Very Good
+44	Slightly overweight	Good
+45	Very overweight	Poor
+46	About the right weight	Good
+47	Slightly underweight	Fair
+48	About the right weight	Excellent
+49	About the right weight	Good
+50	Slightly overweight	Good
+51	About the right weight	Very Good
+52	Slightly overweight	Very Good
+53	Slightly overweight	Good
+54	About the right weight	Good
+55	Slightly overweight	Fair
+56	About the right weight	Good
+57	Very underweight	Fair
+58	Slightly overweight	Very Good
+59	Very overweight	Good
+60	About the right weight	Poor
+61	Slightly overweight	Excellent
+62	About the right weight	Good
+63	Slightly overweight	Good
+64	Slightly overweight	Very Good
+65	About the right weight	Good
+66	Slightly overweight	Good
+67	Very overweight	Excellent
+68	Slightly underweight	Good
+69	About the right weight	Good
+70	Slightly overweight	Very Good
+71	Slightly overweight	Good
+72	Slightly overweight	Very Good
+73	About the right weight	Excellent
+74	About the right weight	Very Good
+75	About the right weight	Excellent
+76	About the right weight	Good
+77	Very overweight	Good
+78	Slightly overweight	Fair
+79	Slightly overweight	Good
+80	Slightly overweight	Good
+81	About the right weight	Good
+82	About the right weight	Good
+83	About the right weight	Very Good
+84	About the right weight	Very Good
+85	Slightly overweight	Very Good
+86	About the right weight	Very Good
+87	About the right weight	Very Good
+88	Very overweight	Good
+89	Slightly overweight	Good
+90	About the right weight	Good
+91	Slightly overweight	Fair
+92	About the right weight	Very Good
+93	Slightly overweight	Good
+94	Slightly underweight	Good
+95	Slightly overweight	Very Good
+96	About the right weight	Fair
+97	Slightly overweight	Very Good
+98	Slightly underweight	Good
+99	Slightly underweight	Fair
+100	About the right weight	Good
+101	About the right weight	Fair
+102	Slightly overweight	Very Good
+103	About the right weight	Good
+104	Slightly overweight	Good
+105	About the right weight	Very Good
+106	About the right weight	Very Good
+107	Slightly overweight	Fair
+108	About the right weight	Excellent
+109	About the right weight	Good
+110	Slightly overweight	Good
+111	Slightly overweight	Good
+112	Slightly overweight	Fair
+113	Slightly overweight	Very Good
+114	Slightly overweight	Very Good
+115	Slightly overweight	Good
+116	Slightly overweight	Very Good
+117	About the right weight	Very Good
+118	Slightly underweight	Good
+119	About the right weight	Very Good
+120	Very underweight	Very Good
+121	About the right weight	Very Good
+122	About the right weight	Excellent
+123	About the right weight	Fair
+124	Slightly overweight	Fair
+125	Very overweight	Fair
+126	About the right weight	Excellent
+127	About the right weight	Excellent
+128	About the right weight	Very Good
+129	About the right weight	Very Good
+130	Slightly overweight	Good
+131	About the right weight	Fair
+132	About the right weight	Good
+133	About the right weight	Good
+134	Slightly overweight	Fair
+135	Slightly overweight	Good
+136	About the right weight	Poor
+137	Slightly overweight	Fair
+138	About the right weight	Very Good
+139	NA	Fair
+140	Slightly overweight	Good
+141	Slightly overweight	Very Good
+142	Slightly overweight	Good
+143	Slightly overweight	Very Good
+144	Slightly overweight	Fair
+145	Slightly underweight	Excellent
+146	Slightly overweight	Very Good
+147	About the right weight	Good
+148	Slightly overweight	Very Good
+149	Slightly overweight	Very Good
+150	Slightly overweight	Good
+151	About the right weight	Good
+152	About the right weight	Very Good
+153	Slightly overweight	Good
+154	Slightly overweight	Good
+155	About the right weight	Good
+156	Slightly overweight	Fair
+157	About the right weight	Excellent
+158	Slightly overweight	Good
+159	Slightly overweight	Very Good
+160	Slightly overweight	Good
+161	Slightly underweight	Poor
+162	Very overweight	Good
+163	About the right weight	Good
+164	About the right weight	Very Good
+165	About the right weight	Fair
+166	Slightly overweight	Good
+167	About the right weight	Very Good
+168	About the right weight	Good
+169	Slightly overweight	Good
+170	About the right weight	Very Good
+171	About the right weight	Very Good
+172	About the right weight	Excellent
+173	Slightly overweight	Good
+174	About the right weight	Good
+175	Slightly overweight	Poor
+176	Slightly overweight	Good
+177	About the right weight	Good
+178	About the right weight	Very Good
+179	Slightly overweight	Fair
+180	Slightly overweight	Good
+181	About the right weight	Poor
+182	About the right weight	Very Good
+183	About the right weight	Very Good
+184	About the right weight	Good
+185	About the right weight	Very Good
+186	Slightly overweight	Good
+187	Slightly underweight	Good
+188	Slightly overweight	NA
+189	Slightly underweight	Fair
+190	Slightly overweight	Very Good
+191	About the right weight	Good
+192	About the right weight	Very Good
+193	About the right weight	Very Good
+194	Slightly overweight	Very Good
+195	Very overweight	Fair
+196	About the right weight	Good
+197	About the right weight	Very Good
+198	Slightly overweight	Very Good
+199	About the right weight	Very Good
+200	About the right weight	Very Good
+201	Slightly underweight	Good
+202	Slightly overweight	Good
+203	About the right weight	Good
+204	About the right weight	Very Good
+205	About the right weight	Excellent
+206	Slightly overweight	Fair
+207	About the right weight	Very Good
+208	Slightly overweight	Fair
+209	Slightly overweight	Fair
+210	About the right weight	Very Good
+211	About the right weight	Fair
+212	About the right weight	Fair
+213	Very underweight	Excellent
+214	About the right weight	Very Good
+215	About the right weight	Good
+216	About the right weight	Very Good
+217	Slightly overweight	Good
+218	Slightly overweight	Good
+219	Slightly overweight	Good
+220	About the right weight	Very Good
+221	Slightly overweight	Good
+222	About the right weight	Very Good
+223	Slightly underweight	Very Good
+224	About the right weight	Good
+225	Slightly overweight	Very Good
+226	Slightly underweight	Very Good
+227	Slightly overweight	Good
+228	About the right weight	Good
+229	Very overweight	Fair
+230	Very overweight	Very Good
+231	Slightly overweight	Good
+232	Slightly overweight	Good
+233	About the right weight	Very Good
+234	Slightly overweight	Poor
+235	About the right weight	Very Good
+236	Slightly overweight	Good
+237	About the right weight	Good
+238	About the right weight	Very Good
+239	Very overweight	Excellent
+240	NA	Good
+241	Slightly overweight	Fair
+242	About the right weight	Very Good
+243	About the right weight	Very Good
+244	Slightly overweight	Good
+245	Slightly underweight	Good
+246	Very underweight	Fair
+247	Slightly overweight	Very Good
+248	About the right weight	Poor
+249	About the right weight	Very Good
+250	About the right weight	Very Good
+251	Slightly overweight	Good
+252	Slightly overweight	Good
+253	About the right weight	Fair
+254	About the right weight	Good
+255	About the right weight	Good
+256	About the right weight	Excellent
+257	About the right weight	Good
+258	About the right weight	Poor
+259	Slightly overweight	NA
+260	Very overweight	Good
+261	Slightly overweight	Good
+262	Slightly overweight	Good
+263	Slightly overweight	Fair
+264	About the right weight	Very Good
+265	Slightly underweight	Fair
+266	Slightly overweight	Fair
+267	About the right weight	Very Good
+268	Very overweight	Good
+269	Slightly underweight	Very Good
+270	Slightly overweight	Good
+271	Very underweight	Fair
+272	About the right weight	Very Good
+273	About the right weight	Good
+274	About the right weight	Good
+275	Slightly overweight	Excellent
+276	Slightly overweight	Good
+277	Slightly overweight	Good
+278	About the right weight	Excellent
+279	About the right weight	Fair
+280	Slightly underweight	Very Good
+281	Slightly overweight	Very Good
+282	About the right weight	Very Good
+283	Very overweight	Fair
+284	About the right weight	Good
+285	Slightly overweight	Very Good
+286	About the right weight	Good
+287	About the right weight	Good
+288	Slightly overweight	Good
+289	About the right weight	Very Good
+290	About the right weight	Excellent
+291	Slightly underweight	Fair
+292	About the right weight	Very Good
+293	About the right weight	Good
+294	Slightly overweight	Good
+295	Slightly overweight	Poor
+296	Slightly overweight	Good
+297	About the right weight	Fair
+298	Slightly underweight	Excellent
+299	About the right weight	Very Good
+300	About the right weight	Excellent
+301	Very overweight	Very Good
+302	About the right weight	Very Good
+303	About the right weight	Excellent
+304	Slightly overweight	Good
+305	About the right weight	Fair
+306	About the right weight	Very Good
+307	Slightly overweight	Good
+308	About the right weight	Good
+309	About the right weight	Very Good
+310	Slightly underweight	Excellent
+311	Slightly overweight	Good
+312	Slightly overweight	Good
+313	Very overweight	Good
+314	About the right weight	Good
+315	Slightly underweight	Very Good
+316	About the right weight	Good
+317	Slightly overweight	Good
+318	Slightly overweight	Good
+319	Slightly overweight	Good
+320	About the right weight	Fair
+321	Slightly overweight	Good
+322	Slightly underweight	NA
+323	Slightly overweight	Very Good
+324	Slightly overweight	Fair
+325	About the right weight	Very Good
+326	Slightly overweight	Fair
+327	About the right weight	Very Good
+328	About the right weight	Fair
+329	Very overweight	Very Good
+330	Slightly overweight	Good
+331	About the right weight	Very Good
+332	Slightly overweight	Good
+333	About the right weight	Very Good
+334	About the right weight	Very Good
+335	About the right weight	Very Good
+336	About the right weight	Good
+337	Slightly overweight	Good
+338	About the right weight	Good
+339	About the right weight	Very Good
+340	Slightly underweight	Very Good
+341	Slightly overweight	Fair
+342	About the right weight	Very Good
+343	Slightly overweight	Good
+344	About the right weight	Excellent
+345	About the right weight	Very Good
+346	About the right weight	Good
+347	Slightly underweight	Good
+348	Slightly overweight	Very Good
+349	Slightly overweight	Excellent
+350	About the right weight	Fair
+351	About the right weight	Very Good
+352	Slightly overweight	Poor
+353	Very overweight	Good
+354	About the right weight	Good
+355	Slightly underweight	Good
+356	Slightly underweight	Excellent
+357	About the right weight	Excellent
+358	About the right weight	Fair
+359	Slightly underweight	Good
+360	Slightly overweight	NA
+361	About the right weight	Excellent
+362	Slightly overweight	Excellent
+363	About the right weight	Excellent
+364	Slightly underweight	Very Good
+365	About the right weight	Good
+366	About the right weight	Very Good
+367	Slightly overweight	Very Good
+368	Slightly overweight	Very Good
+369	About the right weight	Excellent
+370	About the right weight	Good
+371	About the right weight	Very Good
+372	About the right weight	Very Good
+373	Slightly overweight	Good
+374	Slightly overweight	Very Good
+375	About the right weight	Very Good
+376	About the right weight	Very Good
+377	About the right weight	Excellent
+378	About the right weight	Poor
+379	About the right weight	NA
+380	About the right weight	Excellent
+381	About the right weight	Excellent
+382	Very overweight	Good
+383	Slightly overweight	Good
+384	About the right weight	Good
+385	Very overweight	Good
+386	About the right weight	Good
+387	Very overweight	Very Good
+388	Slightly underweight	Good
+389	About the right weight	Very Good
+390	About the right weight	Fair
+391	Slightly overweight	Fair
+392	About the right weight	Very Good
+393	About the right weight	Very Good
+394	Slightly overweight	Good
+395	About the right weight	Very Good
+396	About the right weight	Very Good
+397	About the right weight	Good
+398	Slightly overweight	Good
+399	About the right weight	Fair
+400	About the right weight	Good
+401	Slightly underweight	Very Good
+402	About the right weight	Very Good
+403	About the right weight	Very Good
+404	Slightly overweight	Good
+405	Slightly underweight	Good
+406	About the right weight	Good
+407	About the right weight	Good
+408	About the right weight	Fair
+409	About the right weight	Good
+410	About the right weight	Fair
+411	Very underweight	Fair
+412	About the right weight	Very Good
+413	Slightly overweight	Very Good
+414	Slightly overweight	Very Good
+415	Slightly underweight	Very Good
+416	Slightly underweight	Very Good
+417	Slightly overweight	Good
+418	About the right weight	Very Good
+419	About the right weight	Good
+420	Slightly overweight	Very Good
+421	About the right weight	Good
+422	About the right weight	Very Good
+423	About the right weight	Good
+424	Slightly overweight	Fair
+425	Slightly underweight	Excellent
+426	Very overweight	NA
+427	Slightly overweight	Good
+428	Slightly overweight	Very Good
+429	Slightly overweight	Very Good
+430	About the right weight	Excellent
+431	Very overweight	Good
+432	Slightly underweight	Good
+433	About the right weight	Very Good
+434	Slightly overweight	Good
+435	About the right weight	Very Good
+436	Slightly underweight	Fair
+437	About the right weight	Fair
+438	Very overweight	Good
+439	About the right weight	Fair
+440	Very overweight	Very Good
+441	About the right weight	Very Good
+442	About the right weight	Very Good
+443	About the right weight	Very Good
+444	Slightly overweight	Good
+445	Slightly overweight	Fair
+446	Slightly overweight	Very Good
+447	About the right weight	Very Good
+448	About the right weight	Good
+449	About the right weight	Fair
+450	Slightly overweight	Very Good
+451	About the right weight	Fair
+452	About the right weight	Excellent
+453	Very overweight	Good
+454	About the right weight	Good
+455	Slightly underweight	Good
+456	About the right weight	Good
+457	Slightly overweight	Excellent
+458	Slightly overweight	Very Good
+459	Slightly overweight	Very Good
+460	About the right weight	Good
+461	Very underweight	Very Good
+462	About the right weight	Good
+463	About the right weight	Good
+464	Slightly underweight	Good
+465	Slightly overweight	Very Good
+466	Slightly underweight	Good
+467	Slightly overweight	Good
+468	Very overweight	Good
+469	About the right weight	Good
+470	About the right weight	Good
+471	Slightly underweight	Very Good
+472	About the right weight	Very Good
+473	Slightly underweight	Good
+474	About the right weight	Very Good
+475	About the right weight	Good
+476	About the right weight	Very Good
+477	Slightly overweight	Fair
+478	Slightly underweight	Fair
+479	About the right weight	Good
+480	About the right weight	Very Good
+481	Slightly underweight	Good
+482	Slightly overweight	Good
+483	About the right weight	Good
+484	Slightly overweight	Fair
+485	Very overweight	Good
+486	About the right weight	Very Good
+487	Slightly overweight	NA
+488	Very overweight	NA
+489	Slightly underweight	Good
+490	About the right weight	Very Good
+491	Slightly overweight	Very Good
+492	About the right weight	Good
+493	About the right weight	Very Good
+494	About the right weight	Very Good
+495	About the right weight	Very Good
+496	About the right weight	Excellent
+497	Slightly overweight	Fair
+498	Slightly overweight	NA
+499	Very overweight	Good
+500	Slightly overweight	Fair
+501	Slightly overweight	Very Good
+502	About the right weight	Fair
+503	About the right weight	Very Good
+504	About the right weight	Very Good
+505	About the right weight	Good
+506	About the right weight	Very Good
+507	About the right weight	Very Good
+508	Very overweight	Fair
+509	Slightly overweight	Fair
+510	About the right weight	Good
+511	Slightly overweight	Poor
+512	About the right weight	Good
+513	Slightly overweight	Very Good
+514	About the right weight	Very Good
+515	About the right weight	Good
+516	About the right weight	Good
+517	Very overweight	Good
+518	About the right weight	Very Good
+519	Slightly overweight	Very Good
+520	About the right weight	Very Good
+521	Slightly overweight	Good
+522	Slightly underweight	Good
+523	Slightly overweight	Good
+524	Slightly overweight	Very Good
+525	About the right weight	Good
+526	Slightly overweight	Fair
+527	Slightly underweight	Very Good
+528	Slightly overweight	Fair
+529	About the right weight	Very Good
+530	Slightly overweight	Good
+531	About the right weight	Good
+532	Very overweight	Fair
+533	About the right weight	Good
+534	Very underweight	Good
+535	About the right weight	Very Good
+536	About the right weight	Very Good
+537	About the right weight	Good
+538	Slightly overweight	Good
+539	Slightly overweight	Good
+540	About the right weight	Very Good
+541	Slightly overweight	Good
+542	Very overweight	Very Good
+543	About the right weight	Very Good
+544	Very overweight	Good
+545	Slightly overweight	Fair
+546	About the right weight	Fair
+547	About the right weight	Good
+548	Slightly overweight	Fair
+549	Slightly overweight	Very Good
+550	Slightly overweight	Very Good
+551	About the right weight	Very Good
+552	About the right weight	Excellent
+553	About the right weight	Fair
+554	Slightly overweight	Good
+555	Slightly overweight	Good
+556	Very overweight	NA
+557	Very overweight	Fair
+558	About the right weight	Very Good
+559	Slightly overweight	Fair
+560	About the right weight	Good
+561	Slightly overweight	Very Good
+562	About the right weight	Good
+563	Slightly overweight	Good
+564	About the right weight	Fair
+565	About the right weight	Very Good
+566	About the right weight	Good
+567	About the right weight	Very Good
+568	Slightly overweight	Very Good
+569	Very underweight	Poor
+570	About the right weight	Good
+571	About the right weight	Good
+572	About the right weight	Good
+573	Slightly overweight	Good
+574	About the right weight	Good
+575	Slightly overweight	Very Good
+576	Slightly underweight	Poor
+577	Very overweight	Fair
+578	About the right weight	Fair
+579	About the right weight	Very Good
+580	About the right weight	Excellent
+581	About the right weight	Very Good
+582	About the right weight	Fair
+583	About the right weight	Good
+584	Slightly underweight	Very Good
+585	About the right weight	Good
+586	About the right weight	Very Good
+587	About the right weight	Good
+588	Slightly overweight	Good
+589	Slightly underweight	Good
+590	Slightly overweight	Fair
+591	Slightly underweight	Very Good
+592	About the right weight	Poor
+593	About the right weight	Very Good
+594	Slightly underweight	Very Good
+595	Slightly overweight	Very Good
+596	Slightly overweight	Good
+597	About the right weight	Excellent
+598	About the right weight	Good
+599	Slightly overweight	Good
+600	Very overweight	Very Good
+601	Slightly overweight	Good
+602	Slightly overweight	Good
+603	Slightly overweight	Good
+604	About the right weight	Fair
+605	Slightly underweight	Good
+606	Slightly overweight	Fair
+607	About the right weight	Good
+608	About the right weight	Good
+609	About the right weight	Very Good
+610	Very overweight	Very Good
+611	Slightly overweight	Good
+612	About the right weight	Good
+613	Slightly overweight	Good
+614	About the right weight	Very Good
+615	Slightly overweight	Good
+616	About the right weight	Excellent
+617	About the right weight	Good
+618	Slightly underweight	Very Good
+619	Slightly overweight	Very Good
+620	Very overweight	Fair
+621	Slightly overweight	Good
+622	Slightly overweight	Good
+623	About the right weight	Very Good
+624	About the right weight	Good
+625	Slightly underweight	Very Good
+626	Very overweight	Good
+627	Slightly underweight	Good
+628	Slightly overweight	Excellent
+629	Slightly overweight	Fair
+630	About the right weight	Very Good
+631	Very overweight	Good
+632	About the right weight	Very Good
+633	About the right weight	Very Good
+634	About the right weight	Good
+635	Slightly overweight	Very Good
+636	About the right weight	Good
+637	About the right weight	Poor
+638	About the right weight	Good
+639	About the right weight	Good
+640	About the right weight	Very Good
+641	About the right weight	Excellent
+642	Slightly overweight	Good
+643	Slightly overweight	Good
+644	About the right weight	Very Good
+645	About the right weight	Very Good
+646	Slightly overweight	Good
+647	About the right weight	Good
+648	Slightly overweight	Good
+649	Slightly underweight	Good
+650	Slightly overweight	Good
+651	About the right weight	Excellent
+652	About the right weight	Very Good
+653	About the right weight	Very Good
+654	Slightly overweight	Very Good
+655	Slightly overweight	Very Good
+656	Slightly underweight	Good
+657	About the right weight	Very Good
+658	About the right weight	Excellent
+659	Very underweight	Good
+660	Slightly underweight	Fair
+661	Slightly overweight	Good
+662	Slightly underweight	Very Good
+663	About the right weight	Very Good
+664	Very overweight	Good
+665	Slightly overweight	Fair
+666	About the right weight	Very Good
+667	About the right weight	NA
+668	Slightly overweight	Fair
+669	Slightly overweight	Good
+670	About the right weight	Fair
+671	About the right weight	Excellent
+672	About the right weight	Very Good
+673	Slightly overweight	Fair
+674	About the right weight	Good
+675	Slightly overweight	Good
+676	Slightly overweight	Very Good
+677	About the right weight	Very Good
+678	About the right weight	Very Good
+679	About the right weight	Very Good
+680	Slightly overweight	Good
+681	About the right weight	Very Good
+682	Slightly overweight	Good
+683	Slightly overweight	Good
+684	About the right weight	Very Good
+685	About the right weight	Fair
+686	About the right weight	Good
+687	About the right weight	Very Good
+688	Slightly overweight	Good
+689	Slightly underweight	Fair
+690	About the right weight	Good
+691	Very overweight	Excellent
+692	Slightly overweight	NA
+693	Slightly overweight	Very Good
+694	Slightly overweight	Fair
+695	Slightly overweight	NA
+696	Slightly overweight	Good
+697	Very overweight	Very Good
+698	About the right weight	Excellent
+699	Slightly underweight	Very Good
+700	Slightly overweight	Very Good
+701	Slightly overweight	Very Good
+702	About the right weight	Very Good
+703	Slightly overweight	Very Good
+704	Slightly overweight	Good
+705	About the right weight	Fair
+706	About the right weight	Very Good
+707	About the right weight	Good
+708	About the right weight	Good
+709	Slightly overweight	Good
+710	About the right weight	Good
+711	About the right weight	Fair
+712	Slightly overweight	Very Good
+713	About the right weight	Very Good
+714	About the right weight	Good
+715	About the right weight	Fair
+716	About the right weight	Very Good
+717	Slightly underweight	Very Good
+718	About the right weight	Good
+719	Slightly overweight	Very Good
+720	About the right weight	Excellent
+721	Slightly overweight	Good
+722	About the right weight	Fair
+723	About the right weight	NA
+724	About the right weight	Good
+725	Slightly overweight	Very Good
+726	Slightly underweight	Very Good
+727	Slightly underweight	Excellent
+728	Slightly overweight	Fair
+729	About the right weight	Good
+730	Slightly underweight	Very Good
+731	Slightly overweight	Very Good
+732	About the right weight	Good
+733	About the right weight	Very Good
+734	About the right weight	Good
+735	About the right weight	Good
+736	Very overweight	Good
+737	About the right weight	Good
+738	Slightly overweight	Very Good
+739	Slightly underweight	Good
+740	About the right weight	Fair
+741	About the right weight	Good
+742	Slightly overweight	Good
+743	Slightly overweight	Good
+744	About the right weight	Good
+745	About the right weight	Poor
+746	About the right weight	Good
+747	About the right weight	Very Good
+748	Slightly overweight	Good
+749	Slightly overweight	Very Good
+750	Slightly overweight	Excellent
+751	Slightly underweight	Fair
+752	Slightly overweight	Good
+753	About the right weight	Excellent
+754	About the right weight	Good
+755	Slightly overweight	Good
+756	About the right weight	Good
+757	Slightly overweight	Good
+758	Slightly overweight	Good
+759	About the right weight	Good
+760	NA	Good
+761	Very overweight	Good
+762	About the right weight	Good
+763	About the right weight	Good
+764	About the right weight	Excellent
+765	Slightly overweight	Fair
+766	About the right weight	Good
+767	Very overweight	Fair
+768	Slightly overweight	Very Good
+769	About the right weight	Good
+770	Slightly overweight	Good
+771	Very overweight	Fair
+772	About the right weight	Good
+773	About the right weight	Good
+774	About the right weight	Very Good
+775	Slightly overweight	Excellent
+776	About the right weight	Very Good
+777	Very underweight	Excellent
+778	Slightly overweight	Very Good
+779	Slightly underweight	Good
+780	About the right weight	Fair
+781	About the right weight	Good
+782	About the right weight	Very Good
+783	Slightly overweight	Good
+784	Slightly overweight	Good
+785	About the right weight	Fair
+786	Slightly overweight	Good
+787	About the right weight	Good
+788	Slightly overweight	Fair
+789	About the right weight	Good
+790	About the right weight	NA
+791	About the right weight	Fair
+792	About the right weight	Very Good
+793	Slightly overweight	Good
+794	About the right weight	Very Good
+795	About the right weight	Good
+796	Slightly overweight	Very Good
+797	Slightly overweight	Good
+798	About the right weight	Very Good
+799	Slightly underweight	Good
+800	About the right weight	Good
+801	Very overweight	Very Good
+802	Slightly overweight	Excellent
+803	Slightly overweight	Excellent
+804	About the right weight	Fair
+805	About the right weight	Good
+806	About the right weight	Very Good
+807	About the right weight	Excellent
+808	Very overweight	Good
+809	Slightly overweight	Very Good
+810	About the right weight	Very Good
+811	Slightly overweight	Good
+812	Slightly overweight	Good
+813	Slightly overweight	Good
+814	About the right weight	Very Good
+815	Slightly overweight	Good
+816	About the right weight	Excellent
+817	About the right weight	Very Good
+818	Slightly overweight	Very Good
+819	Slightly overweight	Very Good
+820	Very overweight	Very Good
+821	Slightly overweight	Very Good
+822	About the right weight	Very Good
+823	About the right weight	Good
+824	About the right weight	Good
+825	Slightly overweight	Very Good
+826	Slightly overweight	Very Good
+827	Slightly underweight	Very Good
+828	Slightly overweight	Good
+829	About the right weight	Good
+830	Slightly overweight	Good
+831	About the right weight	NA
+832	About the right weight	Very Good
+833	Very overweight	Good
+834	About the right weight	Good
+835	Slightly overweight	NA
+836	About the right weight	Excellent
+837	About the right weight	Very Good
+838	Very overweight	Fair
+839	About the right weight	Very Good
+840	Slightly overweight	Fair
+841	Slightly overweight	Good
+842	About the right weight	Fair
+843	About the right weight	Fair
+844	Very overweight	Good
+845	Slightly overweight	Good
+846	About the right weight	Very Good
+847	Slightly overweight	Fair
+848	About the right weight	Very Good
+849	Slightly overweight	Good
+850	Very overweight	Very Good
+851	About the right weight	Good
+852	About the right weight	Very Good
+853	Slightly overweight	Good
+854	About the right weight	Very Good
+855	Very overweight	Excellent
+856	Slightly overweight	Good
+857	Slightly underweight	Good
+858	Slightly overweight	Good
+859	Very overweight	Good
+860	About the right weight	Fair
+861	Slightly underweight	Good
+862	Very overweight	Fair
+863	About the right weight	Very Good
+864	Slightly overweight	Good
+865	About the right weight	Excellent
+866	About the right weight	Very Good
+867	Slightly overweight	Good
+868	Very overweight	Good
+869	About the right weight	Excellent
+870	Very overweight	Very Good
+871	About the right weight	Fair
+872	Slightly underweight	Excellent
+873	Slightly overweight	Good
+874	About the right weight	Good
+875	About the right weight	Excellent
+876	About the right weight	Good
+877	Very overweight	Fair
+878	Slightly underweight	Fair
+879	Slightly overweight	Good
+880	Slightly overweight	Fair
+881	Very overweight	Fair
+882	About the right weight	Very Good
+883	Slightly overweight	Good
+884	Slightly overweight	Very Good
+885	About the right weight	Very Good
+886	Slightly underweight	Very Good
+887	Slightly underweight	Very Good
+888	Very overweight	Good
+889	About the right weight	Very Good
+890	About the right weight	Very Good
+891	About the right weight	Very Good
+892	About the right weight	Very Good
+893	Slightly overweight	Fair
+894	Slightly overweight	Very Good
+895	Very overweight	Very Good
+896	About the right weight	Excellent
+897	Slightly overweight	Good
+898	Slightly overweight	Good
+899	About the right weight	NA
+900	About the right weight	Very Good
+901	About the right weight	Very Good
+902	Very overweight	Good
+903	About the right weight	Good
+904	About the right weight	Very Good
+905	About the right weight	Fair
+906	Slightly underweight	Good
+907	Slightly overweight	Good
+908	Slightly overweight	Good
+909	Slightly overweight	Good
+910	About the right weight	Good
+911	About the right weight	Very Good
+912	Slightly overweight	Good
+913	About the right weight	Good
+914	About the right weight	Excellent
+915	About the right weight	Very Good
+916	Very underweight	Very Good
+917	Very overweight	Excellent
+918	About the right weight	Good
+919	About the right weight	Very Good
+920	About the right weight	Very Good
+921	Very overweight	Good
+922	Slightly overweight	Excellent
+923	Slightly overweight	Fair
+924	About the right weight	Good
+925	Slightly overweight	Fair
+926	Slightly overweight	Good
+927	About the right weight	Good
+928	About the right weight	Excellent
+929	About the right weight	Very Good
+930	About the right weight	Good
+931	About the right weight	NA
+932	About the right weight	Good
+933	Slightly overweight	Good
+934	About the right weight	Good
+935	About the right weight	Very Good
+936	About the right weight	Good
+937	Slightly overweight	NA
+938	About the right weight	Good
+939	Slightly overweight	Good
+940	Slightly overweight	Fair
+941	About the right weight	Very Good
+942	About the right weight	Fair
+943	Slightly overweight	Very Good
+944	About the right weight	Good
+945	Slightly overweight	Fair
+946	About the right weight	Very Good
+947	About the right weight	Very Good
+948	Slightly overweight	Fair
+949	Slightly overweight	Very Good
+950	Slightly overweight	Good
+951	Slightly overweight	Excellent
+952	About the right weight	Very Good
+953	Slightly overweight	Good
+954	About the right weight	Good
+955	Slightly overweight	NA
+956	About the right weight	Good
+957	About the right weight	Very Good
+958	Slightly overweight	Good
+959	Slightly overweight	Excellent
+960	Slightly underweight	Very Good
+961	Slightly overweight	Fair
+962	About the right weight	Excellent
+963	About the right weight	Good
+964	About the right weight	Very Good
+965	About the right weight	Very Good
+966	About the right weight	Excellent
+967	Very overweight	Good
+968	Slightly underweight	Fair
+969	Slightly overweight	Very Good
+970	About the right weight	Very Good
+971	Slightly overweight	Very Good
+972	About the right weight	Excellent
+973	Slightly overweight	Very Good
+974	Very overweight	Very Good
+975	About the right weight	Good
+976	Slightly overweight	NA
+977	Slightly overweight	Excellent
+978	About the right weight	Very Good
+979	Slightly overweight	Very Good
+980	About the right weight	Good
+981	Slightly overweight	Good
+982	About the right weight	Good
+983	About the right weight	Good
+984	Slightly underweight	Excellent
+985	Slightly overweight	Good
+986	Slightly overweight	Good
+987	About the right weight	Fair
+988	About the right weight	Very Good
+989	About the right weight	Good
+990	Very overweight	Good
+991	Slightly overweight	Very Good
+992	Slightly overweight	Very Good
+993	About the right weight	Good
+994	About the right weight	Good
+995	Very overweight	Good
+996	About the right weight	NA
+997	About the right weight	Fair
+998	About the right weight	Very Good
+999	About the right weight	Excellent
+1000	Slightly overweight	Good
+1001	Very overweight	Good
+1002	Slightly underweight	Very Good
+1003	Slightly overweight	Good
+1004	About the right weight	Good
+1005	Slightly overweight	Good
+1006	About the right weight	Very Good
+1007	Very overweight	Very Good
+1008	Slightly overweight	Fair
+1009	About the right weight	Good
+1010	Slightly overweight	Good
+1011	Very overweight	Fair
+1012	About the right weight	Fair
+1013	Slightly overweight	Fair
+1014	About the right weight	Excellent
+1015	Slightly underweight	Very Good
+1016	Slightly overweight	Excellent
+1017	Slightly overweight	Good
+1018	Slightly overweight	Good
+1019	About the right weight	Good
+1020	About the right weight	Very Good
+1021	About the right weight	Good
+1022	Slightly overweight	Very Good
+1023	About the right weight	Good
+1024	Slightly underweight	Good
+1025	Slightly underweight	Good
+1026	About the right weight	Good
+1027	Very overweight	Fair
+1028	About the right weight	Excellent
+1029	About the right weight	Good
+1030	Slightly overweight	Fair
+1031	Slightly overweight	Good
+1032	Slightly overweight	Good
+1033	About the right weight	Good
+1034	About the right weight	Very Good
+1035	Slightly overweight	Very Good
+1036	Slightly overweight	Very Good
+1037	Slightly overweight	Very Good
+1038	Very underweight	Fair
+1039	Slightly overweight	Very Good
+1040	About the right weight	Very Good
+1041	About the right weight	Very Good
+1042	Slightly underweight	Very Good
+1043	About the right weight	Excellent
+1044	About the right weight	Very Good
+1045	Slightly overweight	Very Good
+1046	About the right weight	Good
+1047	Very overweight	Fair
+1048	About the right weight	Good
+1049	About the right weight	Fair
+1050	Slightly overweight	Fair
+1051	About the right weight	Good
+1052	About the right weight	Good
+1053	About the right weight	NA
+1054	About the right weight	Very Good
+1055	About the right weight	Good
+1056	About the right weight	Good
+1057	Slightly overweight	Very Good
+1058	Slightly overweight	Fair
+1059	Very overweight	Poor
+1060	About the right weight	Good
+1061	About the right weight	Very Good
+1062	About the right weight	Good
+1063	About the right weight	Very Good
+1064	Slightly overweight	Fair
+1065	Very overweight	Good
+1066	About the right weight	Good
+1067	About the right weight	Very Good
+1068	About the right weight	Excellent
+1069	About the right weight	Very Good
+1070	About the right weight	Fair
+1071	About the right weight	Good
+1072	About the right weight	Very Good
+1073	About the right weight	Good
+1074	Slightly underweight	Very Good
+1075	Very overweight	Good
+1076	Slightly overweight	Good
+1077	About the right weight	Very Good
+1078	About the right weight	Very Good
+1079	About the right weight	Very Good
+1080	About the right weight	Very Good
+1081	About the right weight	Good
+1082	About the right weight	Very Good
+1083	Slightly overweight	Fair
+1084	About the right weight	Very Good
+1085	Slightly underweight	Fair
+1086	About the right weight	Very Good
+1087	Very overweight	Good
+1088	Slightly overweight	Very Good
+1089	Slightly underweight	Good
+1090	About the right weight	Good
+1091	About the right weight	Fair
+1092	About the right weight	Good
+1093	Slightly overweight	Fair
+1094	About the right weight	Very Good
+1095	About the right weight	Very Good
+1096	Slightly underweight	Good
+1097	Slightly overweight	Very Good
+1098	Slightly overweight	Excellent
+1099	Slightly overweight	Good
+1100	Slightly overweight	Fair
+1101	Very overweight	Good
+1102	About the right weight	Good
+1103	About the right weight	Excellent
+1104	About the right weight	Very Good
+1105	Slightly underweight	Fair
+1106	Slightly overweight	Very Good
+1107	About the right weight	Very Good
+1108	About the right weight	Excellent
+1109	About the right weight	Very Good
+1110	Slightly overweight	Very Good
+1111	Slightly overweight	Fair
+1112	About the right weight	Good
+1113	About the right weight	Good
+1114	Slightly underweight	Fair
+1115	Very overweight	Good
+1116	Slightly underweight	Fair
+1117	About the right weight	Good
+1118	Slightly overweight	Poor
+1119	About the right weight	Excellent
+1120	Very overweight	Good
+1121	About the right weight	Good
+1122	Very overweight	NA
+1123	Slightly overweight	Fair
+1124	Slightly overweight	Good
+1125	About the right weight	Very Good
+1126	About the right weight	Excellent
+1127	About the right weight	Good
+1128	About the right weight	Good
+1129	Slightly overweight	Good
+1130	About the right weight	Very Good
+1131	Slightly overweight	Good
+1132	About the right weight	Good
+1133	Slightly overweight	Good
+1134	Slightly overweight	Very Good
+1135	Slightly overweight	Very Good
+1136	About the right weight	Excellent
+1137	About the right weight	Excellent
+1138	About the right weight	Excellent
+1139	Slightly overweight	Very Good
+1140	Slightly overweight	Very Good
+1141	Slightly overweight	Good
+1142	About the right weight	Good
+1143	About the right weight	Very Good
+1144	About the right weight	Good
+1145	About the right weight	Good
+1146	About the right weight	Very Good
+1147	Very overweight	Fair
+1148	About the right weight	Good
+1149	Slightly overweight	Good
+1150	About the right weight	Very Good
+1151	About the right weight	Excellent
+1152	Slightly overweight	Good
+1153	About the right weight	Good
+1154	Slightly overweight	Good
+1155	Very overweight	Fair
+1156	About the right weight	Excellent
+1157	Slightly overweight	Good
+1158	Slightly overweight	Very Good
+1159	About the right weight	Very Good
+1160	Slightly underweight	Good
+1161	About the right weight	Very Good
+1162	Slightly overweight	Good
+1163	About the right weight	Good
+1164	Slightly overweight	Very Good
+1165	Slightly underweight	Good
+1166	Slightly underweight	Good
+1167	Slightly underweight	NA
+1168	Slightly overweight	Very Good
+1169	About the right weight	Good
+1170	About the right weight	Very Good
+1171	Slightly overweight	Very Good
+1172	About the right weight	Good
+1173	About the right weight	Fair
+1174	Very overweight	Good
+1175	Slightly overweight	Fair
+1176	About the right weight	Very Good
+1177	About the right weight	Very Good
+1178	Slightly underweight	Very Good
+1179	Slightly underweight	Very Good
+1180	About the right weight	Very Good
+1181	Slightly overweight	Good
+1182	Slightly underweight	Good
+1183	Slightly overweight	Good
+1184	About the right weight	Excellent
+1185	About the right weight	Excellent
+1186	About the right weight	Good
+1187	About the right weight	Very Good
+1188	Slightly overweight	Good
+1189	About the right weight	Very Good
+1190	Very overweight	Poor
+1191	About the right weight	Excellent
+1192	About the right weight	Very Good
+1193	About the right weight	Very Good
+1194	About the right weight	Good
+1195	Slightly overweight	Very Good
+1196	About the right weight	Very Good
+1197	Slightly overweight	Good
+1198	About the right weight	Excellent
+1199	Slightly overweight	NA
+1200	About the right weight	Good
+1201	Slightly overweight	Good
+1202	Slightly overweight	Excellent
+1203	About the right weight	Fair
+1204	Very overweight	Good
+1205	Slightly underweight	Good
+1206	About the right weight	Very Good
+1207	Slightly overweight	Good
+1208	About the right weight	Very Good
+1209	Very overweight	Fair
+1210	Very overweight	Poor
+1211	About the right weight	Excellent
+1212	Slightly overweight	Excellent
+1213	About the right weight	Excellent
+1214	Slightly underweight	Very Good
+1215	Slightly overweight	Very Good
+1216	About the right weight	Excellent
+1217	Very underweight	Poor
+1218	Slightly overweight	Good
+1219	About the right weight	Fair
+1220	Slightly overweight	Good
+1221	Slightly overweight	Good
+1222	Slightly overweight	Fair
+1223	About the right weight	Good
+1224	About the right weight	Excellent
+1225	Slightly overweight	Very Good
+1226	About the right weight	Fair
+1227	About the right weight	Good
+1228	About the right weight	Very Good
+1229	Slightly overweight	Good
+1230	Very overweight	Good
+1231	Slightly overweight	Good
+1232	Slightly overweight	Good
+1233	Slightly overweight	Very Good
+1234	About the right weight	Very Good
+1235	Slightly overweight	Good
+1236	Slightly underweight	Good
+1237	About the right weight	Fair
+1238	Slightly overweight	Very Good
+1239	Slightly overweight	Fair
+1240	About the right weight	Good
+1241	Slightly overweight	Good
+1242	About the right weight	Good
+1243	Slightly overweight	Fair
+1244	Slightly underweight	Good
+1245	About the right weight	Very Good
+1246	Slightly overweight	Good
+1247	Slightly overweight	Very Good
+1248	Very overweight	Good
+1249	About the right weight	Good
+1250	About the right weight	Good
+1251	Slightly overweight	Good
+1252	About the right weight	Fair
+1253	About the right weight	Very Good
+1254	Slightly underweight	Good
+1255	Slightly overweight	Good
+1256	About the right weight	Good
+1257	Very overweight	Fair
+1258	Slightly overweight	Good
+1259	Slightly overweight	Good
+1260	About the right weight	Good
+1261	Slightly overweight	Good
+1262	Slightly overweight	Good
+1263	Slightly overweight	Good
+1264	About the right weight	Very Good
+1265	About the right weight	Good
+1266	About the right weight	Excellent
+1267	Slightly underweight	Good
+1268	About the right weight	Excellent
+1269	Slightly overweight	Fair
+1270	About the right weight	Good
+1271	Slightly overweight	Good
+1272	Slightly overweight	Fair
+1273	Slightly overweight	Fair
+1274	Slightly overweight	Good
+1275	About the right weight	Fair
+1276	About the right weight	Very Good
+1277	About the right weight	Good
+1278	Slightly overweight	Very Good
+1279	Slightly overweight	Good
+1280	Slightly overweight	Good
+1281	About the right weight	Good
+1282	Slightly overweight	Very Good
+1283	Slightly overweight	Very Good
+1284	About the right weight	Very Good
+1285	About the right weight	Very Good
+1286	Slightly underweight	Good
+1287	Very overweight	Fair
+1288	Slightly overweight	Fair
+1289	About the right weight	Excellent
+1290	About the right weight	Good
+1291	About the right weight	Fair
+1292	About the right weight	Good
+1293	Slightly overweight	Very Good
+1294	Slightly overweight	Poor
+1295	Slightly overweight	Fair
+1296	About the right weight	Good
+1297	About the right weight	Very Good
+1298	About the right weight	Fair
+1299	Slightly underweight	Good
+1300	About the right weight	Very Good
+1301	About the right weight	Very Good
+1302	Slightly overweight	Good
+1303	About the right weight	Good
+1304	Slightly overweight	Very Good
+1305	About the right weight	Very Good
+1306	About the right weight	Good
+1307	About the right weight	Good
+1308	Very overweight	Good
+1309	About the right weight	Very Good
+1310	Slightly overweight	Good
+1311	Very overweight	Very Good
+1312	Very overweight	Good
+1313	Slightly overweight	Very Good
+1314	Very overweight	Fair
+1315	Slightly underweight	Very Good
+1316	About the right weight	Good
+1317	Very overweight	Fair
+1318	Slightly overweight	NA
+1319	About the right weight	Good
+1320	Slightly overweight	Good
+1321	About the right weight	Good
+1322	About the right weight	Very Good
+1323	About the right weight	Good
+1324	Slightly overweight	Very Good
+1325	Very overweight	Good
+1326	About the right weight	Good
+1327	Slightly underweight	Very Good
+1328	Slightly overweight	Very Good
+1329	About the right weight	Excellent
+1330	Slightly overweight	Good
+1331	About the right weight	Fair
+1332	Slightly overweight	Good
+1333	Slightly overweight	Good
+1334	About the right weight	Excellent
+1335	About the right weight	Very Good
+1336	About the right weight	Excellent
+1337	About the right weight	Excellent
+1338	About the right weight	Good
+1339	About the right weight	Excellent
+1340	About the right weight	Good
+1341	Slightly underweight	Good
+1342	Slightly underweight	Good
+1343	About the right weight	Very Good
+1344	Slightly underweight	Good
+1345	About the right weight	Fair
+1346	Slightly overweight	Fair
+1347	About the right weight	Very Good
+1348	About the right weight	Fair
+1349	About the right weight	Excellent
+1350	About the right weight	Very Good
+1351	Slightly underweight	Very Good
+1352	About the right weight	Good
+1353	Slightly overweight	Good
+1354	About the right weight	Very Good
+1355	About the right weight	Very Good
+1356	Very overweight	Good
+1357	About the right weight	Very Good
+1358	Very underweight	Very Good
+1359	Slightly overweight	Very Good
+1360	Very overweight	Good
+1361	Slightly overweight	Fair
+1362	Slightly overweight	Good
+1363	About the right weight	Very Good
+1364	Slightly overweight	Very Good
+1365	Very overweight	Fair
+1366	About the right weight	Very Good
+1367	About the right weight	Very Good
+1368	About the right weight	Excellent
+1369	About the right weight	Very Good
+1370	About the right weight	Very Good
+1371	Slightly overweight	Good
+1372	Slightly overweight	Fair
+1373	Very overweight	Very Good
+1374	Very overweight	Very Good
+1375	Slightly overweight	Poor
+1376	About the right weight	Excellent
+1377	About the right weight	Fair
+1378	Slightly overweight	Very Good
+1379	Slightly underweight	Very Good
+1380	Slightly overweight	Excellent
+1381	About the right weight	Good
+1382	About the right weight	Good
+1383	About the right weight	Good
+1384	About the right weight	Very Good
+1385	Very overweight	Good
+1386	Slightly overweight	Very Good
+1387	Slightly overweight	Fair
+1388	Slightly underweight	Good
+1389	Slightly overweight	NA
+1390	About the right weight	Very Good
+1391	Slightly overweight	Good
+1392	About the right weight	Very Good
+1393	About the right weight	Very Good
+1394	About the right weight	Very Good
+1395	Very overweight	Excellent
+1396	Slightly overweight	Excellent
+1397	Slightly overweight	Good
+1398	About the right weight	Very Good
+1399	About the right weight	Very Good
+1400	About the right weight	Good
+1401	About the right weight	Very Good
+1402	About the right weight	Fair
+1403	Slightly overweight	Very Good
+1404	About the right weight	Very Good
+1405	About the right weight	Very Good
+1406	About the right weight	Excellent
+1407	Very overweight	Poor
+1408	Slightly overweight	Very Good
+1409	Very overweight	Very Good
+1410	Slightly overweight	Good
+1411	Slightly overweight	Very Good
+1412	About the right weight	Good
+1413	Slightly underweight	Excellent
+1414	About the right weight	Good
+1415	About the right weight	Good
+1416	About the right weight	Very Good
+1417	About the right weight	NA
+1418	Very overweight	Good
+1419	About the right weight	Good
+1420	Slightly overweight	Excellent
+1421	Slightly overweight	Good
+1422	Very overweight	Fair
+1423	Slightly overweight	Very Good
+1424	Slightly overweight	Good
+1425	About the right weight	Good
+1426	About the right weight	Excellent
+1427	Slightly overweight	Good
+1428	Slightly underweight	Very Good
+1429	Very overweight	Excellent
+1430	Slightly overweight	Very Good
+1431	About the right weight	Very Good
+1432	About the right weight	Good
+1433	Very overweight	Fair
+1434	Slightly overweight	Good
+1435	Slightly overweight	Very Good
+1436	Slightly overweight	Good
+1437	About the right weight	Fair
+1438	Slightly overweight	Very Good
+1439	About the right weight	Very Good
+1440	Slightly underweight	NA
+1441	About the right weight	Very Good
+1442	Slightly overweight	Very Good
+1443	About the right weight	Excellent
+1444	Slightly overweight	Good
+1445	About the right weight	Good
+1446	About the right weight	Good
+1447	Slightly overweight	Very Good
+1448	Very overweight	Good
+1449	About the right weight	Good
+1450	About the right weight	Good
+1451	About the right weight	Good
+1452	Slightly overweight	Good
+1453	About the right weight	Very Good
+1454	Very overweight	Good
+1455	Slightly overweight	Very Good
+1456	Slightly overweight	Good
+1457	About the right weight	Very Good
+1458	About the right weight	Good
+1459	Very overweight	Fair
+1460	About the right weight	Very Good
+1461	Slightly underweight	Excellent
+1462	Very overweight	Fair
+1463	About the right weight	Excellent
+1464	Slightly overweight	Fair
+1465	Slightly underweight	Good
+1466	About the right weight	Very Good
+1467	About the right weight	NA
+1468	About the right weight	Very Good
+1469	About the right weight	Very Good
+1470	About the right weight	Very Good
+1471	Slightly overweight	Very Good
+1472	About the right weight	Very Good
+1473	About the right weight	Good
+1474	About the right weight	Very Good
+1475	About the right weight	Very Good
+1476	About the right weight	Excellent
+1477	About the right weight	Excellent
+1478	Slightly overweight	Very Good
+1479	Slightly overweight	Very Good
+1480	Slightly overweight	Very Good
+1481	Slightly overweight	Very Good
+1482	About the right weight	Very Good
+1483	Very overweight	Good
+1484	Slightly underweight	Excellent
+1485	Slightly overweight	Fair
+1486	About the right weight	Excellent
+1487	Slightly overweight	Good
+1488	About the right weight	Good
+1489	Very overweight	Good
+1490	Slightly overweight	Good
+1491	Very overweight	Very Good
+1492	About the right weight	NA
+1493	About the right weight	Very Good
+1494	About the right weight	Excellent
+1495	About the right weight	Good
+1496	Slightly overweight	Excellent
+1497	Slightly overweight	Good
+1498	About the right weight	Very Good
+1499	About the right weight	Fair
+1500	About the right weight	Poor
+1501	Very overweight	Good
+1502	About the right weight	Very Good
+1503	About the right weight	Good
+1504	About the right weight	Very Good
+1505	Slightly overweight	Good
+1506	About the right weight	Excellent
+1507	Slightly overweight	Good
+1508	Slightly overweight	Good
+1509	Slightly overweight	Good
+1510	About the right weight	Fair
+1511	About the right weight	Fair
+1512	Very overweight	Excellent
+1513	Slightly overweight	Very Good
+1514	About the right weight	Very Good
+1515	About the right weight	Good
+1516	Very overweight	Good
+1517	Slightly overweight	Very Good
+1518	About the right weight	Excellent
+1519	Slightly overweight	Good
+1520	Slightly overweight	Very Good
+1521	About the right weight	Fair
+1522	About the right weight	Good
+1523	Very overweight	Good
+1524	Very overweight	Good
+1525	About the right weight	Good
+1526	About the right weight	Good
+1527	Very overweight	Good
+1528	About the right weight	Very Good
+1529	Slightly overweight	Good
+1530	Very overweight	Very Good
+1531	About the right weight	Poor
+1532	About the right weight	Very Good
+1533	About the right weight	Good
+1534	Slightly overweight	Very Good
+1535	About the right weight	Very Good
+1536	About the right weight	Good
+1537	About the right weight	Good
+1538	About the right weight	Very Good
+1539	About the right weight	Very Good
+1540	Slightly overweight	Good
+1541	About the right weight	Good
+1542	Very overweight	Good
+1543	Slightly overweight	Very Good
+1544	About the right weight	Good
+1545	Slightly underweight	Good
+1546	Slightly overweight	Good
+1547	About the right weight	Very Good
+1548	About the right weight	Very Good
+1549	Very overweight	Fair
+1550	Slightly overweight	Very Good
+1551	Slightly overweight	Good
+1552	About the right weight	Very Good
+1553	Slightly underweight	Very Good
+1554	Slightly overweight	Good
+1555	Slightly overweight	Very Good
+1556	Very underweight	Good
+1557	About the right weight	Excellent
+1558	Slightly overweight	Very Good
+1559	Slightly underweight	Very Good
+1560	About the right weight	Good
+1561	About the right weight	Good
+1562	About the right weight	Excellent
+1563	About the right weight	Very Good
+1564	Slightly underweight	Poor
+1565	Very overweight	Fair
+1566	Slightly underweight	Good
+1567	Slightly overweight	Excellent
+1568	About the right weight	Very Good
+1569	Very overweight	Fair
+1570	About the right weight	Very Good
+1571	About the right weight	Good
+1572	Slightly underweight	Fair
+1573	About the right weight	Very Good
+1574	Slightly overweight	Good
+1575	Slightly overweight	Good
+1576	About the right weight	Excellent
+1577	About the right weight	Excellent
+1578	Slightly overweight	Excellent
+1579	About the right weight	Very Good
+1580	About the right weight	Good
+1581	Slightly overweight	Good
+1582	About the right weight	Very Good
+1583	Very overweight	Excellent
+1584	About the right weight	Very Good
+1585	About the right weight	Very Good
+1586	Slightly underweight	Fair
+1587	Very overweight	Fair
+1588	Slightly overweight	Very Good
+1589	About the right weight	Excellent
+1590	About the right weight	Excellent
+1591	Slightly overweight	Excellent
+1592	About the right weight	Very Good
+1593	About the right weight	Excellent
+1594	Slightly overweight	Very Good
+1595	Slightly overweight	Very Good
+1596	Slightly overweight	Fair
+1597	About the right weight	Very Good
+1598	Slightly overweight	Good
+1599	About the right weight	Excellent
+1600	Slightly overweight	Good
+1601	Slightly underweight	Fair
+1602	About the right weight	Very Good
+1603	Slightly overweight	Very Good
+1604	About the right weight	Good
+1605	Slightly overweight	Good
+1606	About the right weight	Very Good
+1607	About the right weight	Fair
+1608	About the right weight	Very Good
+1609	Very overweight	Good
+1610	About the right weight	Very Good
+1611	Slightly overweight	Good
+1612	Slightly overweight	Very Good
+1613	About the right weight	Good
+1614	Slightly overweight	Good
+1615	About the right weight	Good
+1616	About the right weight	Very Good
+1617	About the right weight	Very Good
+1618	Very overweight	Fair
+1619	Slightly overweight	Very Good
+1620	About the right weight	Good
+1621	About the right weight	Very Good
+1622	Slightly overweight	Very Good
+1623	Slightly overweight	Very Good
+1624	Slightly underweight	Good
+1625	Slightly overweight	Fair
+1626	Slightly overweight	Good
+1627	About the right weight	Very Good
+1628	About the right weight	Good
+1629	About the right weight	Excellent
+1630	About the right weight	Good
+1631	Slightly overweight	Fair
+1632	About the right weight	Good
+1633	Slightly overweight	Good
+1634	About the right weight	Fair
+1635	Slightly overweight	Fair
+1636	About the right weight	Excellent
+1637	Slightly overweight	Very Good
+1638	About the right weight	Excellent
+1639	Slightly underweight	Very Good
+1640	About the right weight	Good
+1641	Slightly overweight	Very Good
+1642	About the right weight	Good
+1643	About the right weight	Good
+1644	Very overweight	Very Good
+1645	About the right weight	Good
+1646	About the right weight	NA
+1647	Very overweight	Good
+1648	Slightly underweight	Good
+1649	Slightly overweight	Excellent
+1650	About the right weight	Good
+1651	Slightly overweight	Good
+1652	About the right weight	Good
+1653	Slightly underweight	Fair
+1654	About the right weight	Good
+1655	Very overweight	Fair
+1656	About the right weight	Good
+1657	About the right weight	NA
+1658	About the right weight	Very Good
+1659	Slightly underweight	Very Good
+1660	About the right weight	Very Good
+1661	About the right weight	Very Good
+1662	Slightly underweight	Fair
+1663	Slightly overweight	Very Good
+1664	About the right weight	Excellent
+1665	Very overweight	Fair
+1666	Slightly overweight	Excellent
+1667	About the right weight	Very Good
+1668	About the right weight	Excellent
+1669	About the right weight	Very Good
+1670	Slightly overweight	Very Good
+1671	Slightly underweight	Very Good
+1672	Very overweight	Good
+1673	About the right weight	Good
+1674	Slightly underweight	Good
+1675	Very underweight	Very Good
+1676	About the right weight	Excellent
+1677	Slightly underweight	Very Good
+1678	Slightly overweight	Good
+1679	About the right weight	Excellent
+1680	Slightly overweight	Very Good
+1681	About the right weight	Fair
+1682	About the right weight	Good
+1683	Slightly overweight	Very Good
+1684	About the right weight	Very Good
+1685	Slightly underweight	Good
+1686	About the right weight	Good
+1687	Slightly underweight	Very Good
+1688	Slightly underweight	Good
+1689	Slightly overweight	Good
+1690	Slightly overweight	Good
+1691	About the right weight	Very Good
+1692	About the right weight	Very Good
+1693	Slightly overweight	Very Good
+1694	Slightly overweight	Fair
+1695	Very overweight	Good
+1696	Slightly overweight	Good
+1697	About the right weight	Excellent
+1698	Very overweight	Very Good
+1699	Slightly underweight	Very Good
+1700	About the right weight	Excellent
+1701	About the right weight	Excellent
+1702	Slightly overweight	Very Good
+1703	About the right weight	Excellent
+1704	Very overweight	Poor
+1705	About the right weight	Very Good
+1706	Slightly overweight	Very Good
+1707	Very overweight	Very Good
+1708	About the right weight	Excellent
+1709	Slightly overweight	Good
+1710	About the right weight	Excellent
+1711	About the right weight	Very Good
+1712	Slightly overweight	Very Good
+1713	Slightly overweight	Good
+1714	About the right weight	Excellent
+1715	About the right weight	Good
+1716	Slightly overweight	Very Good
+1717	Slightly overweight	Good
+1718	Very overweight	Very Good
+1719	Very overweight	Fair
+1720	Slightly overweight	Very Good
+1721	About the right weight	Very Good
+1722	About the right weight	Good
+1723	Slightly underweight	Good
+1724	Slightly underweight	Good
+1725	About the right weight	Excellent
+1726	About the right weight	Excellent
+1727	About the right weight	Good
+1728	Very overweight	Good
+1729	Very overweight	NA
+1730	Very overweight	Good
+1731	About the right weight	Good
+1732	About the right weight	Very Good
+1733	About the right weight	Good
+1734	Slightly overweight	Good
+1735	Very overweight	Very Good
+1736	Very overweight	Very Good
+1737	Slightly overweight	Very Good
+1738	Slightly underweight	Fair
+1739	About the right weight	Fair
+1740	About the right weight	Very Good
+1741	Slightly underweight	Very Good
+1742	Very overweight	Fair
+1743	About the right weight	Very Good
+1744	Very overweight	Excellent
+1745	Slightly overweight	Good
+1746	About the right weight	Fair
+1747	About the right weight	Very Good
+1748	About the right weight	Fair
+1749	Very overweight	Fair
+1750	Slightly overweight	Very Good
+1751	About the right weight	Very Good
+1752	Slightly overweight	Excellent
+1753	Very overweight	Good
+1754	About the right weight	Very Good
+1755	About the right weight	Excellent
+1756	About the right weight	Fair
+1757	About the right weight	Very Good
+1758	About the right weight	Excellent
+1759	About the right weight	Excellent
+1760	About the right weight	Very Good
+1761	About the right weight	Very Good
+1762	Slightly overweight	Very Good
+1763	About the right weight	Very Good
+1764	Slightly overweight	Very Good
+1765	Slightly underweight	Poor
+1766	About the right weight	NA
+1767	About the right weight	Very Good
+1768	Very overweight	Very Good
+1769	Very underweight	Excellent
+1770	Slightly overweight	Good
+1771	About the right weight	Very Good
+1772	Slightly underweight	Good
+1773	Very overweight	Poor
+1774	Slightly overweight	Fair
+1775	About the right weight	Very Good
+1776	About the right weight	Good
+1777	About the right weight	Very Good
+1778	Slightly overweight	Very Good
+1779	About the right weight	Excellent
+1780	Slightly underweight	Very Good
+1781	About the right weight	Very Good
+1782	About the right weight	Good
+1783	Slightly overweight	Good
+1784	About the right weight	Very Good
+1785	About the right weight	Very Good
+1786	About the right weight	Good
+1787	About the right weight	Good
+1788	Slightly overweight	Fair
+1789	About the right weight	Very Good
+1790	About the right weight	Good
+1791	Very underweight	Fair
+1792	Slightly underweight	Good
+1793	About the right weight	Very Good
+1794	About the right weight	Excellent
+1795	Very overweight	Very Good
+1796	About the right weight	Very Good
+1797	About the right weight	Good
+1798	Slightly underweight	Good
+1799	Slightly overweight	Fair
+1800	Slightly overweight	Very Good
+1801	Slightly overweight	Good
+1802	About the right weight	Excellent
+1803	Slightly overweight	Good
+1804	Very underweight	Fair
+1805	Slightly overweight	Very Good
+1806	About the right weight	Very Good
+1807	Slightly underweight	Very Good
+1808	Slightly overweight	Excellent
+1809	Very overweight	Fair
+1810	About the right weight	Good
+1811	Very overweight	Very Good
+1812	Slightly underweight	Very Good
+1813	Slightly overweight	Excellent
+1814	About the right weight	Very Good
+1815	About the right weight	NA
+1816	About the right weight	Very Good
+1817	About the right weight	Very Good
+1818	Slightly overweight	Very Good
+1819	About the right weight	Excellent
+1820	About the right weight	Very Good
+1821	Slightly overweight	Good
+1822	About the right weight	Excellent
+1823	Very overweight	Excellent
+1824	About the right weight	Very Good
+1825	Very overweight	Fair
+1826	About the right weight	Good
+1827	About the right weight	Very Good
+1828	About the right weight	Good
+1829	Slightly underweight	Good
+1830	About the right weight	Very Good
+1831	Slightly underweight	Good
+1832	About the right weight	Very Good
+1833	About the right weight	Very Good
+1834	Very overweight	Very Good
+1835	Slightly overweight	Fair
+1836	Slightly overweight	Good
+1837	Slightly overweight	Very Good
+1838	About the right weight	Good
+1839	About the right weight	Very Good
+1840	Very overweight	Very Good
+1841	Slightly overweight	Excellent
+1842	About the right weight	Very Good
+1843	Slightly overweight	Excellent
+1844	About the right weight	Good
+1845	Slightly overweight	Good
+1846	Very underweight	Good
+1847	Very overweight	Fair
+1848	Slightly overweight	Fair
+1849	About the right weight	Fair
+1850	Slightly overweight	Fair
+1851	Very overweight	Very Good
+1852	About the right weight	Very Good
+1853	About the right weight	Good
+1854	Slightly overweight	Good
+1855	About the right weight	Excellent
+1856	About the right weight	Very Good
+1857	Slightly overweight	Very Good
+1858	Slightly overweight	Good
+1859	Slightly overweight	Very Good
+1860	Slightly overweight	Fair
+1861	About the right weight	Good
+1862	Very overweight	Good
+1863	About the right weight	Very Good
+1864	Slightly overweight	Fair
+1865	Slightly overweight	Excellent
+1866	Slightly underweight	Good
+1867	About the right weight	Very Good
+1868	About the right weight	NA
+1869	Very overweight	Fair
+1870	About the right weight	Good
+1871	Slightly underweight	Excellent
+1872	Slightly underweight	Excellent
+1873	About the right weight	Poor
+1874	About the right weight	Excellent
+1875	About the right weight	Excellent
+1876	About the right weight	Good
+1877	Slightly overweight	Excellent
+1878	About the right weight	Very Good
+1879	About the right weight	Good
+1880	Slightly underweight	Very Good
+1881	About the right weight	Very Good
+1882	Slightly overweight	Very Good
+1883	About the right weight	Very Good
+1884	Very overweight	Very Good
+1885	About the right weight	Good
+1886	Slightly overweight	Very Good
+1887	Slightly underweight	Good
+1888	Slightly underweight	Good
+1889	About the right weight	Very Good
+1890	Slightly underweight	Very Good
+1891	Slightly overweight	Fair
+1892	About the right weight	Good
+1893	Slightly overweight	Good
+1894	About the right weight	Very Good
+1895	Slightly underweight	Poor
+1896	About the right weight	Very Good
+1897	About the right weight	NA
+1898	Slightly underweight	Good
+1899	Slightly overweight	Good
+1900	About the right weight	Very Good
+1901	About the right weight	Very Good
+1902	NA	Good
+1903	Slightly underweight	Fair
+1904	About the right weight	Excellent
+1905	About the right weight	Fair
+1906	Slightly underweight	Good
+1907	About the right weight	Good
+1908	Slightly underweight	Fair
+1909	About the right weight	Very Good
+1910	Slightly overweight	Very Good
+1911	About the right weight	Very Good
+1912	About the right weight	Good
+1913	About the right weight	Very Good
+1914	Slightly overweight	Good
+1915	About the right weight	Excellent
+1916	About the right weight	Excellent
+1917	Slightly overweight	Very Good
+1918	Slightly overweight	Good
+1919	About the right weight	Excellent
+1920	About the right weight	Very Good
+1921	Very underweight	Good
+1922	Slightly underweight	Good
+1923	About the right weight	Excellent
+1924	About the right weight	Very Good
+1925	Slightly overweight	Fair
+1926	Slightly overweight	Good
+1927	Slightly overweight	Very Good
+1928	Slightly overweight	Good
+1929	Slightly overweight	Excellent
+1930	Slightly underweight	Good
+1931	About the right weight	Very Good
+1932	Slightly overweight	Good
+1933	Slightly underweight	Very Good
+1934	About the right weight	Very Good
+1935	About the right weight	Very Good
+1936	About the right weight	Good
+1937	Slightly overweight	Very Good
+1938	Slightly overweight	Very Good
+1939	About the right weight	Excellent
+1940	Very overweight	Fair
+1941	Slightly overweight	Fair
+1942	Slightly overweight	Good
+1943	About the right weight	Very Good
+1944	About the right weight	Good
+1945	About the right weight	Very Good
+1946	Slightly underweight	Excellent
+1947	About the right weight	Fair
+1948	Slightly overweight	Good
+1949	NA	Very Good
+1950	Very overweight	Good
+1951	Slightly underweight	Excellent
+1952	About the right weight	Very Good
+1953	Slightly underweight	Excellent
+1954	About the right weight	Very Good
+1955	Slightly overweight	Excellent
+1956	Very overweight	Good
+1957	About the right weight	Excellent
+1958	About the right weight	Very Good
+1959	Slightly overweight	Very Good
+1960	About the right weight	Very Good
+1961	About the right weight	Very Good
+1962	About the right weight	Very Good
+1963	Slightly overweight	Good
+1964	About the right weight	Good
+1965	About the right weight	Fair
+1966	About the right weight	Very Good
+1967	Slightly overweight	Fair
+1968	About the right weight	Good
+1969	Slightly underweight	Fair
+1970	About the right weight	Excellent
+1971	Slightly overweight	Good
+1972	About the right weight	Very Good
+1973	Slightly overweight	Good
+1974	Slightly overweight	Fair
+1975	About the right weight	Very Good
+1976	Slightly overweight	NA
+1977	Slightly overweight	Good
+1978	About the right weight	Good
+1979	About the right weight	Very Good
+1980	Slightly overweight	Good
+1981	About the right weight	Very Good
+1982	About the right weight	Very Good
+1983	About the right weight	Very Good
+1984	Slightly overweight	Very Good
+1985	Slightly underweight	Good
+1986	About the right weight	Good
+1987	About the right weight	Excellent
+1988	About the right weight	Very Good
+1989	About the right weight	Very Good
+1990	About the right weight	Very Good
+1991	Very underweight	Very Good
+1992	Slightly overweight	Good
+1993	Slightly overweight	Fair
+1994	Slightly underweight	Excellent
+1995	About the right weight	Good
+1996	About the right weight	Good
+1997	Slightly underweight	Very Good
+1998	About the right weight	Excellent
+1999	About the right weight	Good
+2000	Slightly overweight	Fair
+2001	Slightly overweight	Good
+2002	Slightly overweight	Good
+2003	Slightly underweight	Excellent
+2004	About the right weight	Very Good
+2005	About the right weight	Very Good
+2006	About the right weight	Very Good
+2007	Very underweight	Very Good
+2008	Very overweight	Good
+2009	Very overweight	Good
+2010	About the right weight	Very Good
+2011	Slightly overweight	Very Good
+2012	About the right weight	Good
+2013	Slightly underweight	Excellent
+2014	About the right weight	Very Good
+2015	About the right weight	Good
+2016	About the right weight	Good
+2017	About the right weight	Fair
+2018	About the right weight	Excellent
+2019	About the right weight	NA
+2020	Slightly underweight	Good
+2021	About the right weight	Good
+2022	Slightly overweight	Fair
+2023	Slightly overweight	Good
+2024	Slightly overweight	Fair
+2025	Slightly underweight	Very Good
+2026	About the right weight	Good
+2027	About the right weight	Excellent
+2028	About the right weight	Very Good
+2029	Very overweight	Good
+2030	About the right weight	Good
+2031	About the right weight	Good
+2032	Slightly overweight	NA
+2033	About the right weight	Excellent
+2034	About the right weight	Very Good
+2035	Slightly overweight	Very Good
+2036	Slightly underweight	Fair
+2037	Slightly overweight	Very Good
+2038	About the right weight	Very Good
+2039	Slightly overweight	Good
+2040	Very overweight	Fair
+2041	Slightly underweight	Very Good
+2042	About the right weight	Good
+2043	About the right weight	Excellent
+2044	About the right weight	NA
+2045	About the right weight	Very Good
+2046	About the right weight	Good
+2047	About the right weight	Very Good
+2048	About the right weight	Excellent
+2049	About the right weight	Fair
+2050	Slightly overweight	Good
+2051	Slightly overweight	Good
+2052	Very overweight	Very Good
+2053	About the right weight	Very Good
+2054	About the right weight	Excellent
+2055	Very underweight	Very Good
+2056	About the right weight	Very Good
+2057	Slightly underweight	Very Good
+2058	Slightly underweight	Very Good
+2059	Slightly overweight	Fair
+2060	Slightly overweight	Very Good
+2061	About the right weight	Poor
+2062	Very overweight	Fair
+2063	Very overweight	Fair
+2064	Slightly overweight	Fair
+2065	Slightly underweight	Good
+2066	About the right weight	Excellent
+2067	Slightly overweight	Excellent
+2068	Very overweight	Very Good
+2069	Slightly overweight	Fair
+2070	About the right weight	Very Good
+2071	Slightly underweight	Good
+2072	About the right weight	Very Good
+2073	About the right weight	Good
+2074	Slightly overweight	Good
+2075	About the right weight	Very Good
+2076	About the right weight	Poor
+2077	Slightly overweight	Very Good
+2078	Very overweight	Very Good
+2079	About the right weight	Good
+2080	About the right weight	Excellent
+2081	About the right weight	Good
+2082	Slightly underweight	Fair
+2083	Slightly overweight	Very Good
+2084	About the right weight	Good
+2085	About the right weight	Very Good
+2086	About the right weight	Very Good
+2087	About the right weight	Excellent
+2088	Slightly overweight	Fair
+2089	About the right weight	NA
+2090	Slightly overweight	Very Good
+2091	Very overweight	NA
+2092	Slightly overweight	Excellent
+2093	About the right weight	Good
+2094	Slightly overweight	Very Good
+2095	Slightly overweight	NA
+2096	Slightly overweight	Good
+2097	About the right weight	Good
+2098	About the right weight	Good
+2099	About the right weight	Very Good
+2100	About the right weight	Very Good
+2101	Slightly overweight	Very Good
+2102	Slightly overweight	Good
+2103	Slightly overweight	Excellent
+2104	About the right weight	Very Good
+2105	About the right weight	Good
+2106	Slightly overweight	Poor
+2107	Slightly overweight	Fair
+2108	About the right weight	Excellent
+2109	Slightly overweight	Excellent
+2110	Slightly underweight	Good
+2111	Slightly overweight	Very Good
+2112	Slightly overweight	Good
+2113	Very overweight	Fair
+2114	About the right weight	Very Good
+2115	Slightly overweight	Very Good
+2116	About the right weight	Very Good
+2117	Slightly overweight	Good
+2118	Very overweight	Good
+2119	About the right weight	Excellent
+2120	About the right weight	Very Good
+2121	Very overweight	Fair
+2122	Slightly underweight	Very Good
+2123	About the right weight	Very Good
+2124	Slightly overweight	Very Good
+2125	About the right weight	Very Good
+2126	Slightly underweight	Fair
+2127	Slightly overweight	Good
+2128	About the right weight	Good
+2129	Slightly overweight	Excellent
+2130	About the right weight	Very Good
+2131	Slightly overweight	Excellent
+2132	Slightly overweight	Good
+2133	About the right weight	Good
+2134	Slightly overweight	Fair
+2135	About the right weight	Excellent
+2136	About the right weight	Excellent
+2137	Slightly overweight	Very Good
+2138	Slightly overweight	Good
+2139	About the right weight	Good
+2140	About the right weight	Excellent
+2141	Slightly overweight	Very Good
+2142	About the right weight	Excellent
+2143	About the right weight	Very Good
+2144	Slightly overweight	Fair
+2145	About the right weight	Very Good
+2146	About the right weight	Good
+2147	About the right weight	Fair
+2148	Slightly overweight	Very Good
+2149	Slightly overweight	Very Good
+2150	Slightly overweight	Fair
+2151	About the right weight	Very Good
+2152	About the right weight	Good
+2153	Slightly underweight	Very Good
+2154	About the right weight	Fair
+2155	About the right weight	Very Good
+2156	NA	Very Good
+2157	Slightly overweight	Good
+2158	Slightly underweight	Good
+2159	About the right weight	Very Good
+2160	Slightly overweight	Good
+2161	About the right weight	Excellent
+2162	Slightly underweight	Excellent
+2163	Slightly overweight	Good
+2164	About the right weight	Good
+2165	About the right weight	Very Good
+2166	About the right weight	Very Good
+2167	Slightly underweight	Good
+2168	About the right weight	Very Good
+2169	Slightly underweight	Very Good
+2170	About the right weight	Excellent
+2171	Slightly underweight	Very Good
+2172	Slightly overweight	Very Good
+2173	About the right weight	Very Good
+2174	About the right weight	Good
+2175	About the right weight	Very Good
+2176	About the right weight	Excellent
+2177	Slightly underweight	Good
+2178	About the right weight	Fair
+2179	Very overweight	Poor
+2180	Slightly overweight	Fair
+2181	Slightly overweight	Very Good
+2182	About the right weight	Good
+2183	About the right weight	Very Good
+2184	About the right weight	Very Good
+2185	Very overweight	Very Good
+2186	About the right weight	Very Good
+2187	About the right weight	Very Good
+2188	About the right weight	Very Good
+2189	About the right weight	Good
+2190	About the right weight	Very Good
+2191	Slightly underweight	Good
+2192	Slightly overweight	Good
+2193	Very overweight	Good
+2194	About the right weight	Very Good
+2195	Slightly overweight	Very Good
+2196	Slightly underweight	Very Good
+2197	Slightly underweight	Very Good
+2198	About the right weight	Good
+2199	About the right weight	Fair
+2200	Slightly overweight	Excellent
+2201	Very overweight	Very Good
+2202	Slightly overweight	Good
+2203	About the right weight	Very Good
+2204	Slightly overweight	Very Good
+2205	Very overweight	Very Good
+2206	Slightly overweight	Good
+2207	Slightly overweight	Very Good
+2208	Slightly overweight	Very Good
+2209	About the right weight	Good
+2210	Slightly underweight	Good
+2211	Slightly overweight	Fair
+2212	Slightly overweight	Fair
+2213	About the right weight	Excellent
+2214	Slightly underweight	Good
+2215	About the right weight	Very Good
+2216	About the right weight	Very Good
+2217	Slightly overweight	Good
+2218	About the right weight	Good
+2219	Slightly overweight	Excellent
+2220	About the right weight	Excellent
+2221	About the right weight	Good
+2222	About the right weight	Good
+2223	About the right weight	Very Good
+2224	Slightly overweight	Good
+2225	About the right weight	Very Good
+2226	Very overweight	Fair
+2227	Slightly overweight	Excellent
+2228	Slightly overweight	Very Good
+2229	Slightly overweight	Good
+2230	Slightly underweight	Fair
+2231	About the right weight	Good
+2232	About the right weight	Good
+2233	Slightly overweight	Very Good
+2234	About the right weight	Very Good
+2235	Slightly overweight	Good
+2236	About the right weight	Very Good
+2237	About the right weight	Very Good
+2238	Slightly underweight	Good
+2239	About the right weight	Very Good
+2240	About the right weight	Excellent
+2241	Very underweight	Poor
+2242	Slightly overweight	Excellent
+2243	About the right weight	Very Good
+2244	Slightly overweight	Fair
+2245	Slightly underweight	Fair
+2246	Slightly overweight	Fair
+2247	Slightly overweight	Good
+2248	About the right weight	Good
+2249	About the right weight	Good
+2250	Slightly underweight	Very Good
+2251	About the right weight	Very Good
+2252	Slightly overweight	Very Good
+2253	Slightly overweight	Fair
+2254	About the right weight	Very Good
+2255	About the right weight	Good
+2256	Slightly overweight	Fair
+2257	Slightly overweight	Excellent
+2258	Slightly underweight	Very Good
+2259	Slightly overweight	Very Good
+2260	Slightly underweight	Excellent
+2261	Slightly overweight	Good
+2262	About the right weight	Good
+2263	Slightly overweight	Excellent
+2264	About the right weight	Good
+2265	Slightly overweight	Very Good
+2266	About the right weight	Excellent
+2267	Slightly overweight	Very Good
+2268	Slightly overweight	Very Good
+2269	About the right weight	Very Good
+2270	About the right weight	Excellent
+2271	About the right weight	Excellent
+2272	Very underweight	Good
+2273	About the right weight	Good
+2274	Slightly overweight	Fair
+2275	Slightly overweight	Good
+2276	Slightly overweight	Good
+2277	About the right weight	Very Good
+2278	Slightly overweight	Good
+2279	About the right weight	Excellent
+2280	Slightly overweight	Good
+2281	About the right weight	Very Good
+2282	About the right weight	Good
+2283	Slightly underweight	Very Good
+2284	About the right weight	Fair
+2285	About the right weight	Excellent
+2286	Slightly overweight	Excellent
+2287	About the right weight	Very Good
+2288	About the right weight	Very Good
+2289	About the right weight	Excellent
+2290	About the right weight	Very Good
+2291	About the right weight	Excellent
+2292	About the right weight	Very Good
+2293	Slightly overweight	Very Good
+2294	Slightly overweight	Good
+2295	Slightly underweight	Good
+2296	Slightly overweight	Very Good
+2297	Slightly overweight	Good
+2298	Slightly underweight	Very Good
+2299	Slightly overweight	Very Good
+2300	About the right weight	Very Good
+2301	Slightly overweight	Good
+2302	Very overweight	Fair
+2303	About the right weight	Very Good
+2304	Very overweight	Fair
+2305	About the right weight	Excellent
+2306	About the right weight	NA
+2307	Slightly underweight	Excellent
+2308	About the right weight	NA
+2309	Very overweight	Poor
+2310	About the right weight	Good
+2311	About the right weight	Good
+2312	About the right weight	Excellent
+2313	Slightly overweight	NA
+2314	Slightly underweight	Good
+2315	About the right weight	Very Good
+2316	About the right weight	Very Good
+2317	About the right weight	Excellent
+2318	Slightly underweight	Very Good
+2319	Slightly overweight	Excellent
+2320	About the right weight	Excellent
+2321	Slightly overweight	Excellent
+2322	About the right weight	Good
+2323	Slightly overweight	Good
+2324	Very overweight	Very Good
+2325	Slightly underweight	Good
+2326	About the right weight	Very Good
+2327	Slightly overweight	Very Good
+2328	About the right weight	Very Good
+2329	About the right weight	Excellent
+2330	About the right weight	Good
+2331	About the right weight	Fair
+2332	About the right weight	Very Good
+2333	About the right weight	Excellent
+2334	Slightly underweight	Very Good
+2335	Slightly overweight	Excellent
+2336	About the right weight	Very Good
+2337	Very overweight	Very Good
+2338	Slightly overweight	Good
+2339	Slightly underweight	Very Good
+2340	About the right weight	Very Good
+2341	About the right weight	Very Good
+2342	Slightly overweight	Fair
+2343	About the right weight	Excellent
+2344	About the right weight	Very Good
+2345	Slightly overweight	Very Good
+2346	About the right weight	Good
+2347	Slightly overweight	Good
+2348	Slightly underweight	Very Good
+2349	Slightly overweight	Very Good
+2350	Slightly overweight	Fair
+2351	About the right weight	Very Good
+2352	Very overweight	Fair
+2353	Very overweight	Good
+2354	Slightly overweight	Good
+2355	Very overweight	Fair
+2356	Slightly overweight	Very Good
+2357	Slightly overweight	Good
+2358	Slightly underweight	Very Good
