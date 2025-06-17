@@ -167,7 +167,7 @@ Step 2) Once you have your new data file in your "Data" folder you are ready to 
 
 # read the excel file and assign the name "NCHA2021_RWS_Subset" to the new dataset in your environment 
 
-NCHA2021_RWS_Subset <- read_excel("Data/NCHA2021_RWS_Subset.xlsx")
+NCHA2021_RWS_Subset <- read_excel("~/PINC 2025/Bilaoen-PSP-2025/Onramp/Data/NCHA2021_RWS_Subset.xlsx")
 
 ```
 
@@ -377,17 +377,15 @@ ncha_df <- data.frame(NCHA2021_RWS_Subset)
 
 - Check that your data import went well – typically done in an “exploratory analysis” – should always do this! 
 
-* What class is the data?
-* How many rows?
-* How many columns?
+* What class is the data? Character
+* How many rows? 2358
+* How many columns? 41 
 * How many observations? 
 
 ```{r}
 
 # Check that your data import worked as intended
-
-
-
+glimpse(ncha_df)
 ```
 
 
