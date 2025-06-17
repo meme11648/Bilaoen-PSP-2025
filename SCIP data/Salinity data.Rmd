@@ -1,0 +1,33 @@
+---
+title: "SCIP 2.2"
+author: "Mahal Bilaoen"
+date: "2025-06-17"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# imported the data from my file directly 
+Salinity <- read.csv("DataSalinity_SFbar_FortPoint.csv")
+
+summary(Salinity)
+```
+
+```{r}
+library(chron)
+```
+
+
+```{r}
+#renaming all dates as readable dates in r
+Salinity$Date <- as.chron(Salinity$Date)
+```
+
+```{r}
+plot(x = Salinity$Date, y = Salinity$Salinity, col="pink")
+abline(v = as.chron("10/24/2021"))
+```
+
