@@ -167,7 +167,7 @@ Step 2) Once you have your new data file in your "Data" folder you are ready to 
 
 # read the excel file and assign the name "NCHA2021_RWS_Subset" to the new dataset in your environment 
 
-NCHA2021_RWS_Subset <- read_excel("Data/NCHA2021_RWS_Subset.xlsx")
+NCHA2021_RWS_Subset <- read_excel("~/PINC 2025/Bilaoen-PSP-2025/Onramp/Data/NCHA2021_RWS_Subset.xlsx")
 
 ```
 
@@ -377,17 +377,16 @@ ncha_df <- data.frame(NCHA2021_RWS_Subset)
 
 - Check that your data import went well – typically done in an “exploratory analysis” – should always do this! 
 
-* What class is the data?
-* How many rows?
-* How many columns?
-* How many observations? 
+* What class is the data? Character
+* How many rows? 2358
+* How many columns? 41 
+* How many observations? 2358 (?)
 
 ```{r}
 
 # Check that your data import worked as intended
-
-
-
+glimpse(ncha_df)
+count(ncha_df)
 ```
 
 
@@ -397,7 +396,10 @@ ncha_df <- data.frame(NCHA2021_RWS_Subset)
 ```{r}
 
 # We can rename one variable at a time, OR we can also rename multiple variables at the same time
-
+ncha_df <- rename(ncha_df, 
+                  "overall_health" = "Health",
+                  "exercise_mod_min" = "Exercise_mod_min",
+                  "exercise_vig_min" = "Exercise_vig_min")
 
 ```
 
@@ -407,7 +409,7 @@ ncha_df <- data.frame(NCHA2021_RWS_Subset)
 ```{r}
 
 # Select the variables using pipes [ %>% ]
-
+ncha_df_sub <- ncha_df %>% select(Overall.Health,Minutes.Moderate.PA...minutes,Minutes.Vigorous.PA...minutes)
 
 
 ```
@@ -418,7 +420,7 @@ ncha_df <- data.frame(NCHA2021_RWS_Subset)
 ```{r}
 
 # View the data frame in a pop up window 
-
+view(ncha_df_sub)
 
 ```
 
@@ -428,7 +430,7 @@ ncha_df <- data.frame(NCHA2021_RWS_Subset)
 ```{r}
 
 # Only keep observations for students who self-report "Excellent" health 
-
+ncha_df_sub <- filter(ncha_df_sub, Overall.Health == "Excellent")
 
 ```
 
@@ -439,7 +441,8 @@ ncha_df <- data.frame(NCHA2021_RWS_Subset)
 ```{r}
 
 # make a new variable using mutate()
-
+ncha_df_sub <- ncha_df_sub %>% mutate(vig_activity_hour = Minutes.Vigorous.PA...minutes / 60)
+ncha_df_sub <- ncha_df_sub %>% mutate(mod_activity_hour = Minutes.Moderate.PA...minutes/60)
 ```
 
 
@@ -447,9 +450,9 @@ ncha_df <- data.frame(NCHA2021_RWS_Subset)
 
 ```{r}
 
-# make a simple plot using ggplot()
+# make a simple plot using ggplot() 
 
-
+ggplot(ncha_df_sub, aes(x = Overall.Health, y = mod_activity_hour)) + geom_boxplot()
 
 
 ```
