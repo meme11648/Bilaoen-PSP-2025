@@ -67,11 +67,12 @@ The pipe supplies the result of the previous function as the first argument to t
 ```{r}
 # Install from CRAN
 
-install.packages("tidyverse")
+# install.packages("tidyverse")
 
 # Load the package into your current session
 
 library(tidyverse)
+library(readxl)
 
 ```
 
@@ -339,8 +340,7 @@ ggplot(data = ncha_df_sub, aes (x = overall_health, y = mod_activity_hour, colou
 
 # OR you can use pipes instead of [+] symbol 
 
-ggplot(ncha_df_sub, aes(overall_health, mod_activity_hour) ) %>% 
-          geom_boxplot()
+# ggplot(ncha_df_sub, aes(overall_health, mod_activity_hour) ) %>% geom_boxplot()
 
 
 ```
@@ -369,7 +369,7 @@ ggplot(ncha_df_sub, aes(mod_activity_hour) ) + geom_histogram()
 NCHA2021_RWS_Subset <- read_excel("Data/NCHA2021_RWS_Subset.xlsx")
 
 # make the tibble into a data frame 
-
+library(tidyverse)
 ncha_df <- data.frame(NCHA2021_RWS_Subset)
 
 ```
@@ -382,11 +382,12 @@ ncha_df <- data.frame(NCHA2021_RWS_Subset)
 * How many columns? 41 
 * How many observations? 2358 (?)
 
+
 ```{r}
 
 # Check that your data import worked as intended
 glimpse(ncha_df)
-count(ncha_df)
+
 ```
 
 
@@ -397,9 +398,9 @@ count(ncha_df)
 
 # We can rename one variable at a time, OR we can also rename multiple variables at the same time
 ncha_df <- rename(ncha_df, 
-                  "overall_health" = "Health",
-                  "exercise_mod_min" = "Exercise_mod_min",
-                  "exercise_vig_min" = "Exercise_vig_min")
+                  "overall_health" = "Overall.Health",
+                  "exercise_mod_min" = "Minutes.Moderate.PA...minutes",
+                  "exercise_vig_min" = "Minutes.Vigorous.PA...minutes")
 
 ```
 
@@ -409,7 +410,7 @@ ncha_df <- rename(ncha_df,
 ```{r}
 
 # Select the variables using pipes [ %>% ]
-ncha_df_sub <- ncha_df %>% select(Overall.Health,Minutes.Moderate.PA...minutes,Minutes.Vigorous.PA...minutes)
+ncha_df_sub <- ncha_df %>% select(overall_health, exercise_mod_min, exercise_vig_min)
 
 
 ```
@@ -430,7 +431,7 @@ view(ncha_df_sub)
 ```{r}
 
 # Only keep observations for students who self-report "Excellent" health 
-ncha_df_sub <- filter(ncha_df_sub, Overall.Health == "Excellent")
+ncha_df_sub <- filter(ncha_df_sub, overall_health == "Excellent")
 
 ```
 
@@ -441,8 +442,8 @@ ncha_df_sub <- filter(ncha_df_sub, Overall.Health == "Excellent")
 ```{r}
 
 # make a new variable using mutate()
-ncha_df_sub <- ncha_df_sub %>% mutate(vig_activity_hour = Minutes.Vigorous.PA...minutes / 60)
-ncha_df_sub <- ncha_df_sub %>% mutate(mod_activity_hour = Minutes.Moderate.PA...minutes/60)
+ncha_df_sub <- ncha_df_sub %>% mutate(vig_activity_hour = exercise_vig_min / 60)
+ncha_df_sub <- ncha_df_sub %>% mutate(mod_activity_hour = exercise_mod_min/60)
 ```
 
 
@@ -452,7 +453,7 @@ ncha_df_sub <- ncha_df_sub %>% mutate(mod_activity_hour = Minutes.Moderate.PA...
 
 # make a simple plot using ggplot() 
 
-ggplot(ncha_df_sub, aes(x = Overall.Health, y = mod_activity_hour)) + geom_boxplot()
+ggplot(ncha_df_sub, aes(x = overall_health, y = mod_activity_hour)) + geom_boxplot()
 
 
 ```
