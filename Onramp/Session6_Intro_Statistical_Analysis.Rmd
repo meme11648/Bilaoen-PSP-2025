@@ -53,8 +53,7 @@ Types of Statistical Studies
 First, as always, let's load in our data and libraries (if any).
 
 ```{r}
-library(tidyverse)
-ncha <- read.csv("~/PINC 2025/Bilaoen-PSP-2025/Onramp/Data/NCHA2021_Session3_5_Subset.csv")
+ncha <- read.csv("NCHA2021_Session3_5_Subset.csv")
 ```
 
 Okay, now we can go through some descriptive statistics.
@@ -64,13 +63,12 @@ Remember that descriptive statistics [*describe*]{.underline} what the data is. 
 Let's look at the dataset really quickly. How do we *view* the data?
 
 ```{r}
-view(ncha)
-class(ncha$AGE)
+
 ```
 
 Now let's look at age. What *class* is the variable AGE?
 
-ANSWER: integer
+ANSWER:
 
 Time to use some functions we've learned in section A to describe the data.
 
@@ -79,7 +77,7 @@ Time to use some functions we've learned in section A to describe the data.
 First, let's look at mean (average). Which function can you use for finding the average value in the variable AGE?
 
 ```{r}
-mean(ncha$AGE, na.rm = TRUE)
+
 ```
 
 *Note*: will need to include na.rm = TRUE.
@@ -87,7 +85,7 @@ mean(ncha$AGE, na.rm = TRUE)
 Now, we can look at the median.
 
 ```{r}
-median(ncha$AGE, na.rm = TRUE)
+
 ```
 
 Lastly, we can look at mode. Normally, functions of what you need are named simply, like mean = mean() and median = median(). Mode is one of the few that aren't. You can find the mode (most of the same number of that variable) by using the *table()* function.
@@ -99,7 +97,7 @@ table(ncha$AGE)
 Is the mean, median, and mode the same number? If it's not the same number, then the data may be skewed! We can visualize this by using the base R plotting function, *hist()*.
 
 ```{r}
-hist(ncha$AGE)
+
 ```
 
 Which way is it skewed?
@@ -109,13 +107,13 @@ Which way is it skewed?
 Standard deviation (SD): how dispersed the data is in relation to the mean
 
 ```{r}
-sd(ncha$AGE, na.rm =TRUE)
+
 ```
 
 Variance: expected value of the squared deviation from the mean
 
 ```{r}
-var(ncha$AGE, na.rm = TRUE)
+
 ```
 
 Great job! That's it for Activity 1 in Session 6.
@@ -174,7 +172,8 @@ ncha_summary_table <- ncha %>%
             Max = max(MIN_MOD_PA, na.rm = TRUE), 
             Mean = mean(MIN_MOD_PA, na.rm = TRUE),
             Median = median(MIN_MOD_PA, na.rm = TRUE), 
-            missing = sum(is.na(MIN_MOD_PA))) %>% 
+            missing = sum(is.na(MIN_MOD_PA)), 
+            .groups = "drop") %>% 
   
   # round by mutating on a predicate function
   mutate_if(is.numeric, round, 3)
@@ -271,7 +270,7 @@ legend(
 ```{r}
 
 # install packages for creating table 1 (descriptive stats table)
-# install.packages("table1")
+install.packages("table1")
 
 # load the library into 
 library(table1)
