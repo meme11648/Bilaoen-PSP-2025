@@ -42,7 +42,7 @@ This code will walk through obtaining weather data from NOAA and Daymet.
 
 ```{r token, echo = FALSE}
 # Set your NOAA API Token (replace with your own API key)
-noaa_token <- "sYSaRlnFshYqsTcobQCAivNIaHqEUWVc"
+noaa_token <- "OQNUBOOcExTcVeppzHrIuFlyBAbFycOF"
 
 # Define the API endpoint URL (get this from NOAA website https://www.ncdc.noaa.gov/cdo-web/webservices/v2)
 
@@ -60,7 +60,7 @@ The following code includes a function to download the data.
 
 ```{r define API, echo = FALSE}
 
-noaa_token <- "sYSaRlnFshYqsTcobQCAivNIaHqEUWVc"
+noaa_token <- "OQNUBOOcExTcVeppzHrIuFlyBAbFycOF"
 
 
 fetch_noaa_data_paginated <- function(start_date, end_date, location_id, datatypeids, token) {
@@ -126,8 +126,10 @@ fetch_noaa_data_paginated <- function(start_date, end_date, location_id, datatyp
 
 ## The function can be used based on the year, location id, and data type. These inputs can be changed depending on what you would like to download. The code below is looking at the city code for San Francisco.  
 
+
 ```{r api.using.function, echo = FALSE}
 # Example usage (loop by year, API works better if 1 year or less of data being requested at a time)
+#This is not the code we used, use chunk below for FIPS id 
 all_data <- list()
 for (yr in 2000:2024) {
   cat("Downloading data for year:", yr, "\n")
@@ -233,6 +235,27 @@ write.csv(sf_weather, "sf_weather_noaa_2000_2024.csv", row.names = FALSE)
 ```
 
 
+```{r}
+#converting temperatures from Celsius to Fahrenheit 
+sf_weather <- sf_weather %>% 
+  mutate(temp_f = value * (9/5) + 32)
+
+sf_weather <- sf_weather %>% rename(temp_c = value)
+
+#Making the weather data times to become more tidy 
+sf_weather <- sf_weather %>% 
+  mutate(date_time = ymd_hms(date),
+         date_new = as_date(date_time))
+
+#plotting the weather
+ggplot(sf_weather, aes(x=date_new, y = temp_f, color = datatype)) + geom_line() +
+  scale_x_date(
+    breaks=seq(from = as.Date("2000-01-01"), to = as.Date("2025-01-01"), by = "5 years"),
+    date_labels = "%Y" #only showing the year
+  ) +
+  labs (x = "Years", y = "Temperature(Fahrenheit)", title = "Daily Min and Max Temps throughout SF")
+```
+
 ### Note: we figured out what station ids were in San Francisco 
 ```{r use.station.id, echo = FALSE}
 
@@ -333,6 +356,8 @@ interpolated_results <- pmap_dfr(
 ```{r combine.tracts, echo= FALSE}
 
 sf_tracts_with_weather <- left_join(sf_tracts, interpolated_results, by = "GEOID")
+
+
 
 ```
 
