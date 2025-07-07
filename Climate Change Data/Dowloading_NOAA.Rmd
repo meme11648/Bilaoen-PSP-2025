@@ -1,0 +1,627 @@
+---
+title: "Downloading NOAA Data"
+output: html_document
+date: "2025-07-03"
+---
+
+```{r set.knitr.options, echo=FALSE, message=FALSE, warning=FALSE}
+#-----set knitr options-----
+
+# clear environment
+rm(list = ls())
+
+# knitr options
+suppressMessages(library(knitr))
+opts_chunk$set(tidy = FALSE, echo = TRUE, message = FALSE)
+
+# Load pacman, installing if needed and other packages as needed
+if (!require("pacman")) { install.packages("pacman", repos = "http://cran.r-project.org") }
+
+# Load other packages, installing as needed.
+pacman::p_load(tidyverse, dplyr, httr, jsonlite, tigris, sf, gstat)
+
+# # set working directory
+# work_dir <- getwd()
+# 
+# # name and create output directory
+# output_dir <- file.path(work_dir, "output")
+# dir.create(output_dir, showWarnings = TRUE, recursive = TRUE)
+
+```
+
+
+# About NOAA
+
+The National Oceanic and Atmospheric Administration (NOAA) is a U.S. federal agency that provides publicly available climate and weather data, including long-term daily temperature, precipitation, and other atmospheric variables. NOAA operates thousands of ground-based weather stations across the country and maintains a large archive of historical and near-real-time data.
+
+## Using NOAA API
+
+We will access NOAA data using the NOAA Climate Data Online (CDO) API, which allows users to programmatically retrieve weather observations by specifying parameters. To use the API, users must register for a free API token from NOAA, and send HTTP requests with that token included.
+
+In our project, we used the NOAA API to download daily temperature data from two San Francisco stations for the period 2010–2020, which we then compared with Daymet estimates for validation.
+
+This code will walk through obtaining weather data from NOAA API. First, you will need to obtain an API Token to use the NOAA website. 
+
+```{r token, echo = FALSE}
+# Set your NOAA API Token (replace with your own API key)
+noaa_token <- "OQNUBOOcExTcVeppzHrIuFlyBAbFycOF"
+
+```
+
+
+### API Function 
+
+The function can be used based on the year, location id, and data type. These inputs can be changed depending on what you would like to download. The code below is using the FIPS code for San Francisco county. 
+
+
+```{r api.function, eval = FALSE}
+
+fetch_noaa_data_paginated <- function(start_date, end_date, location_id, datatypeids, token) {
+  base_url <- "https://www.ncdc.noaa.gov/cdo-web/api/v2/data"
+  all_results <- list()
+  offset <- 1
+  limit <- 1000
+  more_data <- TRUE
+  
+  # Create the base query
+  params <- list(
+    datasetid = "GHCND",
+    locationid = location_id,
+    startdate = start_date,
+    enddate = end_date,
+    units = "metric",
+    limit = limit,
+    offset = offset
+  )
+  
+  # Build the query string with multiple datatypeids
+  datatypeid_params <- paste(paste0("datatypeid=", datatypeids), collapse = "&")
+  
+  while(more_data) {
+    # Build the full URL with parameters
+    full_url <- modify_url(
+      base_url,
+      query = c(params, list(offset = offset))
+    )
+    # Add the datatypeids manually
+    full_url <- paste0(full_url, "&", datatypeid_params)
+    
+    response <- GET(full_url, add_headers(token = token))
+    if (status_code(response) != 200) {
+      cat("Error: Status", status_code(response), "\n")
+      break
+    }
+    results <- fromJSON(content(response, "text", encoding = "UTF-8"))
+    if (!is.null(results$results)) {
+      all_results <- append(all_results, list(results$results))
+      num_results <- length(results$results)
+      cat("Fetched", num_results, "records (offset", offset, ")\n")
+      offset <- offset + limit
+      if (num_results < limit) {
+        more_data <- FALSE
+      }
+    } else {
+      more_data <- FALSE
+    }
+    Sys.sleep(1)
+  }
+  if (length(all_results) > 0) {
+    return(bind_rows(all_results))
+  } else {
+    return(NULL)
+  }
+}
+
+
+```
+
+### Downloading data
+
+Below we use the function created above to download data for the County of San Francisco using it's FIPS code. 
+
+```{r use.fips.id, echo = FALSE}
+
+# Example usage (loop by year, API works better if 1 year or less of data being requested at a time)
+all_data <- list()
+for (yr in 2000:2024) {
+  cat("Downloading data for year:", yr, "\n")
+  res <- fetch_noaa_data_paginated(
+    start_date = paste0(yr, "-01-01"),
+    end_date = paste0(yr, "-12-31"),
+    location_id = "FIPS:06075", # FIPS for SF
+    datatypeids = c("TMAX", "TMIN", "TAVG"),
+    token = noaa_token
+  )
+  if (!is.null(res)) {
+    all_data[[as.character(yr)]] <- res
+  }
+}
+
+sf_weather <- bind_rows(all_data)
+
+
+# save the data as a CSV to use for later 
+
+write.csv(sf_weather, "sf_weather_noaa_2000_2024.csv", row.names = FALSE)
+
+```
+
+
+### Combine weather and station data
+
+We then join weather data with station data, this will add the lat/long data needed for next step in the interpolation. 
+
+```{r combine.data, echo = FALSE}
+
+# get list of stations in san francisco 
+
+response <- GET(
+  url = "https://www.ncei.noaa.gov/cdo-web/api/v2/stations",
+  query = list(
+    locationid = "FIPS:06075",   # San Francisco city code
+    datasetid = "GHCND",
+    limit = 1000
+  ),
+  add_headers(token = noaa_token)
+)
+
+stations_json <- fromJSON(content(response, "text", encoding = "UTF-8"))
+sf_stations_api <- stations_json$results
+
+# Show the resulting stations
+sf_station_ids <- sf_stations_api$id
+sf_weather_only <- sf_weather %>% filter(station %in% sf_station_ids)
+# Convert sf_stations_api to a tibble/data frame if not already
+sf_stations_df <- as_tibble(sf_stations_api)
+
+# Join weather data to station metadata (by station ID)
+sf_weather_with_meta <- sf_weather_only %>%
+  left_join(sf_stations_df, by = c("station" = "id"))
+
+
+# Convert to Spatial Data
+weather_points <- st_as_sf(sf_weather_with_meta, coords = c("longitude", "latitude"), crs = 4326)
+
+
+# Get 2020 census tracts for San Francisco County (FIPS: 075)
+sf_tracts <- tracts(state = "CA", county = "San Francisco", year = 2020, class = "sf")
+
+# plot(sf_tracts$geometry)
+
+sf_tracts <- st_transform(sf_tracts, crs = 4326)
+
+
+```
+
+### Interpolation of points to census tracts
+
+We can then interpolate the station data to get data for each census tract within San Francisco. 
+
+```{r interpolate, echo = FALSE}
+
+# read in downloaded csv of data 
+# sf_weather <- read_csv("Climate Change/sf_weather_noaa_2000_2024.csv")
+
+
+library(sf)
+library(gstat)
+library(dplyr)
+library(purrr)
+
+#need to rename it after loading in!
+sf_weather <- sf_weather_noaa_2000_2024
+
+tract_centroids <- st_centroid(sf_tracts)
+
+interpolate_one <- function(datatype, date, value) {
+  day_pts <- weather_points %>%
+    filter(datatype == !!datatype, date == !!date, !is.na(value))
+  if (nrow(day_pts) < 2) return(NULL) # skip if not enough points
+  
+  # Make sure CRS matches
+  day_pts <- st_transform(day_pts, 4326)
+  centroids <- st_transform(tract_centroids, 4326)
+  
+  idw_result <- gstat::idw(
+    value ~ 1,
+    day_pts,
+    newdata = centroids,
+    idp = 2.0
+  )
+  tibble(
+    GEOID = centroids$GEOID,
+    date = date,
+    datatype = datatype,
+    interpolated_value = idw_result$var1.pred
+  )
+}
+
+# Loop as before using purrr
+datatypes <- unique(weather_points$datatype)
+all_dates <- unique(weather_points$date)
+
+grid <- expand.grid(datatype = datatypes, date = all_dates, stringsAsFactors = FALSE)
+
+interpolated_results <- pmap_dfr(
+  grid,
+  function(datatype, date) interpolate_one(datatype, date, value)
+)
+
+
+# Combine weather with tracts 
+
+sf_tracts_with_weather <- left_join(sf_tracts, interpolated_results, by = "GEOID")
+
+#write in as a csv to save time
+write.csv(sf_tracts_with_weather, "sf_interpolated_weather_noaa_2000_2024.csv", row.names = FALSE)
+
+```
+
+
+
+### Transform temperature metric units 
+
+We can also transform units from metric to Fahrenheit
+
+```{r, transform.f, echo = FALSE}
+library(dplyr)
+
+sf_tracts_with_weather <- sf_tracts_with_weather %>%
+  mutate(
+    interpolated_value_f = (interpolated_value) * 9/5 + 32,  
+  )
+
+```
+
+
+### Transform time format 
+
+Fixing Time to have a more useful time stamp. 
+
+```{r, transform.time, echo = FALSE}
+library(dplyr)
+library(lubridate)
+
+sf_tracts_with_weather_time <- sf_tracts_with_weather %>%
+  mutate(
+    # parse the ISO string as UTC
+    datetime_utc = ymd_hms(date, tz = "UTC"),
+    # shift that instant into Pacific Time (handles PST vs PDT)
+    datetime_pst = with_tz(datetime_utc, tzone = "America/Los_Angeles"),
+    # now pull out each component in local time
+    date_pst = as.Date(datetime_pst),
+    Year   = year(datetime_pst),
+  ) %>%
+  # optional: drop the helper columns if you don’t need them
+  select(-datetime_utc)
+
+```
+
+
+### Visualizing data 
+
+```{r, plot.weather, echo = FALSE}
+library(ggplot2)
+library(dplyr)
+
+target_date <- "1990-08-01" # selecting a specific date 
+
+# If you want to map all datatypes (e.g., TMAX & TMIN), you can facet by datatype
+tracts_day <- sf_tracts_with_weather_time %>%
+  filter(date_pst == target_date)
+
+ggplot(tracts_day) +
+  geom_sf(aes(fill = interpolated_value_f), color = "white", size = 0.1) +
+  scale_fill_viridis_c(
+    na.value = "grey80",
+    name = "Weather value"
+  ) +
+  labs(
+    title = paste("Interpolated Weather by Tract on", target_date),
+    fill = "Value"
+  ) +
+  facet_wrap(~datatype) +         # Remove this line if you only have one datatype!
+  theme_minimal()
+
+```
+
+
+
+## Exploratory Data Analysis (EDA)
+
+We can explore the directly downloaded data. Note: this is the data before the interpolation step. 
+
+```{r}
+
+# read in data that was previously downloaded (the date variable will be different format)
+# sf_weather <- read_csv("Climate Change/sf_weather_noaa_2000_2024.csv")
+
+# look over all data 
+summary(sf_weather)
+
+# look at number of stations 
+table(sf_weather$station)
+
+# check min and max dates 
+min(sf_weather$date) # "2000-01-01T00:00:00"
+
+max(sf_weather$date) # "2023-11-20T00:00:00"
+
+# can also check the range of dates 
+range(sf_weather$date)
+
+# look at first 6 rows of data 
+head(sf_weather)
+
+# transform Celsius to Fahrenheit
+## Temperature in degrees Fahrenheit (°F) = (Temperature in degrees Celsius (°C) * 9/5) + 32
+
+sf_weather <- sf_weather %>% 
+                mutate(temp_f = (value * (9/5) + 32))
+
+sf_weather <- sf_weather %>%  rename(temp_c = value)
+
+# dealing with time from direct download 
+# sf_weather <- sf_weather %>%
+#   mutate(date = as_date(with_tz(ymd_hms(date, tz = "UTC"), tzone = "America/Los_Angeles")))
+
+# dealing with time from csv file 
+sf_weather <- sf_weather %>% 
+                mutate(date = ymd(date)) 
+
+# plot using ggplot2 
+
+ggplot(sf_weather, aes(x = date, y = temp_f, color = datatype)) + geom_point()
+
+# wrapping by data type (min or max)
+ggplot(sf_weather, aes(x = date, y = temp_f, color = datatype)) + geom_point() + 
+  facet_wrap(~datatype)
+
+# wrapping by station 
+ggplot(sf_weather, aes(x = date, y = temp_f, color = datatype)) + geom_point() + 
+  facet_wrap(~station)
+
+# add axis labels, customize axis ticks 
+
+ggplot(sf_weather, aes(x = date, y = temp_f, color = datatype)) +
+  geom_point() +
+  scale_x_date(
+    breaks = seq(from = as.Date("2000-01-01"), to = as.Date("2025-01-01"), by = "5 years"),
+    date_labels = "%Y"  # Only show the year
+  ) +
+labs(y = "Temperature (\u00B0F)") + 
+  xlab("Date") + 
+  ggtitle("Temperature in SF 2000-2024") + 
+    theme(plot.title = element_text(hjust = 0.5)) + 
+  labs(color = "Type")
+
+
+```
+
+
+We can aggregate the daily data to weekly data to help visualize it. 
+
+```{r}
+
+# average weekly min and max temperature 
+df_weekly <- sf_weather %>%
+  # Convert 'date' to Date format if not already
+  mutate(date = as.Date(date)) %>%
+  # Floor the date to the start of the week (default = Sunday, use 'week_start = 1' for Monday)
+  mutate(week_start = floor_date(date, unit = "week", week_start = 1)) %>%
+  # Group by week, station, and datatype
+  group_by(station, datatype, week_start) %>%
+  # Summarize weekly temperature
+  summarise(
+    weekly_temp_c = mean(temp_c, na.rm = TRUE),
+    weekly_temp_f = mean(temp_f, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+
+
+ggplot(df_weekly, aes(x = week_start, y = weekly_temp_f, color = datatype)) +
+  geom_point() +
+  scale_x_date(
+    breaks = seq(from = as.Date("2000-01-01"), to = as.Date("2025-01-01"), by = "5 years"),
+    date_labels = "%Y"  # Only show the year
+  ) +
+labs(y = "Temperature (\u00B0F)") + 
+  xlab("Date") + 
+  ggtitle("Weekly Temp in SF 2000-2024") + 
+    theme(plot.title = element_text(hjust = 0.5)) + 
+  labs(color = "Type")
+
+
+```
+
+We can aggregate the daily data to bi-weekly data to help visualize it. 
+
+```{r}
+
+# Assume your dataframe is named `df`
+df_biweekly <- sf_weather %>%
+  # Ensure date is in Date format
+  mutate(date = as.Date(date)) %>%
+  # Get week start date
+  mutate(week_start = floor_date(date, unit = "week", week_start = 1)) %>%
+  # Compute 2-week group: number of weeks since origin, then floor by 2-week bins
+  mutate(week_num = as.numeric(difftime(week_start, min(week_start), units = "weeks")),
+         biweek_start = min(week_start) + weeks(floor(week_num / 2) * 2)) %>%
+  # Group by biweekly start date, station, and datatype
+  group_by(station, datatype, biweek_start) %>%
+  # Summarize mean temperature for 2-week periods
+  summarise(
+    temp_c_biweek_avg = mean(temp_c, na.rm = TRUE),
+    temp_f_biweek_avg = mean(temp_f, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+
+ggplot(df_biweekly, aes(x = biweek_start, y = temp_f_biweek_avg, color = datatype)) +
+  geom_point() +
+  scale_x_date(
+    breaks = seq(from = as.Date("2000-01-01"), to = as.Date("2025-01-01"), by = "5 years"),
+    date_labels = "%Y"  # Only show the year
+  ) +
+labs(y = "Temperature (\u00B0F)") + 
+  xlab("Date") + 
+  ggtitle("Biweekly Temp in SF 2000-2024") + 
+    theme(plot.title = element_text(hjust = 0.5)) + 
+  labs(color = "Type")
+
+
+```
+
+
+## Next steps for PINC team. 
+
+EDA Steps for NOAA Data
+1. Data Quality Checks
+ Check for missing or NA values in tmax, tmin, or date
+ Confirm station IDs, names, and locations (make sure they are in SF)
+ Ensure the time range covers 2010–2020
+
+2. Time Series Plots
+ Plot tmax and tmin over time for each station
+ Look for outliers or unusual patterns (e.g., flat lines, gaps)
+
+3. Annual and Seasonal Summaries
+ Calculate average annual tmax per station
+ Count extreme heat days per year (tmax ≥ 29.4°C)
+ Summarize heat days by month or season
+
+4. Heat Wave Detection
+ Define a heat wave (e.g., 2+ consecutive days ≥ 29.4°C)
+ Count number of heat wave events per year
+ Calculate duration of longest event per year
+
+5. Compare Between Stations
+ Compare temperature trends across the two NOAA sites
+ Assess whether both stations show similar seasonal and annual trends
+
+6. Weekly Aggregation (for comparison with Daymet)
+ Aggregate to weekly means of tmax
+ Count heat days per week
+ Create a year-week variable for joining with Daymet
+
+7. Prepare for Validation
+ Join NOAA weekly summaries with Daymet weekly data
+ Compare trends and calculate correlation or RMSE
+
+
+```{r}
+# Load required packages
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(tidyr)
+library(Metrics)
+
+# Step 1: Prepare the data
+# Ensure 'date' is Date type and filter for 2010–2020
+noaa_df <- sf_weather %>%
+  mutate(date = as.Date(date)) %>%
+  filter(year(date) >= 2000 & year(date) <= 2020)
+
+# Step 2: Pivot wider to get tmax and tmin in separate columns
+noaa_wide <- noaa_df %>%
+  filter(datatype %in% c("TMAX", "TMIN")) %>%
+  select(date, station, datatype, temp_f) %>%
+  pivot_wider(names_from = datatype, values_from = temp_f) %>%
+  rename(tmax = TMAX, tmin = TMIN)
+
+# Step 3: Add year, month, week, and heat day flag (tmax ≥ 29.4°C)
+noaa_wide <- noaa_wide %>%
+  mutate(
+    year = year(date),
+    month = month(date, label = TRUE),
+    week = isoweek(date),
+    heat_day = ifelse(tmax >= 29.4, 1, 0)
+  )
+
+# Step 4: Time series plots of daily tmax and tmin
+ggplot(noaa_wide, aes(x = date)) +
+  geom_line(aes(y = tmax, color = "TMAX")) +
+  geom_line(aes(y = tmin, color = "TMIN")) +
+  facet_wrap(~ station, scales = "free_y") +
+  labs(title = "Daily Max and Min Temperatures by Station", y = "Temperature (°C)", color = "Variable")
+
+# Step 5: Annual summary statistics
+annual_summary <- noaa_wide %>%
+  group_by(station, year) %>%
+  summarise(
+    avg_tmax = mean(tmax, na.rm = TRUE),
+    heat_days = sum(heat_day, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Step 6: Monthly heat day count
+monthly_summary <- noaa_wide %>%
+  group_by(station, month) %>%
+  summarise(
+    heat_days = sum(heat_day, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Step 7: Heat wave detection per year
+detect_heatwaves <- function(temp_vec) {
+  r <- rle(temp_vec)
+  sum(r$lengths[r$values == 1 & r$lengths >= 2])
+}
+
+heatwave_stats <- noaa_wide %>%
+  group_by(station, year) %>%
+  summarise(
+    heat_wave_count = detect_heatwaves(heat_day),
+    longest_event = max(rle(heat_day)$lengths[rle(heat_day)$values == 1], na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Step 8: Compare stations – optional quick plot
+ggplot(annual_summary, aes(x = year, y = heat_days, color = station)) +
+  geom_line() +
+  geom_point() +
+  scale_x_continuous(breaks = seq(min(annual_summary$year), max(annual_summary$year), by = 5)) +
+  labs(title = "Annual Extreme Heat Days (≥85°F)", y = "# of Heat Days", x = "Year") +
+  theme_minimal()
+
+# Step 9: Weekly aggregation
+weekly_summary <- noaa_wide %>%
+  group_by(station, year, week) %>%
+  summarise(
+    mean_tmax = mean(tmax, na.rm = TRUE),
+    heat_days = sum(heat_day, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(year_week = paste0(year, "-W", sprintf("%02d", week)))
+
+# Output sample summaries
+head(annual_summary)
+head(heatwave_stats)
+head(weekly_summary)
+
+```
+
+
+## Answering Research Question 1!
+
+**What are the temporal patterns of extreme heat events in San Francisco from 2010–2020?**
+
+1. Define Extreme Heat Event
+For this analysis, define an extreme heat day as any day where TMAX ≥ 29.4°C (85°F) OR we can use the local based defintion based on the 95th percentile. 
+
+A heat wave event is 2 or more consecutive extreme heat days.
+
+2. Process and Summarize NOAA Data
+Use the cleaned and reshaped NOAA dataset to calculate:
+Total number of extreme heat days per year
+Number of heat wave events per year
+Duration of the longest heat wave each year
+Seasonal patterns: in which months do heat events most frequently occur?
+
+3. Visualize Temporal Trends
+Create the following plots:
+Line chart: extreme heat days per year (shows trend over time)
+Bar plot: heat wave events per year
+Boxplot or histogram: distribution of heat days by month or season

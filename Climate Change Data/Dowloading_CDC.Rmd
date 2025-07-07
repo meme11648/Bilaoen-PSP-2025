@@ -1,0 +1,85 @@
+---
+title: "Downloading NOAA Data"
+output: html_document
+date: "2025-07-03"
+---
+
+```{r set.knitr.options, include= FALSE, message=FALSE, warning=FALSE}
+#-----set knitr options-----
+
+# clear environment
+rm(list = ls())
+
+# knitr options
+suppressMessages(library(knitr))
+opts_chunk$set(tidy = FALSE, echo = TRUE, message = FALSE)
+
+# Load pacman, installing if needed and other packages as needed
+if (!require("pacman")) { install.packages("pacman", repos = "http://cran.r-project.org") }
+
+# Load other packages, installing as needed.
+pacman::p_load(tidyverse, dplyr, httr, jsonlite, tigris, sf, gstat, daymetr)
+
+```
+
+# About SVI Data 
+
+The Social Vulnerability Index (SVI), developed by the CDC/ATSDR, measures the resilience of communities when confronted by external stresses such as natural disasters or disease outbreaks. It is based on 16 U.S. Census variables grouped into four themes: socioeconomic status, household composition & disability, minority status & language, and housing type & transportation. The SVI is reported at the census tract level and ranges from 0 (least vulnerable) to 1 (most vulnerable), allowing for comparison across geographic areas.
+
+In our analysis, we use the 2020 SVI to assess how extreme heat exposure correlates with social vulnerability across San Francisco census tracts from 2010 to 2020. By linking weekly heat metrics derived from Daymet data to the SVI scores of each tract, we examine whether communities with higher social vulnerability experience more frequent or intense extreme heat events. This helps us identify environmental justice patterns and prioritize areas for future public health interventions.
+
+
+## Downloading Data
+
+Since no specific API exists, we can directly download from the website:  https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html
+
+You can select Year: 2020, Geography: California, Geography Type: Census Tracts. 
+
+```{r}
+
+# read in data 
+svi_data <- read_csv("Climate Change/Data/CA_SVI.csv")
+View(CA_SVI)
+
+```
+
+
+
+## Data Preparation
+
+Join to weekly heat exposure data using tract ID
+
+
+Exploratory Data Analysis
+4.1 Time trends
+Plot yearly average heat days per tract
+
+Plot number of heat waves per year
+
+4.2 Spatial patterns
+Map of average weekly heat days per tract
+
+Map of SVI values per tract
+
+Map showing both for visual overlap
+
+
+Statistical Analysis
+5.1 Correlation analysis
+Correlation between average weekly heat exposure and SVI
+
+Include Pearson or Spearman correlation and scatterplot
+
+5.2 Group comparison
+Create SVI categories (quartiles or high/low)
+
+Compare average heat exposure across SVI groups (boxplots, t-tests or Kruskal-Wallis)
+
+
+
+
+```{r session.info, echo=FALSE}
+#-----session info-----
+
+sessionInfo()
+```

@@ -1,0 +1,343 @@
+---
+title: "Downloading NOAA Data"
+output: html_document
+date: "2025-07-03"
+---
+
+```{r set.knitr.options, include= FALSE, message=FALSE, warning=FALSE}
+#-----set knitr options-----
+
+# clear environment
+rm(list = ls())
+
+# knitr options
+suppressMessages(library(knitr))
+opts_chunk$set(tidy = FALSE, echo = TRUE, message = FALSE)
+
+# Load pacman, installing if needed and other packages as needed
+if (!require("pacman")) { install.packages("pacman", repos = "http://cran.r-project.org") }
+
+# Load other packages, installing as needed.
+pacman::p_load(tidyverse, dplyr, httr, jsonlite, tigris, sf, gstat, daymetr)
+
+```
+
+# About Daymet
+
+Unlike NOAA (National Oceanic and Atmospheric Administration), which uses observational climate and weather data collected from ground stations, satellites, and other sources, Daymet provides gridded daily surface weather data (e.g., temperature, precipitation) for North America, derived from interpolation of ground-based station data, and is especially useful for ecological and environmental modeling where spatially continuous data are needed.
+
+## Using Daymet R package
+
+We will use the *daymetr* package to download weather data from 2000-2024. More information and examples of how to use the R package can be found here: <https://cran.r-project.org/web/packages/daymetr/vignettes/daymetr-vignette.html>
+
+To download the data we need to select the locations of the estimates. Given we want to examine weather at the census tract level, we can use census tract centroids to extract estimates at these locations.
+
+A census tract centroid is the geographic center point (latitude and longitude) of a census tract, which is a small, relatively permanent subdivision of a county used for statistical purposes. The centroid represents the approximate "middle" of the tract and is often used to link spatial data (like climate or health data) to the tract's location.
+
+First, we need to create a CSV file with information needed for batch downloading using the *daymetr* package.
+
+```{r centroids, echo = FALSE}
+
+# To use Daymet we will need to make csv file with : site (GEOID), latitude, longitude
+
+# Get 2020 census tracts for San Francisco County (FIPS: 075)
+sf_tracts <- tracts(state = "CA", county = "San Francisco", year = 2020, class = "sf")
+
+# extract centroids 
+tract_centroids <- st_centroid(sf_tracts)
+
+# select the variables 
+sf_centroids <- tract_centroids %>% select(GEOID, INTPTLAT, INTPTLON)
+
+# remove geometry 
+sf_centroid_df <- st_drop_geometry(sf_centroids)
+
+# change to numeric 
+sf_centroid_df <- sf_centroid_df %>% mutate(across(c(INTPTLAT, INTPTLON), as.numeric))
+
+# rename to use with Daymet function 
+sf_centroid_df <- sf_centroid_df %>% 
+                        rename(site = GEOID,
+                               lat = INTPTLAT,
+                               lon = INTPTLON)
+
+
+# save a csv with the centroid locations for San Francisco 
+# write.csv(sf_centroid_df, "Climate Change/sf_centroids.csv", row.names = FALSE)
+
+
+```
+
+### Batch downloads
+
+The download_daymet_batch function from the daymetr R package allows users to download Daymet data for multiple locations in a single batch. Users provide a table of site information (with site names, latitude, and longitude), and the function retrieves daily weather data (e.g., temperature, precipitation) for each site over specified years. It’s useful for efficiently collecting climate data for many locations at once.
+
+```{r daymet.download, eval = FALSE}
+
+# warning: downloading data takes a LONG time to run, so only run once, chunk is set to eval = FALSE to help prevent it from running again 
+
+# download batch data using SF centroid locations
+# make sure to indicate the year, end
+# the argument "simplify" can be used to create a dataframe of the data, not using it will result your data to be in a list format 
+
+df_batch <- download_daymet_batch(file_location = "~/Library/Mobile Documents/com~apple~CloudDocs/Documents/SFSU Faculty/PINC 2025/PSP2025/Climate Change/sf_centroids.csv", 
+start = 2000, 
+end = 2024, 
+simplify = TRUE)
+
+# save a csv with weather data for San Francisco 
+write.csv(df_batch, "sf_daymet.csv", row.names = FALSE)
+
+# read in your data from the csv after you download it the first time 
+
+sf_daymet <- read_csv("~/Library/Mobile Documents/com~apple~CloudDocs/Documents/SFSU Faculty/PINC 2025/PSP2025/Climate Change/sf_daymet.csv")
+
+
+```
+
+### Data wrangling
+
+We now need to fix the names of the measurement types.
+
+```{r data.wrangling, echo = FALSE}
+
+# what are the names of each category? use unique to find the names  
+unique(sf_daymet$measurement)
+
+sf_daymet <- sf_daymet %>%
+  mutate(measurement = recode(measurement,
+    "tmax..deg.c." = "tmax",
+    "tmin..deg.c." = "tmin",
+    "prcp..mm.day." = "prcp",
+    "srad..W.m.2." = "srad",
+    "swe..kg.m.2." = "swe",
+    "vp..Pa." = "vp",
+    "dayl..s." = "dayl"
+  ))
+
+# check names again 
+unique(sf_daymet$measurement)
+
+# check dimensions, quick check of the number of rows 
+dim(sf_daymet) # 14839442
+
+# remove the level that does not have estimates 
+sf_daymet <- sf_daymet %>%
+  filter(!grepl("outside DAYMET spatial coverage", measurement))
+
+# check dimensions, quick check of the number of rows 
+dim(sf_daymet) # 14839440
+
+# check names again 
+unique(sf_daymet$measurement)
+
+
+```
+
+We can look at the average temperature, by averaging the min and max temepratures.
+
+```{r}
+
+
+# Step 1: Filter for temperature
+# Daymet separates measurements by type (e.g., tmax, tmin), so filter accordingly:
+
+# Reshape and calculate daily mean temperature
+temp_data <- sf_daymet %>%
+  filter(measurement %in% c("tmax", "tmin")) %>%
+  pivot_wider(names_from = measurement, values_from = value) %>%
+  mutate(mean_temp = (tmax + tmin) / 2)
+
+# Step 2: Aggregate (e.g., annual average per site)
+
+# Compute annual average temperature per site
+annual_avg <- temp_data %>%
+  group_by(site, year) %>%
+  summarise(annual_temp = mean(mean_temp, na.rm = TRUE), .groups = "drop")
+
+
+# Step 3: Plot trends (sample of sites or aggregated)
+# Option A: Sample 20 sites for individual trend lines
+
+
+set.seed(42)
+sample_sites <- sample(unique(annual_avg$site), 20)
+
+ggplot(filter(annual_avg, site %in% sample_sites),
+       aes(x = year, y = annual_temp, color = site)) +
+  geom_line(alpha = 0.6) +
+  geom_smooth(se = FALSE, method = "loess", color = "black") +
+  labs(title = "Mean Annual Temperature Trends (Sample of 20 Sites)",
+       x = "Year", y = "Mean Annual Temp (°C)")
+
+
+# Option B: Overall trend across all sites
+
+overall_avg <- annual_avg %>%
+  group_by(year) %>%
+  summarise(mean_temp = mean(annual_temp, na.rm = TRUE))
+
+ggplot(overall_avg, aes(x = year, y = mean_temp)) +
+  geom_line(color = "blue") +
+  geom_smooth(method = "loess", se = FALSE, color = "black") +
+  labs(title = "Average Annual Temperature Across All Sites",
+       x = "Year", y = "Mean Annual Temp (°C)")
+
+
+```
+
+We can also look at the minimum and maximum temperatures seperately.
+
+```{r}
+
+# Step 1: Prepare separate datasets for tmin and tmax
+# Filter and compute annual average tmin
+annual_tmin <- sf_daymet %>%
+  filter(measurement == "tmin") %>%
+  group_by(site, year) %>%
+  summarise(annual_tmin = mean(value, na.rm = TRUE), .groups = "drop")
+
+# Filter and compute annual average tmax
+annual_tmax <- sf_daymet %>%
+  filter(measurement == "tmax") %>%
+  group_by(site, year) %>%
+  summarise(annual_tmax = mean(value, na.rm = TRUE), .groups = "drop")
+
+
+# Step 2: Plotting trends
+# Option A: Sample of 20 sites (for both tmin and tmax)
+
+set.seed(123)
+sample_sites <- sample(unique(annual_tmin$site), 20)
+
+# Plot tmin
+ggplot(filter(annual_tmin, site %in% sample_sites),
+       aes(x = year, y = annual_tmin, color = site)) +
+  geom_line(alpha = 0.6) +
+  geom_smooth(se = FALSE, method = "loess", color = "black") +
+  labs(title = "Mean Annual Minimum Temperature (Sample Sites)",
+       x = "Year", y = "tmin (°C)")
+
+# Plot tmax
+ggplot(filter(annual_tmax, site %in% sample_sites),
+       aes(x = year, y = annual_tmax, color = site)) +
+  geom_line(alpha = 0.6) +
+  geom_smooth(se = FALSE, method = "loess", color = "black") +
+  labs(title = "Mean Annual Maximum Temperature (Sample Sites)",
+       x = "Year", y = "tmax (°C)")
+
+
+# Option B: Overall average across all sites
+
+# Overall tmin
+overall_tmin <- annual_tmin %>%
+  group_by(year) %>%
+  summarise(mean_tmin = mean(annual_tmin, na.rm = TRUE))
+
+ggplot(overall_tmin, aes(x = year, y = mean_tmin)) +
+  geom_line(color = "steelblue") +
+  geom_smooth(method = "loess", se = FALSE, color = "black") +
+  labs(title = "Average Annual Minimum Temperature Across All Sites",
+       x = "Year", y = "tmin (°C)")
+
+# Overall tmax
+overall_tmax <- annual_tmax %>%
+  group_by(year) %>%
+  summarise(mean_tmax = mean(annual_tmax, na.rm = TRUE))
+
+ggplot(overall_tmax, aes(x = year, y = mean_tmax)) +
+  geom_line(color = "firebrick") +
+  geom_smooth(method = "loess", se = FALSE, color = "black") +
+  labs(title = "Average Annual Maximum Temperature Across All Sites",
+       x = "Year", y = "tmax (°C)")
+
+
+```
+
+## Next steps for PINC team
+
+As part of your training you will take the Daymet data and apply some data wrangling. Tasks are below.
+
+1)  Aggregate Daily Data to Weekly Timeframes
+
+Each row in your Daymet dataset is tied to a tract via its centroid. Group by site (i.e., tract centroid) and week (from yday or converted date). Note: You will need to convert the yday to a date if you want to have exact calendar dates!
+
+Calculate for each week and tract:
+
+weekly_tmax_mean weekly_tmin_mean weekly_mean_temp = mean of (tmax + tmin)/2 weekly_temp_range = tmax - tmin
+
+2)  Define and Tag Heat Wave Events
+
+Determine criteria for a "heat wave", there are multiple approaches you can take.
+
+Calculate for each week and tract:
+
+weekly_heat_wave_days (number of days exceeding threshold like 85°F or 95°F) heat_wave_event_count (number of events defined by 2–3+ consecutive hot days)
+
+Tag these as events per site and week, to later model exposure-outcome timing.
+
+# Answering Research Question 1!
+
+Now we can get ready to answer our first research question!
+
+**What are the temporal patterns of extreme heat events in San Francisco from 2010–2020?**
+
+1.  Choose a heat threshold Decide what counts as an “extreme heat day” — for example: Any day with maximum temperature (tmax) ≥ 85°F (29.4°C).
+
+2.  Filter your data Keep only the rows from 2010 to 2020 and only the temperature measurements you need.
+
+3.  Flag extreme heat days Add a new column that says whether each day meets the heat threshold (Yes/No or 1/0).
+
+4.  Group by year (and tract) Count how many extreme heat days happen each year for each census tract.
+
+5.  Group by month To look for seasonal patterns, count how many heat days happen in each month.
+
+6.  Find heat waves A heat wave is 2 or more days in a row over the threshold. Count how many heat waves happen each year.
+
+7.  Calculate duration Find the longest heat wave in each year (how many days it lasted).
+
+8.  Make graphs Plot your results:
+
+A line graph: \# of extreme heat days per year A bar chart: \# of heat waves per year A heatmap or seasonal plot: which months have the most heat days
+
+Write a short summary for your abstract and poster!
+
+Describe the patterns you see: Are heat events increasing? Do they happen in the same months? Which years had more or fewer events?
+
+9.  Map it For your poster make a map showing which tracts had the most heat days.
+
+# Answering Research Question 2!
+
+**How do weekly extreme heat events correlate spatially with areas of high social vulnerability?**
+
+We will need to compare heat exposure and social vulnerability at the census tract level, across both space and time (weekly).
+
+1.  Prepare Your Weekly Dataset For each census tract and week, calculate:
+
+Number of extreme heat days (e.g., days ≥ 85°F)
+
+Number of heat wave events (e.g., 2+ consecutive hot days)
+
+2.  Add Social Vulnerability Index (SVI) Merge in the CDC/ATSDR SVI dataset, which is static per tract, with:
+
+Overall SVI
+
+Optional: individual components (e.g., poverty, housing, race)
+
+3.  Analyze the Correlation (Spatial and Temporal) A. Correlation analysis Group by tract and compute mean weekly heat over the full time range (2010–2020).
+
+Calculate correlation between average heat exposure and SVI score.
+
+B. Spatial visualization Create maps to compare:
+
+Heat exposure (average heat days or events)
+
+SVI score
+
+4.  Group Tracts by SVI Categorize tracts into SVI quartiles or high/low groups: Then compare mean weekly heat across those groups using boxplots or line plots.
+
+```{r session.info, echo=FALSE}
+#-----session info-----
+
+sessionInfo()
+```
