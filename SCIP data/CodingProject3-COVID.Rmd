@@ -1,0 +1,144 @@
+---
+title: "SCIP Coding Project 3 - COVID Cases Data"
+output: html_notebook
+---
+
+This is an R Notebook Rmd file. When making plots, this will allow you to see the plot within the Rmd file itself.Each section between the '''{r} ''' is where code goes and are called chunks. The results of your code in each chunk will show below the chunk. Run each chunk by pressing the green arrow at the top right of the chunk.
+
+
+#PREPARATIONS
+*Set Up Working Directory*
+
+Whenever you first create an Rfile or R document, make sure your Working Directory is listed in the correct place. The Working Directory should be the place where you want to save your files and where your data is located.
+
+Run the chunk below to see where your Working Directory is in. If it's not in the correct place, use the function
+
+```{r}
+getwd()
+#setwd("insert location of desired folder here")
+```
+
+*Load in Needed Libraries*
+
+Load in the following packages: dplyr, ggplot2, and RColorBrewer
+
+If you do not have these packages, download them through the function install.packages().
+```{r}
+library() #add in dplyr package name within the parentheses
+library() #add in ggplot2 package name within the parentheses
+```
+
+*Load in Data*
+
+Run the chunk below to read in the data for the number of COVID cases by county. Data can be found in the folder provided with this R Notebook file.
+
+Note: You can rename the data frame by changing the name on the left side of the arrow.
+
+```{r}
+COVIDraw <- read.csv("us-counties.csv")
+
+```
+
+
+#DATA CLEANING
+*changing the category of variable to date*
+
+View the data by using the View() function and the name of the data frame you inputted in the previous chunk.Then, use the Class() function to identify what data type the 'date' variable is in the data frame.
+```{r}
+View() #insert data frame name within parentheses
+class() #insert data frame and variable within parentheses
+```
+
+We need to change the variable of the data frame's 'date' column from a character to a date. To do this, we use the as.Date() function. Run the chunk below to change the variables to dates.
+
+The layout of the code will look something like this: 
+dataframe$variable <- as.Date(dataframe$variable)
+
+```{r}
+ <- as.Date()
+class()
+
+```
+
+*Subsetting the data*
+
+In the data frame, we have many counties that we could choose from. Right now we are focused on Bay Area counties. To clean the data to have only inputs of Bay Area counties, we will need to subset the data with the subset() function. 
+
+First we will subset to only California counties. Use the subset function to create a new data frame with ONLY listings of California counties. 
+
+Note: Remember the State and County names are case sensitive!
+
+The layout of the code will look something like this:
+dataframeNew1 <- subset(dataframe, variable == "input the desired variable here")
+
+
+```{r}
+#insert subset code here
+
+
+```
+
+Now, we will subset the new data frame to have only the California Bay Area counties rather than all California counties.
+
+Hint: use the | sign between each county you would like in the data to signify that you would like this county OR that county. You can use this sign multiple times in your code. For example, it could look like county == "San Francisco" | county == "Napa" | and so forth... The | sign means "or", which tells RStudio that your code involves this OR that.
+
+```{r}
+#insert susbet code here
+
+
+```
+
+
+#PLOTTING THE DATA
+Time to get into plotting! The goal here is to plot data with more than 2 variables within a plot! Here we will be looking at cases (variable 1) per each day (variable 2) for several Bay Area counties (variable 3).
+
+The next portion, you will be copying and pasting the code from the chunks prior to create a full code for a plot. You will start from CHUNK 8 in PLOTTING THE DATA.
+
+*Base Plot*
+The first thing we will do is make a scatterplot through the ggplot() and geom_point() function. In the chunk, make a code for creating the base plot. 
+
+```{r}
+#CHUNK 8#
+
+ggplot() + geom_point()
+```
+
+*Adding Colors*
+Now, we will add different colors through the RColorBrewer package in order to signify different counties. Pick palette Spectral or any palette with 10 colors.
+
+```{r}
+#CHUNK 9#
+
+*insert code from CHUNK 8 here* + scale_color_brewer(palette = "Spectral")
+```
+
+*Labeling the Plot*
+Next thing to do is to label! We need to label the x-axis, y-axis, and title of the plot to best illustrate what our plot means. However, the dates on the x-axis are super packed together and difficult to read! For the sake of time, I will include the code to how to break up the date labels on the x-axis, but please feel free to adjust as you would like!
+
+Note: to change the labels, you can use the function xlab(), ylab(), and labs()
+
+```{r}
+#CHUNK 10#
+
+*insert code from CHUNK 9 here* + scale_x_date(date_labels = "%b %y", date_breaks = "1 month") +
+  ylab("Insert title for y-axis here") + labs(title = "Insert title here", color = "Insert legend title here",
+                                       caption = "Insert caption if you would like here")
+```
+
+Congratulations! You have created a multi-variable plot for COVID cases in the Bay Area over time!
+
+*Extra Plot Items*
+If you would like to, here are some extra lines of code that you can use to make the plot more aesthetically similar to the one in the Coding Project 3 video:
+
+```{r}
+#CHUNK 11#
+
+insert code from CHUNK 10* + guides(colour = guide_legend(override.aes = list(size = 5))) +
+  theme_bw() + theme(panel.grid.minor.x = element_blank(), axis.title.x = element_blank(), legend.position = "bottom", legend.title = element_text(face = "bold"))
+```
+
+The guides() function allows you to make changes to the figure legend, in terms of aesthetic, font, etc. 
+
+The theme() function allows you to make aesthetic changes to the overall plot layout and theme. You can change the font, where things are placed in  plot, and remove things you may not want (like axes labels).
+
+You can save the plot by pressing on the drop down button at the top right of the chunk. Feel free to make changes to the plot as you'd like and post your results in the #question-forum or #res-r channel!
