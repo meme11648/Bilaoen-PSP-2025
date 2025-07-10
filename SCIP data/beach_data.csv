@@ -1,31 +1,3 @@
-Sample,Animal,Weight,Zone
-SC01,Anemone,33,Low-Tide
-SC02,Crab,19,High-Tide
-SC03,Limpet,18,Splash
-SC04,Mussel,30,Mid-Tide
-SC05,Mussel,31,Mid-Tide
-SC06,Starfish,39,Low-Tide
-SC07,Crab,12,High-Tide
-SC08,Limpet,16,Splash
-SC09,Anemone,41,Low-Tide
-SC10,Starfish,72,Low-Tide
-SC11,Anemone,28,Low-Tide
-SC12,Crab,9,Splash
-SC13,Starfish,58,Low-Tide
-SC14,Mussel,18,Splash
-SC15,Crab,11,Mid-Tide
-SC16,Crab,13,Splash
-SC17,Crab,13,Low-Tide
-SC18,Limpet,6,Low-Tide
-SC19,Limpet,10,Mid-Tide
-SC20,Anemone,27,Low-Tide
-SC21,Snail,5,Mid-Tide
-SC22,Snail,8,Splash
-SC23,Aneome,25,Low-Tide
-SC24,Snail,13,Mid-Tide
-SC25,Crab,7,Mid-Tide
-SC26,Mussel,21,Mid-Tide
-SC27,Mussel,26,Splash
-SC28,Mussel,21,High-Tide
-SC29,Mussel,17,High-Tide
-SC30,Starfish,31,MId-Tide
+version https://git-lfs.github.com/spec/v1
+oid sha256:db7119c4d810b24460a6b27dc2187636a785c53d4747e7e76a5787cc2946774f
+size 755
