@@ -80,7 +80,7 @@ The download_daymet_batch function from the daymetr R package allows users to do
 # make sure to indicate the year, end
 # the argument "simplify" can be used to create a dataframe of the data, not using it will result your data to be in a list format 
 
-df_batch <- download_daymet_batch(file_location = "~/Library/Mobile Documents/com~apple~CloudDocs/Documents/SFSU Faculty/PINC 2025/PSP2025/Climate Change/sf_centroids.csv", 
+df_batch <- download_daymet_batch(file_location = "~/PINC 2025/Bilaoen-PSP-2025/Climate Change Data/sf_centroids.csv", 
 start = 2000, 
 end = 2024, 
 simplify = TRUE)
@@ -90,7 +90,7 @@ write.csv(df_batch, "sf_daymet.csv", row.names = FALSE)
 
 # read in your data from the csv after you download it the first time 
 
-sf_daymet <- read_csv("~/Library/Mobile Documents/com~apple~CloudDocs/Documents/SFSU Faculty/PINC 2025/PSP2025/Climate Change/sf_daymet.csv")
+sf_daymet <- read_csv("~/PINC 2025/Bilaoen-PSP-2025/Climate Change Data/sf_daymet.csv")
 
 
 ```
@@ -132,6 +132,8 @@ dim(sf_daymet) # 14839440
 unique(sf_daymet$measurement)
 
 
+# save a csv with the cleaned up data 
+write.csv(sf_daymet, "sf_daymet_clean.csv", row.names = FALSE)
 ```
 
 We can look at the average temperature, by averaging the min and max temepratures.

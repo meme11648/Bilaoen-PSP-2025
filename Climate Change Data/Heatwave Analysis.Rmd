@@ -22,7 +22,7 @@ pacman::p_load(tidyverse)
 
 
 # Set working directory 
-setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Documents/SFSU Faculty/PINC 2025/PSP2025/Climate Change")
+setwd("~/PINC 2025/Bilaoen-PSP-2025/Climate Change Data")
 
 
 ```
@@ -69,7 +69,7 @@ Definitions:
 
 # Step 0: Load downloaded and pre-processed clean daymet data
 
-sf_daymet <- read_csv("Data/sf_daymet_clean.csv")
+sf_daymet <- read_csv("Climate Change Data/sf_daymet_clean.csv")
 
 ```
 
