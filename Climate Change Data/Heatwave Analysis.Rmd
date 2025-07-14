@@ -1,0 +1,325 @@
+---
+title: "Heatwave Analysis"
+output: html_document
+date: "2025-07-08"
+---
+
+```{r set.knitr.options, include= FALSE, message=FALSE, warning=FALSE}
+#-----set knitr options-----
+
+# clear environment
+rm(list = ls())
+
+# knitr options
+suppressMessages(library(knitr))
+opts_chunk$set(tidy = FALSE, echo = TRUE, message = FALSE)
+
+# Load pacman, installing if needed and other packages as needed
+if (!require("pacman")) { install.packages("pacman", repos = "http://cran.r-project.org") }
+
+# Load other packages, installing as needed.
+pacman::p_load(tidyverse)
+
+
+# Set working directory 
+setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Documents/SFSU Faculty/PINC 2025/PSP2025/Climate Change")
+
+
+```
+
+# Heatwaves
+
+According to the CDC (Centers for Disease Control and Prevention), a heatwave is a period of abnormally and uncomfortably hot and unusually humid weather, typically lasting two or more days. The definition can vary by location, but heatwaves are generally characterized by temperatures that are significantly higher than the average for a given area and time of year, and they can pose serious health risks, especially to older adults, children, and people with chronic conditions. For more information see: <https://www.cdc.gov/climate-health/php/resources/protect-yourself-from-the-dangers-of-extreme-heat.html>
+
+Climate Change and Extreme Heat Events: <https://www.cdc.gov/climate-health/media/pdfs/ClimateChangeandExtremeHeatEvents.pdf>
+
+Heatwave based on temperature and vapor pressure.
+
+NCEI (National Centers for Environmental Information) calculates the 85th-percentile threshold for each MSA, both for minimum daily temperatures and for maximum daily temperatures. Using these data, EPA compared each city’s daily minimum apparent temperature records with that city’s corresponding 85th-percentile threshold. EPA identified a heat wave whenever two or more consecutive days exceeded the threshold, then quantified the following four metrics for each city and each year:
+
+• Frequency: the number of distinct heat waves that occur every year.
+
+• Duration: the length of each individual heat wave, in days. These data can be aggregated to find the average duration of individual heat waves over a time period such as a year or a decade.
+
+• Season length: the number of days from the first day of the first heat wave of the year to the last day of the last heat wave, including the first and last days in the count.
+
+• Intensity: how hot the temperature is during a heat wave, compared with the corresponding city-specific threshold. For example, if a city has an 85th-percentile threshold of 95°F, and the average of the daily minimum apparent temperatures during a three-day heat wave was 98°F, the intensity would be recorded as 3°F above the threshold.
+
+Hence, health warnings about extreme heat are often based on NWS’s Heat Index, which is similar to apparent temperature in that it combines temperature and humidity (albeit with a different formula). This indicator specifically uses daily minimum temperature because studies show that mortality is more closely related to elevated daily minimum temperature than to daily maximum or daily mean temperature (Habeeb et al., 2015; Sarofim et al., 2016), as warm nighttime temperatures prevent the body from cooling off after a hot day. For each MSA, NCEI calculated daily maximum and minimum apparent temperature for each day based on hourly temperature and humidity measurements.
+
+NCEI derived apparent temperature using the following equation:
+
+AT = -1.3 + 0.92T + 2.2e
+
+where AT is the apparent temperature (°C), T is ambient air temperature (°C), and e is water vapor pressure (kilopascals). This equation was established by Steadman (1984).
+
+Based on Huang et al. (2021) we will examine the 97.5th percentile of apparent temperature, based on the minimum temperature. We will use the NCEI equation for apparent temperature, which does differ from Huang et al.'s (2021) equation that uses dew point instead.
+
+Definitions:
+
+1.  AT \> 85th percentile for 2+ days
+
+2.  AT \> 85th percentile for 3+ days
+
+3.  AT \> 97.5th percentile for 2+ days
+
+4.  AT \> 97.5th percentile for 3+ days
+
+```{r load.data, echo= FALSE}
+
+# Step 0: Load downloaded and pre-processed clean daymet data
+
+sf_daymet <- read_csv("Data/sf_daymet_clean.csv")
+
+```
+
+# Water vapor pressure vp Pa Water vapor pressure in pascals. Daily average partial pressure of water vapor.
+
+We need to transform the vp variable from pascals to kilopascals. We divide the pressure value by 1000.
+
+```{r}
+#  unique(sf_daymet$measurement)
+# [1] "dayl" "prcp" "srad" "swe"  "tmax" "tmin" "vp" 
+
+#Calculate tmean
+# temp_data <- sf_daymet %>%
+#   filter(measurement %in% c("tmax", "tmin")) %>%
+#   pivot_wider(names_from = measurement, values_from = value) %>%
+#   mutate(tmean = (tmax + tmin) / 2)
+
+
+# Step 1: pivot data to wide format 
+temp_data <- sf_daymet %>%
+  filter(measurement %in% c("tmax", "tmin", "vp")) %>%
+  pivot_wider(names_from = measurement, values_from = value) 
+
+# kilopascals 
+temp_data <- temp_data %>% 
+              mutate(vp_kp = vp/1000)
+
+# add AT 
+
+# AT = -1.3 + 0.92T + 2.2e
+
+temp_data <- temp_data %>% 
+              mutate(AT = (-1.3 + 0.92 * (tmin) + 2.2 * (vp_kp)) )
+
+# Reshape to long format
+long_temp <- temp_data %>%
+  select(site, year, yday, tmax, tmin, vp, vp_kp, AT) %>%
+  pivot_longer(cols = c(tmax, tmin, vp, vp_kp, AT),
+               names_to = "measurement",
+               values_to = "value")
+
+# Calculate 97.5th percentile per site & measurement
+percentiles <- long_temp %>%
+  group_by(site, measurement) %>%
+  mutate(p97_5 = quantile(value, probs = 0.975, na.rm = TRUE),
+            p85 = quantile(value, probs = 0.85, na.rm = TRUE))
+
+
+```
+
+```{r percentile.calculation, echo= FALSE}
+
+# Add threshold and flag hot days
+long_temp_flagged <- percentiles %>%
+  mutate(hot_day_85 = value > p85,
+         hot_day_97_5 = value > p97_5)
+
+# Identify 2-day and 3-day heatwaves
+# This function will flag days part of 2+ or 3+ day hot streaks
+# flag_heatwaves <- function(df) {
+#   df <- df[order(df$year, df$yday), ]  # sort chronologically
+#   r <- rle(df$is_hot_day)
+#   idxs <- rep(seq_along(r$lengths), times = r$lengths)
+# 
+#   # Identify runs of 2+ and 3+ hot days
+#   run_df <- data.frame(run_id = idxs, is_hot_day = rep(r$values, r$lengths), run_length = rep(r$lengths, r$lengths))
+#   df$hw_2day <- with(run_df, is_hot_day & run_length >= 2)
+#   df$hw_3day <- with(run_df, is_hot_day & run_length >= 3)
+#   return(df)
+# }
+
+flag_heatwaves_hot_day_85 <- function(df) {
+  df <- df[order(df$year, df$yday), ]  # sort chronologically
+  r <- rle(df$hot_day_85)
+  idxs <- rep(seq_along(r$lengths), times = r$lengths)
+
+  # Identify runs of 2+ and 3+ hot days
+  run_df <- data.frame(run_id = idxs, hot_day_85 = rep(r$values, r$lengths), run_length = rep(r$lengths, r$lengths))
+  df$hw_2day_85 <- with(run_df, hot_day_85 & run_length >= 2)
+  df$hw_3day_85 <- with(run_df, hot_day_85 & run_length >= 3)
+  return(df)
+}
+
+flag_heatwaves_hot_day_97_5 <- function(df) {
+  df <- df[order(df$year, df$yday), ]  # sort chronologically
+  r <- rle(df$hot_day_97_5)
+  idxs <- rep(seq_along(r$lengths), times = r$lengths)
+
+  # Identify runs of 2+ and 3+ hot days
+  run_df <- data.frame(run_id = idxs, hot_day_97_5 = rep(r$values, r$lengths), run_length = rep(r$lengths, r$lengths))
+  df$hw_2day_97_5 <- with(run_df, hot_day_97_5 & run_length >= 2)
+  df$hw_3day_97_5 <- with(run_df, hot_day_97_5 & run_length >= 3)
+  return(df)
+}
+
+
+
+# Apply heatwave detection function by site and measurement
+# code DOES NOT WORK when keeping the two functions in this manner 
+# heatwave_data <- long_temp_flagged %>%
+#   group_by(site, measurement) %>%
+#   group_modify(~ flag_heatwaves_hot_day_85(.x),
+#   group_modify(~ flag_heatwaves_hot_day_97_5(.x)) %>%
+#   ungroup()
+
+
+ heatwave_data_85 <- long_temp_flagged %>%
+   group_by(site, measurement) %>%
+   group_modify(~ flag_heatwaves_hot_day_85(.x) ) %>% 
+   ungroup()
+
+ heatwave_data_97 <- long_temp_flagged %>%
+   group_by(site, measurement) %>%
+   group_modify(~ flag_heatwaves_hot_day_97_5(.x) ) %>% 
+   ungroup()
+
+   
+# combine the data to have all of the heatwave flags 
+heatwave_data <- heatwave_data_85 %>%  left_join(heatwave_data_97)
+
+# Inspect data that can be used for further analysis
+head(heatwave_data)
+
+# save a csv with the cleaned up data 
+# write.csv(heatwave_data, "Data/heatwave_data_clean.csv", row.names = FALSE)
+
+
+```
+
+```{r}
+
+# plot of 2-day heatwaves for AT 
+
+plot1 <- heatwave_data %>%
+  filter(measurement == "AT") %>%
+  ggplot(aes(x = yday, y = value, color = hw_2day_85)) +
+  geom_point(alpha = 0.6) +
+  facet_wrap(~ year, scales = "free_x") +
+  labs(title = "AT with 2-Day Heatwaves Highlighted",
+       x = "Day of Year", y = "Temperature (°C)")
+
+
+# we saved the plot as an object so we can render it later 
+
+```
+
+
+Now we can view heat waves at the 85th percentile or higher for 2 or more days. 
+
+```{r}
+
+# summarize heat waves = 2 days at 85th percentile or higher 
+
+hw_2day_85_summary <- heatwave_data %>%
+  filter(measurement == "AT") %>%
+  group_by(site, year, measurement) %>%
+  summarise(
+    total_hot_days = sum(hw_2day_85, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+
+# View the result first 6 rows 
+# head(hw_2day_85_summary)
+
+
+# plot Hot Days Over Time by Tract
+
+hw_2day_85_summary %>%
+  ggplot(aes(x = year, y = total_hot_days, group = site)) +
+  geom_line(alpha = 0.4) +
+  labs(title = "Total Hot Days per Year (AT ≥ 85th Percentile)",
+       x = "Year", y = "Number of Hot Days")
+```
+
+Now we can view heat waves at the 97.5th percentile or higher for 2 or more days. 
+```{r}
+
+# summarize heat waves = 2 days at 97.5th percentile or higher 
+
+hw_2day_97_summary <- heatwave_data %>%
+  filter(measurement == "AT") %>%
+  group_by(site, year, measurement) %>%
+  summarise(
+    total_hot_days = sum(hw_2day_97_5, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+
+# plot Hot Days Over Time by Tract
+
+hw_2day_97_summary %>%
+  ggplot(aes(x = year, y = total_hot_days, group = site)) +
+  geom_line(alpha = 0.4) +
+  labs(title = "Total Hot Days per Year (AT ≥ 97.5th Percentile)",
+       x = "Year", y = "Number of Hot Days")
+```
+
+
+We can also view this at the yearly level. Here we answer, how many heatwaves occur per year? 
+```{r}
+
+# Helper: Count number of distinct heatwave events
+count_heatwaves <- function(df, hw_col) {
+  df <- df[order(df$yday), ]
+  r <- rle(df[[hw_col]])
+  sum(r$values & r$lengths >= 1)  # Count TRUE runs of any length
+}
+
+# Use group_modify instead of summarise for custom logic
+yearly_heatwave_summary_2day_85 <- heatwave_data %>%
+  group_by(site, year, measurement) %>%
+  group_modify(~ {
+    data.frame(
+      hw_2day_count = count_heatwaves(.x, "hw_2day_85"),
+      hw_3day_count = count_heatwaves(.x, "hw_2day_85")
+    )
+  }) %>%
+  ungroup()
+
+# View the result first 6 rows 
+head(yearly_heatwave_summary_2day_85)
+
+```
+
+
+
+```{r}
+
+# Sum total 2-day or 3-day heatwave events across all tracts per year
+citywide_heatwaves_2day_85 <- yearly_heatwave_summary_2day_85 %>%
+  filter(measurement == "AT") %>%  # Optional: focus on AT
+  group_by(year) %>%
+  summarise(
+    total_hw_2day = sum(hw_2day_count, na.rm = TRUE),
+    total_hw_3day = sum(hw_3day_count, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+
+# Plot total number of 2+ day heatwaves
+ggplot(citywide_heatwaves_2day_85, aes(x = factor(year), y = total_hw_2day)) +
+  geom_bar(stat = "identity", fill = "tomato") +
+  labs(
+    title = "Total 2+ Day Heatwaves above 85th percentile per Year in San Francisco",
+    x = "Year",
+    y = "Number of Heatwave Events (Citywide)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+```
