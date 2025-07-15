@@ -38,11 +38,22 @@ You can select Year: 2020, Geography: California, Geography Type: Census Tracts.
 ```{r}
 
 # read in data 
-svi_data <- read_csv("Climate Change/Data/CA_SVI.csv")
-View(CA_SVI)
+svi_data <- read_csv("CA_SVI.csv")
+
+heat_wave_summary <- read_csv("heat_wave_summary.csv")
+
+View(svi_data)
 
 ```
 
+```{r}
+heat_wave_summary_site <- heat_wave_summary %>%
+  mutate(site = as.character(sprintf("%011.0f", site)))
+
+
+yearly_ehe_svi <- heat_wave_summary_site %>%
+  left_join(svi_data, by = c("site" = "FIPS"))
+```
 
 
 ## Data Preparation
@@ -81,5 +92,8 @@ Compare average heat exposure across SVI groups (boxplots, t-tests or Kruskal-Wa
 ```{r session.info, echo=FALSE}
 #-----session info-----
 
-sessionInfo()
+table(yearly_ehe_svi$RPL_THEMES, useNA= "ifany")
+
+print(yearly_ehe_svi$RPL_THEMES)
+#there are 42 values of -999 and 21 na's which refer to unavailable data for the svi and centroids respectively 
 ```

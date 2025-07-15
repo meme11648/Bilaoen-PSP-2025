@@ -1,7 +1,7 @@
 ---
 title: "Heatwave Analysis"
 output: html_document
-date: "2025-07-08"
+date: "2025-07-15"
 ---
 
 ```{r set.knitr.options, include= FALSE, message=FALSE, warning=FALSE}
@@ -18,7 +18,7 @@ opts_chunk$set(tidy = FALSE, echo = TRUE, message = FALSE)
 if (!require("pacman")) { install.packages("pacman", repos = "http://cran.r-project.org") }
 
 # Load other packages, installing as needed.
-pacman::p_load(tidyverse)
+pacman::p_load(tidyverse, scales)
 
 
 # Set working directory 
@@ -69,15 +69,15 @@ Definitions:
 
 # Step 0: Load downloaded and pre-processed clean daymet data
 
-sf_daymet <- read_csv("Climate Change Data/sf_daymet_clean.csv")
+sf_daymet <- read_csv("sf_daymet_clean.csv")
 
 ```
 
-# Water vapor pressure vp Pa Water vapor pressure in pascals. Daily average partial pressure of water vapor.
+Water vapor pressure vp Pa Water vapor pressure in pascals. Daily average partial pressure of water vapor.
 
 We need to transform the vp variable from pascals to kilopascals. We divide the pressure value by 1000.
 
-```{r}
+```{r apparent.temperature, echo = FALSE}
 #  unique(sf_daymet$measurement)
 # [1] "dayl" "prcp" "srad" "swe"  "tmax" "tmin" "vp" 
 
@@ -112,214 +112,260 @@ long_temp <- temp_data %>%
                values_to = "value")
 
 # Calculate 97.5th percentile per site & measurement
+
+# tenyear_percentiles <- long_temp %>%
+#   filter(year >= 2000 & year <= 2010) %>%     # Optional: first 10 years of data 
+#   group_by(site, measurement) %>%
+#   mutate(p97_5 = quantile(value, probs = 0.975, na.rm = TRUE), # percentiles are VERY similar when looking at 2000s
+#             p85 = quantile(value, probs = 0.85, na.rm = TRUE))
+# 
+
+
 percentiles <- long_temp %>%
+  filter(year >= 2000 & year <= 2020) %>%     # using 2000-2020 data in analysis 
   group_by(site, measurement) %>%
   mutate(p97_5 = quantile(value, probs = 0.975, na.rm = TRUE),
             p85 = quantile(value, probs = 0.85, na.rm = TRUE))
 
 
+# filtering to only keep the AT data 
+percentiles <- percentiles %>% filter(measurement == "AT")
+
+
 ```
 
-```{r percentile.calculation, echo= FALSE}
+
+How many "hot days" do we have per year per site (by year)?
+
+```{r hot.days, echo= FALSE}
 
 # Add threshold and flag hot days
 long_temp_flagged <- percentiles %>%
-  mutate(hot_day_85 = value > p85,
-         hot_day_97_5 = value > p97_5)
+  mutate(hot_day_85 = value >= p85,
+         hot_day_97_5 = value >= p97_5)
 
-# Identify 2-day and 3-day heatwaves
-# This function will flag days part of 2+ or 3+ day hot streaks
-# flag_heatwaves <- function(df) {
-#   df <- df[order(df$year, df$yday), ]  # sort chronologically
-#   r <- rle(df$is_hot_day)
-#   idxs <- rep(seq_along(r$lengths), times = r$lengths)
+# count how many days are flagged as hot days 
+hot_days_summary <- long_temp_flagged %>%
+  group_by(site, year) %>%
+  summarise(
+    n_hot_day_85 = sum(hot_day_85, na.rm = TRUE),
+    n_hot_day_97_5 = sum(hot_day_97_5, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# View first six rows of summary
+head(hot_days_summary)
+
+
+# visualizing
+
+
+# ggplot(hot_days_summary, aes(x = year)) +
+#   geom_line(aes(y = n_hot_day_85, color = "85th percentile")) +
+#   geom_line(aes(y = n_hot_day_97_5, color = "97.5th percentile")) +
+#   facet_wrap(~ site, scales = "free_y") +
+#   labs(
+#     title = "Number of Hot Days per Year by Site",
+#     x = "Year", y = "Number of Hot Days",
+#     color = "Threshold"
+#   ) +
+#   theme_minimal() + 
+#  theme(plot.title = element_text(hjust = 0.5))
+
+
+
+
+# Reshape for plotting
+# hot_days_summary_long <- hot_days_summary %>%
+#   pivot_longer(cols = starts_with("n_hot_day"),
+#                names_to = "threshold", values_to = "count")
 # 
-#   # Identify runs of 2+ and 3+ hot days
-#   run_df <- data.frame(run_id = idxs, is_hot_day = rep(r$values, r$lengths), run_length = rep(r$lengths, r$lengths))
-#   df$hw_2day <- with(run_df, is_hot_day & run_length >= 2)
-#   df$hw_3day <- with(run_df, is_hot_day & run_length >= 3)
-#   return(df)
-# }
-
-flag_heatwaves_hot_day_85 <- function(df) {
-  df <- df[order(df$year, df$yday), ]  # sort chronologically
-  r <- rle(df$hot_day_85)
-  idxs <- rep(seq_along(r$lengths), times = r$lengths)
-
-  # Identify runs of 2+ and 3+ hot days
-  run_df <- data.frame(run_id = idxs, hot_day_85 = rep(r$values, r$lengths), run_length = rep(r$lengths, r$lengths))
-  df$hw_2day_85 <- with(run_df, hot_day_85 & run_length >= 2)
-  df$hw_3day_85 <- with(run_df, hot_day_85 & run_length >= 3)
-  return(df)
-}
-
-flag_heatwaves_hot_day_97_5 <- function(df) {
-  df <- df[order(df$year, df$yday), ]  # sort chronologically
-  r <- rle(df$hot_day_97_5)
-  idxs <- rep(seq_along(r$lengths), times = r$lengths)
-
-  # Identify runs of 2+ and 3+ hot days
-  run_df <- data.frame(run_id = idxs, hot_day_97_5 = rep(r$values, r$lengths), run_length = rep(r$lengths, r$lengths))
-  df$hw_2day_97_5 <- with(run_df, hot_day_97_5 & run_length >= 2)
-  df$hw_3day_97_5 <- with(run_df, hot_day_97_5 & run_length >= 3)
-  return(df)
-}
+# ggplot(hot_days_summary_long, aes(x = factor(year), y = count, fill = threshold)) +
+#   geom_col(position = "dodge") +
+#   facet_wrap(~ site, scales = "free_y") +
+#   labs(
+#     title = "Number of Hot Days per Year by Threshold",
+#     x = "Year", y = "Count",
+#     fill = "Threshold"
+#   ) +
+#   theme_minimal()  + 
+#  theme(plot.title = element_text(hjust = 0.5))
 
 
 
-# Apply heatwave detection function by site and measurement
-# code DOES NOT WORK when keeping the two functions in this manner 
-# heatwave_data <- long_temp_flagged %>%
-#   group_by(site, measurement) %>%
-#   group_modify(~ flag_heatwaves_hot_day_85(.x),
-#   group_modify(~ flag_heatwaves_hot_day_97_5(.x)) %>%
-#   ungroup()
-
-
- heatwave_data_85 <- long_temp_flagged %>%
-   group_by(site, measurement) %>%
-   group_modify(~ flag_heatwaves_hot_day_85(.x) ) %>% 
-   ungroup()
-
- heatwave_data_97 <- long_temp_flagged %>%
-   group_by(site, measurement) %>%
-   group_modify(~ flag_heatwaves_hot_day_97_5(.x) ) %>% 
-   ungroup()
-
-   
-# combine the data to have all of the heatwave flags 
-heatwave_data <- heatwave_data_85 %>%  left_join(heatwave_data_97)
-
-# Inspect data that can be used for further analysis
-head(heatwave_data)
-
-# save a csv with the cleaned up data 
-# write.csv(heatwave_data, "Data/heatwave_data_clean.csv", row.names = FALSE)
-
-
-```
-
-```{r}
-
-# plot of 2-day heatwaves for AT 
-
-plot1 <- heatwave_data %>%
-  filter(measurement == "AT") %>%
-  ggplot(aes(x = yday, y = value, color = hw_2day_85)) +
-  geom_point(alpha = 0.6) +
-  facet_wrap(~ year, scales = "free_x") +
-  labs(title = "AT with 2-Day Heatwaves Highlighted",
-       x = "Day of Year", y = "Temperature (°C)")
-
-
-# we saved the plot as an object so we can render it later 
-
-```
-
-
-Now we can view heat waves at the 85th percentile or higher for 2 or more days. 
-
-```{r}
-
-# summarize heat waves = 2 days at 85th percentile or higher 
-
-hw_2day_85_summary <- heatwave_data %>%
-  filter(measurement == "AT") %>%
-  group_by(site, year, measurement) %>%
-  summarise(
-    total_hot_days = sum(hw_2day_85, na.rm = TRUE),
-    .groups = "drop"
-  )
-
-
-# View the result first 6 rows 
-# head(hw_2day_85_summary)
-
-
-# plot Hot Days Over Time by Tract
-
-hw_2day_85_summary %>%
-  ggplot(aes(x = year, y = total_hot_days, group = site)) +
-  geom_line(alpha = 0.4) +
-  labs(title = "Total Hot Days per Year (AT ≥ 85th Percentile)",
-       x = "Year", y = "Number of Hot Days")
-```
-
-Now we can view heat waves at the 97.5th percentile or higher for 2 or more days. 
-```{r}
-
-# summarize heat waves = 2 days at 97.5th percentile or higher 
-
-hw_2day_97_summary <- heatwave_data %>%
-  filter(measurement == "AT") %>%
-  group_by(site, year, measurement) %>%
-  summarise(
-    total_hot_days = sum(hw_2day_97_5, na.rm = TRUE),
-    .groups = "drop"
-  )
-
-
-# plot Hot Days Over Time by Tract
-
-hw_2day_97_summary %>%
-  ggplot(aes(x = year, y = total_hot_days, group = site)) +
-  geom_line(alpha = 0.4) +
-  labs(title = "Total Hot Days per Year (AT ≥ 97.5th Percentile)",
-       x = "Year", y = "Number of Hot Days")
-```
-
-
-We can also view this at the yearly level. Here we answer, how many heatwaves occur per year? 
-```{r}
-
-# Helper: Count number of distinct heatwave events
-count_heatwaves <- function(df, hw_col) {
-  df <- df[order(df$yday), ]
-  r <- rle(df[[hw_col]])
-  sum(r$values & r$lengths >= 1)  # Count TRUE runs of any length
-}
-
-# Use group_modify instead of summarise for custom logic
-yearly_heatwave_summary_2day_85 <- heatwave_data %>%
-  group_by(site, year, measurement) %>%
-  group_modify(~ {
-    data.frame(
-      hw_2day_count = count_heatwaves(.x, "hw_2day_85"),
-      hw_3day_count = count_heatwaves(.x, "hw_2day_85")
-    )
-  }) %>%
-  ungroup()
-
-# View the result first 6 rows 
-head(yearly_heatwave_summary_2day_85)
-
-```
-
-
-
-```{r}
-
-# Sum total 2-day or 3-day heatwave events across all tracts per year
-citywide_heatwaves_2day_85 <- yearly_heatwave_summary_2day_85 %>%
-  filter(measurement == "AT") %>%  # Optional: focus on AT
+# averages across city = avg number of hot days per yr 
+hot_days_avg <- hot_days_summary %>%
   group_by(year) %>%
   summarise(
-    total_hw_2day = sum(hw_2day_count, na.rm = TRUE),
-    total_hw_3day = sum(hw_3day_count, na.rm = TRUE),
+    mean_hot_day_85 = mean(n_hot_day_85, na.rm = TRUE),
+    mean_hot_day_97_5 = mean(n_hot_day_97_5, na.rm = TRUE),
     .groups = "drop"
-  )
+  ) 
 
 
-# Plot total number of 2+ day heatwaves
-ggplot(citywide_heatwaves_2day_85, aes(x = factor(year), y = total_hw_2day)) +
-  geom_bar(stat = "identity", fill = "tomato") +
+ggplot(hot_days_avg, aes(x = year)) +
+  geom_line(aes(y = mean_hot_day_85, color = "85th percentile")) +
+  geom_line(aes(y = mean_hot_day_97_5, color = "97.5th percentile")) +
   labs(
-    title = "Total 2+ Day Heatwaves above 85th percentile per Year in San Francisco",
-    x = "Year",
-    y = "Number of Heatwave Events (Citywide)"
+    title = "Average Number of Hot Days per Year Across All SF",
+    x = "Year", y = "Average Hot Days",
+    color = "Threshold"
   ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme_minimal()  + 
+ theme(plot.title = element_text(hjust = 0.5))
 
 
 ```
+
+
+
+
+
+Now lets calculate the heat waves! We will use the four definitions we described above. 
+
+```{r heatwave.calculation, echo = FALSE}
+
+
+long_temp_flagged_new <- long_temp_flagged %>%
+  group_by(site, measurement, year) %>%
+  arrange(yday, .by_group = TRUE) %>%
+  mutate(
+    # Streaks of 2+ for hot_day_85
+    streak_85_2 = {
+      r <- rle(hot_day_85)
+      inverse.rle(list(
+        lengths = r$lengths,
+        values = r$values & r$lengths >= 2
+      ))
+    },
+    # Streaks of 3+ for hot_day_85
+    streak_85_3 = {
+      r <- rle(hot_day_85)
+      inverse.rle(list(
+        lengths = r$lengths,
+        values = r$values & r$lengths >= 3
+      ))
+    },
+    # Streaks of 2+ for hot_day_97_5
+    streak_97_5_2 = {
+      r <- rle(hot_day_97_5)
+      inverse.rle(list(
+        lengths = r$lengths,
+        values = r$values & r$lengths >= 2
+      ))
+    },
+    # Streaks of 3+ for hot_day_97_5
+    streak_97_5_3 = {
+      r <- rle(hot_day_97_5)
+      inverse.rle(list(
+        lengths = r$lengths,
+        values = r$values & r$lengths >= 3
+      ))
+    }
+  ) %>%
+  ungroup()
+
+# Preview the result
+head(long_temp_flagged_new)
+
+```
+
+
+
+```{r heatwave.counting, echo = FALSE}
+
+# Helper function to count qualifying streaks
+count_streaks <- function(x, min_length) {
+  r <- rle(x)
+  sum(r$values & r$lengths >= min_length)
+}
+
+# Main heat wave summary
+heat_wave_summary <- long_temp_flagged %>%
+  filter(measurement == "AT") %>%
+  group_by(site, year) %>%
+  arrange(yday, .by_group = TRUE) %>%  # ensure correct order
+  summarise(
+    hw_2day_85   = count_streaks(hot_day_85, 2),
+    hw_3day_85   = count_streaks(hot_day_85, 3),
+    hw_2day_97_5 = count_streaks(hot_day_97_5, 2),
+    hw_3day_97_5 = count_streaks(hot_day_97_5, 3),
+    .groups = "drop"
+  )
+
+# save a copy of the heat wave data 
+
+# write.csv(heat_wave_summary, "heat_wave_summary.csv", row.names = FALSE)
+
+  
+```
+
+# Answering Research Question 1: What are the temporal patterns of extreme heat events in San Francisco from 2000–2020?
+
+Each team member can work on one of the heat wave definitions to answer the question above. 
+
+
+
+## Heatwaves: 2+ days at 85th percentile 
+
+
+```{r}
+summary_hw_2day_85 <-   heat_wave_summary %>% 
+    group_by(year) %>% 
+    summarise(avg_hw_2day_85 = mean(hw_2day_85, na.rm = TRUE),
+              .groups = "drop")
+  
+  summary_hw_2day_85 %>%  ggplot(aes (x = year, y = avg_hw_2day_85)) + geom_col(stat = "identity") + geom_smooth(method = "loess")
+  
+  
+```
+
+## Heatwaves: 3+ days at 85th percentile 
+
+
+```{r}
+
+  summary_hw_3day_85 <-   heat_wave_summary %>% 
+    group_by(year) %>% 
+    summarise(avg_hw_3day_85 = mean(hw_3day_85, na.rm = TRUE),
+              .groups = "drop")
+  
+  summary_hw_3day_85 %>%  ggplot(aes (x = year, y = avg_hw_3day_85)) + geom_col(stat = "identity") + geom_smooth(method = "loess")
+  
+```
+
+
+
+## Heatwaves: 2+ days at 97.5th percentile 
+
+
+```{r}
+    summary_hw_2day_97_5 <-   heat_wave_summary %>% 
+    group_by(year) %>% 
+    summarise(avg_hw_2day_97_5 = mean(hw_2day_97_5, na.rm = TRUE),
+              .groups = "drop")
+  
+  summary_hw_2day_97_5 %>%  ggplot(aes (x = year, y = avg_hw_2day_97_5)) + geom_col(stat = "identity") + geom_smooth(method = "loess")
+  
+#linear model 
+  model_lm_hw_2day_97_5 <- lm(avg_hw_2day_97_5 ~ year, data = summary_hw_2day_97_5)
+
+summary(model_lm_hw_2day_97_5)
+  
+```
+
+
+## Heatwaves: 3+ days at 97.5th percentile 
+
+```{r}
+
+  summary_hw_3day_97_5 <-   heat_wave_summary %>% 
+    group_by(year) %>% 
+    summarise(avg_hw_3day_97_5 = mean(hw_3day_97_5, na.rm = TRUE),
+              .groups = "drop")
+  
+  summary_hw_3day_97_5 %>%  ggplot(aes (x = year, y = avg_hw_3day_97_5)) + geom_col(stat = "identity") + geom_smooth(method = "loess")
+  
+```
+
+
