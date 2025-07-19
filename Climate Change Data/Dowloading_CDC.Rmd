@@ -1,7 +1,10 @@
 ---
-title: "Downloading NOAA Data"
+title: "Downloading SVI Data"
 output: html_document
-date: "2025-07-03"
+date: "2025-07-16"
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r set.knitr.options, include= FALSE, message=FALSE, warning=FALSE}
@@ -18,82 +21,920 @@ opts_chunk$set(tidy = FALSE, echo = TRUE, message = FALSE)
 if (!require("pacman")) { install.packages("pacman", repos = "http://cran.r-project.org") }
 
 # Load other packages, installing as needed.
-pacman::p_load(tidyverse, dplyr, httr, jsonlite, tigris, sf, gstat, daymetr)
+pacman::p_load(tidyverse, tigris, sf, tmap, leaflet, RColorBrewer)
 
+# Set working directory 
+setwd("~/PINC 2025/Bilaoen-PSP-2025/Climate Change Data")
 ```
 
-# About SVI Data 
+# About SVI Data
 
-The Social Vulnerability Index (SVI), developed by the CDC/ATSDR, measures the resilience of communities when confronted by external stresses such as natural disasters or disease outbreaks. It is based on 16 U.S. Census variables grouped into four themes: socioeconomic status, household composition & disability, minority status & language, and housing type & transportation. The SVI is reported at the census tract level and ranges from 0 (least vulnerable) to 1 (most vulnerable), allowing for comparison across geographic areas.
+The Social Vulnerability Index (SVI), developed by the CDC/ATSDR,
+measures the resilience of communities when confronted by external
+stresses such as natural disasters or disease outbreaks. It is based on
+16 U.S. Census variables grouped into four themes: socioeconomic status,
+household composition & disability, minority status & language, and
+housing type & transportation. The SVI is reported at the census tract
+level and ranges from 0 (least vulnerable) to 1 (most vulnerable),
+allowing for comparison across geographic areas.
 
-In our analysis, we use the 2020 SVI to assess how extreme heat exposure correlates with social vulnerability across San Francisco census tracts from 2010 to 2020. By linking weekly heat metrics derived from Daymet data to the SVI scores of each tract, we examine whether communities with higher social vulnerability experience more frequent or intense extreme heat events. This helps us identify environmental justice patterns and prioritize areas for future public health interventions.
+In our analysis, we use the 2020 SVI to assess how extreme heat exposure
+correlates with social vulnerability across San Francisco census tracts
+from 2000 to 2020. By linking weekly heat metrics derived from Daymet
+data to the SVI scores of each tract, we examine whether communities
+with higher social vulnerability experience more frequent or intense
+extreme heat events. This helps us identify environmental justice
+patterns and prioritize areas for future public health interventions.
 
+The variable *RPL_THEMES* represents the overall percentile rank of
+social vulnerability for each census tract, based on the combination of
+all four SVI themes: Socioeconomic status Household composition &
+disability Minority status & language Housing type & transportation
 
 ## Downloading Data
 
-Since no specific API exists, we can directly download from the website:  https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html
+Since no specific API exists, we can directly download from the website:
+<https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html>
 
-You can select Year: 2020, Geography: California, Geography Type: Census Tracts. 
+You can select Year: 2020, Geography: California, Geography Type: Census
+Tracts.
 
-```{r}
+```{r load.data, echo= FALSE}
 
-# read in data 
+# Step 0: Load SVI and pre-processed yearly heat wave data 
 svi_data <- read_csv("CA_SVI.csv")
+# View(svi_data)
 
 heat_wave_summary <- read_csv("heat_wave_summary.csv")
-
-View(svi_data)
+# View(heat_wave_summary)
 
 ```
 
-```{r}
+
+
+
+```{r, echo = FALSE}
+
+# Join with SVI Data
+
+# since the svi_data has a FIPS code (as a character) with a leading 0, but the heat_wave_summary has site (as a double) without the leading 0, data wrangling is needed...
+# we can fix this by converting site to character with leading zeroes
+
 heat_wave_summary_site <- heat_wave_summary %>%
   mutate(site = as.character(sprintf("%011.0f", site)))
 
 
 yearly_ehe_svi <- heat_wave_summary_site %>%
   left_join(svi_data, by = c("site" = "FIPS"))
+
+
+# filter the SVI to only keep valid values 
+yearly_ehe_svi <- yearly_ehe_svi %>%
+  filter(RPL_THEMES >= 0 & RPL_THEMES <= 1)
+
+
+
+# > dim(yearly_ehe_svi)
+# [1] 5082  163
+
+# > dim(yearly_ehe_svi_filtered)
+# [1] 5019  163
+
+# > length(unique(yearly_ehe_svi$site))
+# [1] 242
+
+# > length(unique(yearly_ehe_svi_filtered$site))
+# [1] 239
+
+
 ```
 
 
-## Data Preparation
+```{r}
 
-Join to weekly heat exposure data using tract ID
+# aggregate data by site 
 
+tract_summary <- yearly_ehe_svi %>%
+  group_by(site, RPL_THEMES) %>%
+  summarize(
+    mean_hw_2day_85 = mean(hw_2day_85, na.rm = TRUE),
+    mean_hw_3day_85 = mean(hw_3day_85, na.rm = TRUE),
+    mean_hw_2day_97_5 = mean(hw_2day_97_5, na.rm = TRUE),
+    mean_hw_3day_97_5 = mean(hw_3day_97_5, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+
+```
+
+
+## Correlations
+
+The commonly used correlations in data science are “Spearman and Pearson.” The difference between Spearman and Pearson is that  Spearman uses rank variables while Pearson uses interval or ratio variables. 
+
+Use Pearson correlation for linear relationships with normally distributed data, and Spearman correlation for monotonic relationships, or when data is ordinal or not normally distributed. Pearson measures the strength of a linear association, while Spearman assesses the strength of a monotonic association, which can be linear or non-linear. 
+
+Note: If the relationship between temperature and heatwave data is expected to be linear and normally distributed with no outliers, Pearson correlation is the standard choice. However, if the relationship is monotonic but not strictly linear, or if the data is non-normal or contains outliers, Spearman correlation provides a more robust and accurate measure of association. 
+
+Let's examine correlations with the average number of heatwaves (by site, aka. census tract) and SVI. 
+
+For a Pearson correlation between SVI and the average annual number of 3-day heatwaves (97.5th percentile) per tract from 2000–2020, we found a positive correlation between SVI and heatwave exposure.
+
+A Pearson correlation analysis revealed a statistically significant positive association between social vulnerability (RPL_THEMES) and average annual 3-day heatwave events (97.5th percentile) across census tracts in San Francisco from 2000–2020 (r = 0.22, p < 0.001). This suggests that tracts with higher social vulnerability tend to experience more frequent extreme heat events, though the strength of the relationship is modest.
+
+```{r}
+
+# Spearman correlation
+cor.test(tract_summary$RPL_THEMES,
+         tract_summary$mean_hw_2day_85,
+         method = "spearman")
+
+# Pearson correlation
+cor.test(tract_summary$RPL_THEMES,
+         tract_summary$mean_hw_2day_85,
+         method = "pearson")
+
+#  p-value = 0.02176
+# alternative hypothesis: true correlation is not equal to 0
+# 95 percent confidence interval:
+#  -0.27018047 -0.02188942
+# sample estimates:
+#        cor 
+# -0.1483723 
+
+# Spearman correlation
+cor.test(tract_summary$RPL_THEMES,
+         tract_summary$mean_hw_3day_85,
+         method = "spearman")
+
+# Pearson correlation
+cor.test(tract_summary$RPL_THEMES,
+         tract_summary$mean_hw_3day_85,
+         method = "pearson")
+
+# p-value = 0.0004577
+# alternative hypothesis: true correlation is not equal to 0
+# 95 percent confidence interval:
+#  -0.3420771 -0.1009326
+# sample estimates:
+#        cor 
+# -0.2249466 
+
+# Spearman correlation
+cor.test(tract_summary$RPL_THEMES,
+         tract_summary$mean_hw_2day_97_5,
+         method = "spearman")
+
+# Pearson correlation
+cor.test(tract_summary$RPL_THEMES,
+         tract_summary$mean_hw_2day_97_5,
+         method = "pearson")
+
+
+# p-value = 0.01366
+# alternative hypothesis: true correlation is not equal to 0
+# 95 percent confidence interval:
+#  -0.28056003 -0.03311216
+# sample estimates:
+#        cor 
+# -0.1593377 
+
+
+# Spearman correlation
+cor.test(tract_summary$RPL_THEMES,
+         tract_summary$mean_hw_3day_97_5,
+         method = "spearman")
+
+# Pearson correlation
+cor.test(tract_summary$RPL_THEMES,
+         tract_summary$mean_hw_3day_97_5,
+         method = "pearson")
+
+# p-value = 0.0007632
+# alternative hypothesis: true correlation is not equal to 0
+# 95 percent confidence interval:
+#  0.0918933 0.3339956
+# sample estimates:
+#       cor 
+# 0.2162665 
+
+# cor = 0.2163
+# This means there is a positive correlation between SVI and heatwave exposure.
+# 
+# The strength of the relationship is weak to moderate — tracts with higher social vulnerability tend to experience more extreme heat events on average.
+```
+
+Scatterplots of SVI by Average annual number of heatwaves. 
+
+```{r}
+
+ggplot(tract_summary, aes(x = RPL_THEMES, y = mean_hw_2day_85)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", color = "red", se = TRUE) +
+  labs(
+    x = "Social Vulnerability Index",
+    y = "Avg. Annual 2-Day Heatwaves (85th %)",
+    title = "SVI vs. Heatwave Exposure by Tract"
+  ) +
+  theme_minimal()
+
+
+```
+
+
+```{r}
+ggplot(tract_summary, aes(x = RPL_THEMES, y = mean_hw_3day_85)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", color = "red", se = TRUE) +
+  labs(
+    x = "Social Vulnerability Index",
+    y = "Avg. Annual 3-Day Heatwaves (85th %)",
+    title = "SVI vs. Heatwave Exposure by Tract"
+  ) +
+  theme_minimal()
+
+```
+
+
+```{r}
+
+ggplot(tract_summary, aes(x = RPL_THEMES, y = mean_hw_2day_97_5)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", color = "red", se = TRUE) +
+  labs(
+    x = "Social Vulnerability Index",
+    y = "Avg. Annual 2-Day Heatwaves (97.5th %)",
+    title = "SVI vs. Heatwave Exposure by Tract"
+  ) +
+  theme_minimal()
+
+
+```
+
+
+```{r}
+
+# scatterplot of SVI and average number of Annual 3-Day Heatwaves 
+
+ggplot(tract_summary, aes(x = RPL_THEMES, y = mean_hw_3day_97_5)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", color = "red", se = TRUE) +
+  labs(
+    x = "Social Vulnerability Index",
+    y = "Avg. Annual 3-Day Heatwaves (97.5th %)",
+    title = "SVI vs. Heatwave Exposure by Tract"
+  ) +
+  theme_minimal()
+
+```
+
+
+
+
+```{r}
+
+# Create SVI Quartiles 
+
+tract_summary <- tract_summary %>%
+  mutate(
+    svi_quartile = ntile(RPL_THEMES, 4),     # Q1 = least vulnerable, Q4 = most
+    svi_quintiles = ntile(RPL_THEMES, 5)    # Q1 = least vulnerable, Q5 = most
+  )
+
+```
+
+
+
+
+## Plotting SVI and Average number of Annual Heatwaves
+
+Let's look at a boxplot with annual EHE by SVI quartile. 
+
+```{r}
+
+ggplot(tract_summary, aes(x = svi_quartile, y = mean_hw_3day_97_5, color = factor(svi_quartile))) +
+  geom_boxplot(size = 1.2) +
+  scale_fill_brewer(palette = "YlOrRd", name = "SVI Quartile") +
+  labs(
+    title = "Avg. Annual 3-Day Heatwaves (97.5th %) by Social Vulnerability Index (SVI)",
+    x = "SVI Quartiles",
+    y = "Mean Heat Waves per Tract"
+  ) +
+  theme_minimal()
+
+
+```
+
+
+We can also use a time series plot comparing heatwave trends between the lowest and highest SVI tracts or neighborhoods to visually contrast vulnerability and exposure over time.
+
+
+```{r}
+
+library(dplyr)
+
+ehe_svi_grouped <- yearly_ehe_svi %>%
+  mutate(
+    svi_group = case_when(
+      RPL_THEMES >= quantile(RPL_THEMES, 0.90, na.rm = TRUE) ~ "High SVI",
+      RPL_THEMES <= quantile(RPL_THEMES, 0.10, na.rm = TRUE) ~ "Low SVI",
+      TRUE ~ NA_character_
+    )
+  ) %>%
+  filter(!is.na(svi_group))
+
+library(tidyr)
+
+ehe_long <- ehe_svi_grouped %>%
+  pivot_longer(
+    cols = starts_with("hw_"),
+    names_to = "definition",
+    values_to = "event_count"
+  )
+
+heat_summary_long <- ehe_long %>%
+  group_by(svi_group, year, definition) %>%
+  summarise(mean_events = mean(event_count, na.rm = TRUE), .groups = "drop")
+
+heat_summary_long <- heat_summary_long %>%
+  mutate(definition = recode(definition,
+    "hw_2day_85"   = "2-Day ≥ 85th",
+    "hw_3day_85"   = "3-Day ≥ 85th",
+    "hw_2day_97_5" = "2-Day ≥ 97.5th",
+    "hw_3day_97_5" = "3-Day ≥ 97.5th"
+  ))
+
+library(ggplot2)
+
+ggplot(heat_summary_long, aes(x = year, y = mean_events, color = svi_group)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 2) +
+  facet_wrap(~ definition, ncol = 2, scales = "free_y") +
+  scale_color_manual(values = c("High SVI" = "#d73027", "Low SVI" = "#1a759f")) +
+  labs(
+    title = "Heatwave Trends by SVI Group and Definition",
+    subtitle = "Comparing High and Low Social Vulnerability Areas (2000–2020)",
+    x = "Year",
+    y = "Avg. Annual Heatwave Events",
+    color = "SVI Group"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    legend.position = "top",
+    strip.text = element_text(face = "bold")
+  )
+
+
+```
+
+
+
+## Spatial Analysis 
+
+### San Francisco Neighborhood Level Maps
+```{r}
+
+sf_neighborhoods <- read_csv("Analysis_Neighborhoods.csv")
+
+
+# aggregate data by site 
+
+annual_summary <- heat_wave_summary_site %>%
+  group_by(site) %>%
+  summarize(
+    mean_hw_2day_85 = mean(hw_2day_85, na.rm = TRUE),
+    mean_hw_3day_85 = mean(hw_3day_85, na.rm = TRUE),
+    mean_hw_2day_97_5 = mean(hw_2day_97_5, na.rm = TRUE),
+    mean_hw_3day_97_5 = mean(hw_3day_97_5, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+
+
+# Join with EHE + Neighborhood Data
+
+neighborhood_data <- sf_neighborhoods %>%
+  left_join(annual_summary, by = c("geoid" = "site"))
+
+# add geometry 
+# Convert to sf using WKT from 'the_geom' column
+neighborhood_sf <- neighborhood_data %>%
+  st_as_sf(wkt = "the_geom", crs = 4326) 
+
+
+# remove The Farallones
+
+neighborhood_sf <- neighborhood_sf %>%  filter(geoid != "06075980401")
+
+
+
+# Heatwaves 
+ggplot(neighborhood_sf) +
+  geom_sf(aes(fill = mean_hw_2day_85), color = "white", size = 0.2) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90") +
+  labs(
+    title = "Mean 2-Day Heatwave Events (85th Percentile)",
+    fill = "Average Annual Heatwaves"  ) +
+  theme_void() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+
+
+# aggregate data by neighborhoods_analysis_boundaries 
+
+neighborhood_sf_avg <- neighborhood_sf %>%
+  group_by(neighborhoods_analysis_boundaries) %>%
+  summarize(
+    mean_hw_2day_85 = mean(mean_hw_2day_85, na.rm = TRUE),
+    mean_hw_3day_85 = mean(mean_hw_3day_85, na.rm = TRUE),
+    mean_hw_2day_97_5 = mean(mean_hw_2day_97_5, na.rm = TRUE),
+    mean_hw_3day_97_5 = mean(mean_hw_3day_97_5, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+
+# mapping at the neighborhood level 
+
+ggplot(neighborhood_sf_avg) +
+  geom_sf(aes(fill = mean_hw_3day_85), color = "white", size = 0.2) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90") +
+  labs(
+    title = "Mean 3-Day Heatwave Events (85th Percentile)",
+    fill = "Average Annual Heatwaves"  ) +
+  theme_void() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+
+
+
+ggplot(neighborhood_sf_avg) +
+  geom_sf(aes(fill = mean_hw_2day_97_5), color = "white", size = 0.2) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90") +
+  labs(
+    title = "Mean 2-Day Heatwave Events (97.5th Percentile)",
+    fill = "Average Annual Heatwaves"  ) +
+  theme_void() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+
+ggplot(neighborhood_sf_avg) +
+  geom_sf(aes(fill = mean_hw_3day_97_5), color = "white", size = 0.2) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90") +
+  labs(
+    title = "Mean 3-Day Heatwave Events (97.5th Percentile)",
+    fill = "Average Annual Heatwaves"  ) +
+  theme_void() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+
+```
+
+
+
+
+```{r}
+tmap_mode("plot")  # Use "view" for interactive mode
+
+tm_shape(neighborhood_sf) +
+  tm_fill("mean_hw_2day_85",
+          title = "Mean HW (85th)",
+          palette = "plasma",
+          colorNA = "lightgray",
+          textNA = "No data") +
+  tm_borders(col = "white", lwd = 0.5) +
+  tm_layout(
+    title = "Mean 2-Day Heatwave Events (85th Percentile)",
+    frame = FALSE,     # Removes map frame
+    legend.outside = TRUE,
+    legend.title.size = 1.1,
+    legend.text.size = 0.9,
+    bg.color = "white"
+  )
+
+```
+
+
+### Census Tract Level Maps
+
+
+
+```{r}
+
+
+# Heatwaves 
+ggplot(neighborhood_sf) +
+  geom_sf(aes(fill = mean_hw_2day_85), color = "white", size = 0.2) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90") +
+  labs(
+    title = "Mean 2-Day Heatwave Events (85th Percentile)",
+    fill = "Average Annual Heatwaves"  ) +
+  theme_void() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+
+
+ggplot(neighborhood_sf) +
+  geom_sf(aes(fill = mean_hw_3day_85), color = "white", size = 0.2) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90") +
+  labs(
+    title = "Mean 3-Day Heatwave Events (85th Percentile)",
+    fill = "Average Annual Heatwaves"  ) +
+  theme_void() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+
+
+ggplot(neighborhood_sf) +
+  geom_sf(aes(fill = mean_hw_2day_97_5), color = "white", size = 0.2) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90") +
+  labs(
+    title = "Mean 2-Day Heatwave Events (97.5th Percentile)",
+    fill = "Average Annual Heatwaves"  ) +
+  theme_void() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+
+
+ggplot(neighborhood_sf) +
+  geom_sf(aes(fill = mean_hw_3day_97_5), color = "white", size = 0.2) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90") +
+  labs(
+    title = "Mean 3-Day Heatwave Events (97.5th Percentile)",
+    fill = "Average Annual Heatwaves"  ) +
+  theme_void() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+
+
+# Pivot to long format for faceting
+sf_mean_long <- neighborhood_sf %>%
+  pivot_longer(
+    cols = starts_with("mean_hw_"),
+    names_to = "definition",
+    values_to = "value"
+  ) %>%
+  mutate(definition = recode(definition,
+    "mean_hw_2day_85"   = "2-Day ≥ 85th",
+    "mean_hw_3day_85"   = "3-Day ≥ 85th",
+    "mean_hw_2day_97_5" = "2-Day ≥ 97.5th",
+    "mean_hw_3day_97_5" = "3-Day ≥ 97.5th"
+  ))
+
+
+ggplot(sf_mean_long) +
+  geom_sf(aes(fill = value), color = "white", size = 0.2) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90") +
+  facet_wrap(~ definition, ncol = 2) +
+  labs(
+    title = "Average Annual Heatwave Events by Definition (2000–2020)",
+    fill = "Avg. Events"
+  ) +
+  theme_void() +
+  theme(
+    strip.text = element_text(face = "bold", size = 12),
+    legend.position = "bottom",
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
+
+
+```
+
+
+
+
+```{r, message = FALSE}
+
+# Get the San Francisco County Boundary
+sf_boundary <- counties(state = "CA", year = 2020, class = "sf") %>%
+  filter(NAME == "San Francisco") %>%
+  st_transform(4326)  # ensure consistent CRS
+
+# Download Tracts for San Francisco
+tracts_sf <- tracts(state = "CA", county = "San Francisco", year = 2020, class = "sf") %>%
+  st_transform(4326)
+
+tracts_sf <- tracts_sf %>%
+  filter(ALAND > 0)  # Keeps only tracts with land area
+
+
+tracts_sf_clean <- tracts_sf %>%
+  filter(st_coordinates(st_centroid(geometry))[,1] > -123)  # Removes far west tracts
+
+
+# Join with EHE + SVI Data
+
+tracts_sf_data <- tracts_sf_clean %>%
+  left_join(tract_summary, by = c("GEOID" = "site"))
+
+```
+
+
+Mapping the average number of heatwaves for each census tract over 2000-2020.
+
+```{r}
+
+tm_shape(tracts_sf_data) +
+  tm_fill("mean_hw_3day_97_5", palette = "Reds", style = "quantile") +
+  tm_borders() +
+  tm_layout(title = "Annual Average Heatwave Exposure by Tract")
+
+
+```
+
+Mapping SVI. 
+
+```{r}
+
+tm_shape(tracts_sf_data) +
+  tm_fill("RPL_THEMES", palette = "Blues", style = "quantile",
+          title = "Social Vulnerability (SVI)") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(title = "San Francisco Social Vulnerability by Census Tract")
+
+
+```
+
+
+Using leaflet we can also make an interactive map. 
+
+```{r}
+library(leaflet)
+library(RColorBrewer)
+
+# Heat palette
+pal_hw <- colorQuantile("YlOrRd", domain = tracts_sf_data$mean_hw_3day_97_5, n = 5)
+
+leaflet(tracts_sf_data) %>%
+  addTiles() %>%
+  addPolygons(
+    fillColor = ~pal_hw(mean_hw_3day_97_5),
+    color = "#FFFFFF", weight = 1, fillOpacity = 0.7,
+    label = ~paste0("Tract: ", GEOID, "<br>Heatwaves: ", round(mean_hw_3day_97_5, 2)),
+    highlightOptions = highlightOptions(weight = 2, color = "#000", bringToFront = TRUE)
+  ) %>%
+  addLegend("bottomright", pal = pal_hw, values = ~mean_hw_3day_97_5,
+            title = "Avg. Annual 3-Day Heatwaves")
+
+```
+
+
+### Bivariate maps 
+
+We can also create a bivariate map of SVI and Average Number of Heatwave days. 
+
+
+```{r}
+
+library(tibble)
+library(ggplot2)
+library(patchwork)
+library(sf) 
+
+# add svi to neighborhood_sf
+
+neighborhood_sf_svi <- neighborhood_sf %>%
+  left_join(svi_data, by = c("geoid" = "FIPS"))
+
+neighborhood_bivar_all <- neighborhood_sf_svi %>%
+  pivot_longer(
+    cols = starts_with("mean_hw_"),  # e.g., mean_hw_2day_85, etc.
+    names_to = "definition",
+    values_to = "heat_value"
+  )
+
+neighborhood_bivar_all <- neighborhood_bivar_all %>%
+  group_by(definition) %>%
+  mutate(
+    svi_q = ntile(RPL_THEMES, 4),
+    heat_q = ntile(heat_value, 4),
+    bivar_class = paste0(svi_q, "-", heat_q)
+  ) %>%
+  ungroup()
+
+neighborhood_bivar_all <- neighborhood_bivar_all %>%
+  mutate(definition = recode(definition,
+    "mean_hw_2day_85"   = "2-Day ≥ 85th",
+    "mean_hw_3day_85"   = "3-Day ≥ 85th",
+    "mean_hw_2day_97_5" = "2-Day ≥ 97.5th",
+    "mean_hw_3day_97_5" = "3-Day ≥ 97.5th"
+  )) %>% 
+  filter(definition == "2-Day ≥ 97.5th") #only looking at one heatwave definition
+
+# Use the same bivar_palette you used in the map
+bivar_palette <- c(
+  "1-1" = "#f2f0f7", "1-2" = "#cbc9e2", "1-3" = "#9e9ac8", "1-4" = "#756bb1",
+  "2-1" = "#e7d4e8", "2-2" = "#d1b9d8", "2-3" = "#b39dd0", "2-4" = "#8e6cbf",
+  "3-1" = "#fbb4b9", "3-2" = "#f768a1", "3-3" = "#dd3497", "3-4" = "#ae017e",
+  "4-1" = "#fcae91", "4-2" = "#fb6a4a", "4-3" = "#ef3b2c", "4-4" = "#99000d"
+)
+
+# Create 4x4 grid
+bivar_legend_df <- expand.grid(
+  svi_q = 1:4,
+  heat_q = 1:4
+) %>%
+  mutate(
+    bivar_class = paste0(svi_q, "-", heat_q),
+    fill = bivar_class  # match to your map's fill values
+  )
+
+bivar_legend <- ggplot(bivar_legend_df, aes(x = heat_q, y = svi_q, fill = bivar_class)) +
+  geom_tile() +
+  scale_fill_manual(values = bivar_palette, guide = "none") +
+  scale_x_continuous(
+    breaks = 1:4,
+    labels = c("Low", "", "", "High"),
+    expand = c(0, 0)
+  ) +
+  scale_y_continuous(
+    breaks = 1:4,
+    labels = c("Low", "", "", "High"),
+    expand = c(0, 0)
+  ) +
+  labs(x = "Heatwave Exposure", y = "Social Vulnerability") +
+  coord_fixed() +
+  theme_minimal() +
+  theme(
+    axis.title = element_text(size = 8, face = "bold"),
+    axis.text = element_text(size = 8),
+    panel.grid = element_blank(),
+    plot.margin = margin(2, 2, 2, 2)
+  )
+
+main_map <- ggplot(neighborhood_bivar_all) +
+  geom_sf(aes(fill = bivar_class), color = "white", size = 0.2) +
+  scale_fill_manual(values = bivar_palette, name = "SVI + Heat") +
+# if you want to facet wrap facet_wrap(~ definition, ncol = 2) +
+  labs(
+    title = "Bivariate Maps of Social Vulnerability and Heat Exposure",
+    subtitle = "Quartile Classification of SVI and Heatwave Metrics",
+    caption = "Dark = High SVI and High Heat"
+  ) +
+  theme_void() +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    strip.text = element_text(face = "bold", size = 12)
+  )
+
+final_plot <- main_map + 
+  inset_element(bivar_legend, left = -0.5, bottom = 0.02, right = 0.25, top = 0.25)
+
+print(final_plot)
+
+```
+
+
+```{r}
+library(dplyr)
+
+
+tract_sf_bivar <- tracts_sf_data %>%
+    filter(!is.na(RPL_THEMES), !is.na(mean_hw_3day_97_5)) %>%
+  mutate(
+    svi_cat = ntile(RPL_THEMES, 3),               # 1 = low, 3 = high
+    heat_cat = ntile(mean_hw_3day_97_5, 3),        # 1 = low, 3 = high
+    bivar_class = paste0(svi_cat, "-", heat_cat)   # e.g., "3-3" = high SVI + high heat
+  )
+
+# choose a color palette - this can be changed if we don't like it! 
+
+bivar_palette <- c(
+  "1-1" = "#ffffcc", "2-1" = "#c2e699", "3-1" = "#78c679",
+  "1-2" = "#fed976", "2-2" = "#feb24c", "3-2" = "#fd8d3c",
+  "1-3" = "#fc4e2a", "2-3" = "#e31a1c", "3-3" = "#b10026"
+)
+
+
+
+library(tmap)
+
+tmap_mode("plot")  # use "view" for interactive
+
+tm_shape(tract_sf_bivar) +
+  tm_fill("bivar_class",
+          palette = bivar_palette,
+          title = "SVI + Heatwave",
+          labels = names(bivar_palette)) +
+  tm_borders(alpha = 0.3) +
+  tm_layout(title = "Bivariate Map: SVI and 3-Day Heatwave Exposure")
+
+```
+
+
+We can also make an interactive map with layer toggle!
+
+```{r}
+
+library(leaflet)
+library(RColorBrewer)
+library(sf)
+
+# SVI palette (Blues)
+pal_svi <- colorQuantile("Blues", domain = tracts_sf_data$RPL_THEMES, n = 5)
+
+# Heatwave palette (Reds)
+pal_hw <- colorQuantile("YlOrRd", domain = tracts_sf_data$mean_hw_3day_97_5, n = 5)
+
+labels_svi <- paste0(
+  "Tract: ", tracts_sf_data$GEOID, "<br>",
+  "SVI: ", round(tracts_sf_data$RPL_THEMES, 2)
+) %>% lapply(htmltools::HTML)
+
+labels_hw <- paste0(
+  "Tract: ", tracts_sf_data$GEOID, "<br>",
+  "Avg. 3-Day Heatwaves: ", round(tracts_sf_data$mean_hw_3day_97_5, 2)
+) %>% lapply(htmltools::HTML)
+
+leaflet(tracts_sf_data) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+
+  # Heatwave layer
+  addPolygons(
+    fillColor = ~pal_hw(mean_hw_3day_97_5),
+    weight = 1,
+    color = "white",
+    opacity = 1,
+    fillOpacity = 0.7,
+    label = labels_hw,
+    group = "Heatwaves"
+  ) %>%
+
+  # SVI layer
+  addPolygons(
+    fillColor = ~pal_svi(RPL_THEMES),
+    weight = 1,
+    color = "white",
+    opacity = 1,
+    fillOpacity = 0.7,
+    label = labels_svi,
+    group = "SVI"
+  ) %>%
+
+  # Add legends
+  addLegend("bottomright", pal = pal_hw, values = ~mean_hw_3day_97_5,
+            title = "Avg. 3-Day Heatwaves", group = "Heatwaves") %>%
+
+  addLegend("bottomright", pal = pal_svi, values = ~RPL_THEMES,
+            title = "Social Vulnerability Index", group = "SVI") %>%
+
+  # Layer controls
+  addLayersControl(
+    baseGroups = c("SVI", "Heatwaves"),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+
+```
+
+
+
+## Notes on analysis 
+
+Join to weekly heat exposure data using tract ID (FIPS)
 
 Exploratory Data Analysis
-4.1 Time trends
-Plot yearly average heat days per tract
+
+4.1 Time trends Plot yearly average heat days per tract
 
 Plot number of heat waves per year
 
-4.2 Spatial patterns
-Map of average weekly heat days per tract
+4.2 Spatial patterns Map of average weekly heat days per tract
 
 Map of SVI values per tract
 
 Map showing both for visual overlap
 
-
 Statistical Analysis
-5.1 Correlation analysis
-Correlation between average weekly heat exposure and SVI
+
+5.1 Correlation analysis Correlation between average weekly heat
+exposure and SVI
 
 Include Pearson or Spearman correlation and scatterplot
 
-5.2 Group comparison
-Create SVI categories (quartiles or high/low)
+5.2 Group comparison Create SVI categories (quartiles or high/low)
 
-Compare average heat exposure across SVI groups (boxplots, t-tests or Kruskal-Wallis)
-
-
+Compare average heat exposure across SVI groups (boxplots, t-tests or
+Kruskal-Wallis)
 
 
 ```{r session.info, echo=FALSE}
 #-----session info-----
 
-table(yearly_ehe_svi$RPL_THEMES, useNA= "ifany")
-
-print(yearly_ehe_svi$RPL_THEMES)
-#there are 42 values of -999 and 21 na's which refer to unavailable data for the svi and centroids respectively 
+sessionInfo()
 ```

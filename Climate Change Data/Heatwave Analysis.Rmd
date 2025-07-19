@@ -1,7 +1,7 @@
 ---
 title: "Heatwave Analysis"
 output: html_document
-date: "2025-07-15"
+date: "2025-07-17"
 ---
 
 ```{r set.knitr.options, include= FALSE, message=FALSE, warning=FALSE}
@@ -22,7 +22,7 @@ pacman::p_load(tidyverse, scales)
 
 
 # Set working directory 
-setwd("~/PINC 2025/Bilaoen-PSP-2025/Climate Change Data")
+setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Documents/SFSU Faculty/PINC 2025/PSP2025/Climate Change")
 
 
 ```
@@ -69,7 +69,7 @@ Definitions:
 
 # Step 0: Load downloaded and pre-processed clean daymet data
 
-sf_daymet <- read_csv("sf_daymet_clean.csv")
+sf_daymet <- read_csv("Data/sf_daymet_clean.csv")
 
 ```
 
@@ -134,7 +134,6 @@ percentiles <- percentiles %>% filter(measurement == "AT")
 
 ```
 
-
 How many "hot days" do we have per year per site (by year)?
 
 ```{r hot.days, echo= FALSE}
@@ -193,7 +192,7 @@ head(hot_days_summary)
 
 
 
-# averages across city = avg number of hot days per yr 
+# averages across city - average number of hot days per year 
 hot_days_avg <- hot_days_summary %>%
   group_by(year) %>%
   summarise(
@@ -217,13 +216,9 @@ ggplot(hot_days_avg, aes(x = year)) +
 
 ```
 
+Now lets calculate the heat waves! We will use the four definitions we described above.
 
-
-
-
-Now lets calculate the heat waves! We will use the four definitions we described above. 
-
-```{r heatwave.calculation, echo = FALSE}
+```{r heatwave.calculation, eval = FALSE}
 
 
 long_temp_flagged_new <- long_temp_flagged %>%
@@ -270,8 +265,6 @@ head(long_temp_flagged_new)
 
 ```
 
-
-
 ```{r heatwave.counting, echo = FALSE}
 
 # Helper function to count qualifying streaks
@@ -295,19 +288,16 @@ heat_wave_summary <- long_temp_flagged %>%
 
 # save a copy of the heat wave data 
 
-# write.csv(heat_wave_summary, "heat_wave_summary.csv", row.names = FALSE)
+# write.csv(heat_wave_summary, "Data/heat_wave_summary.csv", row.names = FALSE)
 
   
 ```
 
 # Answering Research Question 1: What are the temporal patterns of extreme heat events in San Francisco from 2000–2020?
 
-Each team member can work on one of the heat wave definitions to answer the question above. 
+Each team member can work on one of the heat wave definitions to answer the question above.
 
-
-
-## Heatwaves: 2+ days at 85th percentile 
-
+## Heatwaves: 2+ days at 85th percentile
 
 ```{r}
 summary_hw_2day_85 <-   heat_wave_summary %>% 
@@ -315,13 +305,45 @@ summary_hw_2day_85 <-   heat_wave_summary %>%
     summarise(avg_hw_2day_85 = mean(hw_2day_85, na.rm = TRUE),
               .groups = "drop")
   
-  summary_hw_2day_85 %>%  ggplot(aes (x = year, y = avg_hw_2day_85)) + geom_col(stat = "identity") + geom_smooth(method = "loess")
-  
-  
+summary_hw_2day_85 %>%  ggplot(aes (x = year, y = avg_hw_2day_85)) + 
+                                  geom_col(stat = "identity") + 
+                                  geom_smooth(method = "loess")
+
+# Create log-transformed variable
+summary_hw_2day_85$log_avg_hw <- log(summary_hw_2day_85$avg_hw_2day_85)
+
+# Fit linear model
+model_log_hw_2day_85 <- lm(log_avg_hw ~ year, data = summary_hw_2day_85)
+
+summary(model_log_hw_2day_85)
+
+# interpret coefficient
+
+exp(coef(model_log_hw_2day_85)["year"]) - 1
+
+
+exp(0.023) - 1 # 0.0233 is 2.33% increase per year
+
+
+
+# linear model 
+
+model_lm_hw_2day_85 <- lm(avg_hw_2day_85 ~ year, data = summary_hw_2day_85)
+
+summary(model_lm_hw_2day_85)
+
+# year           0.23996    0.09163   2.619 
+# p value   0.0169 * IS statistically significant 
+
+# Each additional year is associated with an increase of ~0.24 heat wave events per year
+
+# A linear regression model showed a statistically significant increase in the number of 2-day heat wave events above the 85th percentile in San Francisco between 2000 and 2020 (β = 0.24, p = 0.017). This corresponds to an average rise of about one additional 2-day heatwave every 4 years, highlighting a clear upward trend in short-duration heat extremes.
+
+
+
 ```
 
-## Heatwaves: 3+ days at 85th percentile 
-
+## Heatwaves: 3+ days at 85th percentile
 
 ```{r}
 
@@ -332,30 +354,71 @@ summary_hw_2day_85 <-   heat_wave_summary %>%
   
   summary_hw_3day_85 %>%  ggplot(aes (x = year, y = avg_hw_3day_85)) + geom_col(stat = "identity") + geom_smooth(method = "loess")
   
+
+# Create log-transformed variable
+summary_hw_3day_85$log_avg_hw <- log(summary_hw_3day_85$avg_hw_3day_85)
+
+# Fit linear model
+model_log_hw_3day_85 <- lm(log_avg_hw ~ year, data = summary_hw_3day_85)
+summary(model_log_hw_3day_85)
+
+# interpret coefficient
+
+exp(coef(model_log_hw_3day_85)["year"]) - 1
+
+
+exp(0.03251644) - 1 # 0.03305 is 3.31% increase per year
+
+
+# linear model 
+
+model_lm_hw_3day_85 <- lm(avg_hw_3day_85 ~ year, data = summary_hw_3day_85)
+
+summary(model_lm_hw_3day_85)
+  
+# year           0.17443    0.08894   1.961   
+
+# p value 0.0647 is NOT statistically significant 
+
+# Each additional year is associated with an increase of ~0.17 heat wave events per year
+
+# A linear model examining the average number of 3-day heat wave events above the 85th percentile from 2000–2020 showed a marginally significant increasing trend (p = 0.065). The estimated increase was approximately 0.17 events per year, indicating a possible rise in multi-day extreme heat events, though the trend does not reach conventional statistical significance.
+
+
 ```
 
-
-
-## Heatwaves: 2+ days at 97.5th percentile 
-
+## Heatwaves: 2+ days at 97.5th percentile
 
 ```{r}
-    summary_hw_2day_97_5 <-   heat_wave_summary %>% 
+
+summary_hw_2day_97_5 <-   heat_wave_summary %>% 
     group_by(year) %>% 
     summarise(avg_hw_2day_97_5 = mean(hw_2day_97_5, na.rm = TRUE),
               .groups = "drop")
   
-  summary_hw_2day_97_5 %>%  ggplot(aes (x = year, y = avg_hw_2day_97_5)) + geom_col(stat = "identity") + geom_smooth(method = "loess")
+summary_hw_2day_97_5 %>%  ggplot(aes (x = year, y = avg_hw_2day_97_5)) + geom_col(stat = "identity") + geom_smooth(method = "loess")
   
-#linear model 
-  model_lm_hw_2day_97_5 <- lm(avg_hw_2day_97_5 ~ year, data = summary_hw_2day_97_5)
+
+
+# linear model 
+
+model_lm_hw_2day_97_5 <- lm(avg_hw_2day_97_5 ~ year, data = summary_hw_2day_97_5)
 
 summary(model_lm_hw_2day_97_5)
-  
+
+# year           0.12739    0.06943   1.835  
+
+# p value 0.0822 NOT statistically significant 
+
+# Each additional year is associated with an increase of ~0.13 2-day heatwave events per year
+
+# Between 2000 and 2020, the average number of 2-day heat wave events above the 97.5th percentile increased by approximately 0.13 events per year — or roughly 1 additional event every 8 years.
+
+
+
 ```
 
-
-## Heatwaves: 3+ days at 97.5th percentile 
+## Heatwaves: 3+ days at 97.5th percentile
 
 ```{r}
 
@@ -366,6 +429,314 @@ summary(model_lm_hw_2day_97_5)
   
   summary_hw_3day_97_5 %>%  ggplot(aes (x = year, y = avg_hw_3day_97_5)) + geom_col(stat = "identity") + geom_smooth(method = "loess")
   
+  
+
+
+# linear model 
+
+model_lm_hw_3day_97_5 <- lm(avg_hw_3day_97_5 ~ year, data = summary_hw_3day_97_5)
+
+summary(model_lm_hw_3day_97_5)
+
+# year           0.06876    0.03092   2.224   
+# Each additional year is associated with an increase of ~0.069 events per year.
+
+# p value 0.0385 * IS statistically significant 
+  
+# From 2000 to 2020, the average number of 3-day heat wave events (above the 97.5th percentile) in San Francisco increased by approximately 0.069 events per year, a statistically significant upward trend (p = 0.0385).
+
+
 ```
+
+```{r}
+
+all_summary <-  heat_wave_summary %>% 
+    group_by(year) %>% 
+    summarise(avg_hw_2day_85 = mean(hw_2day_85, na.rm = TRUE),
+              avg_hw_3day_85 = mean(hw_3day_85, na.rm = TRUE),
+              avg_hw_2day_97_5 = mean(hw_2day_97_5, na.rm = TRUE),
+              avg_hw_3day_97_5 = mean(hw_3day_97_5, na.rm = TRUE),
+              .groups = "drop")
+
+
+library(tidyverse)
+
+# Assuming your tibble is called all_summary
+all_summary_long <- all_summary %>%
+  pivot_longer(
+    cols = starts_with("avg_hw"),
+    names_to = "heat_metric",
+    values_to = "value"
+  )
+
+# Now plot using ggplot with facet_wrap
+ggplot(all_summary_long, aes(x = year, y = value)) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~ heat_metric, scales = "fixed") +
+  labs(
+    title = "Annual Average Heatwave Metrics",
+    x = "Year",
+    y = "Value",
+    caption = "Faceted by heatwave definition"
+  ) +
+  theme_minimal()
+
+
+ggplot(all_summary_long, aes(x = factor(year), y = value)) +
+  geom_col(fill = "skyblue", alpha = 0.8) +
+  geom_smooth(aes(group = 1), method = "loess", color = "red", se = FALSE) +
+  facet_wrap(~ heat_metric, scales = "fixed") +
+  labs(
+    title = "Annual Average Heatwave Metrics",
+    x = "Year",
+    y = "Average Heatwave Events",
+    caption = "Faceted by heatwave definition"
+  ) +
+  theme_minimal()
+
+```
+
+
+
+
+
+
+# Heatwave Change Over Time
+
+We can also show the change in heatwave by definition over the last 20 years
+
+First, we compared 2000 vs 2020. 
+
+```{r}
+
+# Calculate the increase from 2000 to 2020 
+
+# Filter and reshape
+heat_change_all <- heat_wave_summary %>%
+  filter(year %in% c(2000, 2020)) %>%
+  pivot_wider(
+    id_cols = site,
+    names_from = year,
+    values_from = c(hw_2day_85, hw_3day_85, hw_2day_97_5, hw_3day_97_5),
+    names_sep = "_"
+  ) %>%
+  mutate(
+    hw_2day_85_diff     = hw_2day_85_2020 - hw_2day_85_2000,
+    hw_3day_85_diff     = hw_3day_85_2020 - hw_3day_85_2000,
+    hw_2day_97_5_diff   = hw_2day_97_5_2020 - hw_2day_97_5_2000,
+    hw_3day_97_5_diff   = hw_3day_97_5_2020 - hw_3day_97_5_2000
+  ) %>%
+  select(site, ends_with("_diff"))
+
+
+
+heat_change_all <- heat_change_all %>%
+  mutate(site = as.character(sprintf("%011.0f", site)))
+
+
+sf_neighborhoods <- read_csv("Data/Analysis_Neighborhoods_-_2020_census_tracts_assigned_to_neighborhoods_20250717.csv")
+
+
+# Join with EHE + Neighborhood Data
+
+heat_change_sf <- sf_neighborhoods %>%
+  left_join(heat_change_all, by = c("geoid" = "site"))
+
+# add geometry 
+# Convert to sf using WKT from 'the_geom' column
+neighborhood_heat_change_sf <- heat_change_sf %>%
+  st_as_sf(wkt = "the_geom", crs = 4326) 
+
+
+# remove The Farallones
+
+neighborhood_heat_change_sf <- neighborhood_heat_change_sf %>%  filter(geoid != "06075980401")
+
+
+
+# Heatwave change in SF  
+ggplot(neighborhood_heat_change_sf) +
+  geom_sf(aes(fill = hw_2day_85_diff), color = "white", size = 0.2) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90") +
+  labs(
+    title = "Change in Heatwave Events by Census Tract",
+    fill = "Average Annual Heatwaves 2day 85th"  ) +
+  theme_void() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+
+
+
+
+# Heatwave change in SF  
+
+
+tmap_mode("plot")
+
+tm_shape(neighborhood_heat_change_sf) +
+  tm_fill("hw_2day_85_diff",
+          palette = "-RdYlBu",
+          title = "Change in 2-Day 85th perecentile  (2000–2020)",
+          midpoint = 0,
+          colorNA = "lightgray") +
+  tm_borders() +
+  tm_layout(
+    title = "Change in Heatwave Events by Census Tract",
+    frame = FALSE,
+    legend.outside = TRUE
+  )
+
+
+# you can also make faceted versions of the map 
+
+neighborhood_heat_change_long <- neighborhood_heat_change_sf %>%
+  pivot_longer(
+    cols = starts_with("hw_"),
+    names_to = "definition",
+    values_to = "change"
+  ) %>%
+  mutate(definition = recode(definition,
+    "hw_2day_85_diff"   = "2-Day ≥ 85th",
+    "hw_3day_85_diff"   = "3-Day ≥ 85th",
+    "hw_2day_97_5_diff" = "2-Day ≥ 97.5th",
+    "hw_3day_97_5_diff" = "3-Day ≥ 97.5th"
+  ))
+
+
+
+# using GGPLOT 
+
+ggplot(neighborhood_heat_change_long) +
+  geom_sf(aes(fill = change), color = "white", size = 0.2) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey90") +
+  facet_wrap(~ definition, ncol = 2) +
+  labs(
+    title = "Change in Heatwave Events by Census Tract (2000–2020)",
+    fill = "Change in Events"
+  ) +
+  theme_void() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    strip.text = element_text(face = "bold")
+  )
+
+
+
+# Using TAP
+
+tmap_mode("plot")
+
+tm_shape(neighborhood_heat_change_long) +
+  tm_fill("change",
+          palette = "-RdYlBu",
+          title = "Change (2000–2020)",
+          midpoint = 0,
+          colorNA = "lightgray") +
+  tm_borders(lwd = 0.2) +
+  tm_facets(by = "definition", ncol = 2) +
+  tm_layout(
+    title = "Change in Heatwave Events by Census Tract",
+    legend.outside = TRUE,
+    frame = FALSE
+  )
+
+```
+
+
+We also looked at the trend over the 20 years (considers change over time)
+
+```{r}
+library(dplyr)
+library(purrr)
+library(broom)
+library(tidyr)
+
+# Reshape to long format so we can model all definitions at once
+heat_trends_long <- heat_wave_summary %>%
+  pivot_longer(
+    cols = starts_with("hw_"),
+    names_to = "definition",
+    values_to = "count"
+  )
+
+# Fit linear models per site and definition, then extract slope
+heat_trend_slopes <- heat_trends_long %>%
+  group_by(site, definition) %>%
+  summarise(
+    slope = coef(lm(count ~ year))[2],
+    .groups = "drop"
+  )
+
+
+heat_trend_slopes <- heat_trend_slopes %>%
+  mutate(site = as.character(sprintf("%011.0f", site)))
+
+
+neighborhood_trend <- neighborhood_sf %>%
+  left_join(heat_trend_slopes, by = c("geoid" = "site"))
+
+neighborhood_trend <- neighborhood_trend %>%
+  mutate(definition = recode(definition,
+    "hw_2day_85"   = "2-Day ≥ 85th %tile",
+    "hw_3day_85"   = "3-Day ≥ 85th %tile",
+    "hw_2day_97_5" = "2-Day ≥ 97.5th %tile",
+    "hw_3day_97_5" = "3-Day ≥ 97.5th %tile"
+  ))
+
+
+# using GGPLOT 
+
+neighborhood_trend <- neighborhood_trend %>%
+  mutate(definition = recode(definition,
+    "hw_2day_85"   = "2-Day ≥ 85th",
+    "hw_3day_85"   = "3-Day ≥ 85th",
+    "hw_2day_97_5" = "2-Day ≥ 97.5th",
+    "hw_3day_97_5" = "3-Day ≥ 97.5th"
+  ))
+
+ggplot(neighborhood_trend) +
+  geom_sf(aes(fill = slope), color = "white", size = 0.2) +
+  scale_fill_distiller(
+    palette = "RdYlBu",
+    direction = -1,
+    na.value = "grey90",
+    name = "Slope (Events/Year)"
+  ) +
+  facet_wrap(~ definition, ncol = 2) +
+  labs(
+    title = "Heatwave Event Trends by Census Tract (2000–2020)"
+  ) +
+  theme_void() +
+  theme(
+    strip.text = element_text(face = "bold", size = 12),
+    legend.position = "bottom"
+  )
+
+
+
+# Using TMAP
+tmap_mode("plot")
+
+tm_shape(neighborhood_trend) +
+  tm_fill("slope",
+          palette = "-RdYlBu",
+          midpoint = 0,
+          title = "Slope (Events per Year)",
+          colorNA = "lightgray") +
+  tm_borders(lwd = 0.2) +
+  tm_facets(by = "definition", ncol = 2, free.scales = FALSE) +
+  tm_layout(
+    title = "Heatwave Event Trends by Census Tract (2000–2020)",
+    legend.outside = TRUE,
+    frame = FALSE
+  )
+
+
+```
+
 
 
