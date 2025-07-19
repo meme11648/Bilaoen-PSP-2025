@@ -142,6 +142,8 @@ We can look at the average temperature, by averaging the min and max temeprature
 # Step 1: Filter for temperature
 # Daymet separates measurements by type (e.g., tmax, tmin), so filter accordingly:
 
+sf_daymet <- read.csv("sf_daymet_clean.csv")
+
 # Reshape and calculate daily mean temperature
 temp_data <- sf_daymet %>%
   filter(measurement %in% c("tmax", "tmin")) %>%

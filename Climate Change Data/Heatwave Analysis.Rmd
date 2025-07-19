@@ -22,7 +22,7 @@ pacman::p_load(tidyverse, scales)
 
 
 # Set working directory 
-setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Documents/SFSU Faculty/PINC 2025/PSP2025/Climate Change")
+setwd("~/PINC 2025/Bilaoen-PSP-2025/Climate Change Data")
 
 
 ```
@@ -69,7 +69,7 @@ Definitions:
 
 # Step 0: Load downloaded and pre-processed clean daymet data
 
-sf_daymet <- read_csv("Data/sf_daymet_clean.csv")
+sf_daymet <- read_csv("sf_daymet_clean.csv")
 
 ```
 
@@ -456,7 +456,8 @@ all_summary <-  heat_wave_summary %>%
               avg_hw_3day_85 = mean(hw_3day_85, na.rm = TRUE),
               avg_hw_2day_97_5 = mean(hw_2day_97_5, na.rm = TRUE),
               avg_hw_3day_97_5 = mean(hw_3day_97_5, na.rm = TRUE),
-              .groups = "drop")
+              .groups = "drop") 
+  
 
 
 library(tidyverse)
@@ -477,15 +478,15 @@ ggplot(all_summary_long, aes(x = year, y = value)) +
   labs(
     title = "Annual Average Heatwave Metrics",
     x = "Year",
-    y = "Value",
+    y = "Average Heatwaves Events",
     caption = "Faceted by heatwave definition"
   ) +
   theme_minimal()
 
 
 ggplot(all_summary_long, aes(x = factor(year), y = value)) +
-  geom_col(fill = "skyblue", alpha = 0.8) +
-  geom_smooth(aes(group = 1), method = "loess", color = "red", se = FALSE) +
+  geom_col(fill = "#b39dd0", alpha = 0.8) +
+  geom_smooth(aes(group = 1), method = "loess", color = "#ae017e", se = FALSE) +
   facet_wrap(~ heat_metric, scales = "fixed") +
   labs(
     title = "Annual Average Heatwave Metrics",
@@ -493,7 +494,9 @@ ggplot(all_summary_long, aes(x = factor(year), y = value)) +
     y = "Average Heatwave Events",
     caption = "Faceted by heatwave definition"
   ) +
-  theme_minimal()
+  theme_minimal() + 
+  theme(
+    axis.text = element_text(size = 8, face = "bold"))
 
 ```
 
@@ -535,7 +538,7 @@ heat_change_all <- heat_change_all %>%
   mutate(site = as.character(sprintf("%011.0f", site)))
 
 
-sf_neighborhoods <- read_csv("Data/Analysis_Neighborhoods_-_2020_census_tracts_assigned_to_neighborhoods_20250717.csv")
+sf_neighborhoods <- read_csv("Analysis_Neighborhoods.csv")
 
 
 # Join with EHE + Neighborhood Data
@@ -557,11 +560,11 @@ neighborhood_heat_change_sf <- neighborhood_heat_change_sf %>%  filter(geoid != 
 
 # Heatwave change in SF  
 ggplot(neighborhood_heat_change_sf) +
-  geom_sf(aes(fill = hw_2day_85_diff), color = "white", size = 0.2) +
-  scale_fill_viridis_c(option = "plasma", na.value = "grey90") +
+  geom_sf(aes(fill = hw_2day_97_5_diff), color = "white", size = 0.2) +
+  scale_fill_viridis_c(option = "magma", na.value = "grey90") +
   labs(
-    title = "Change in Heatwave Events by Census Tract",
-    fill = "Average Annual Heatwaves 2day 85th"  ) +
+    title = "Change in Heatwave Events by Census Tract (2000 - 2020)",
+    fill = "Average Annual Heatwaves 2day 97.5th"  ) +
   theme_void() +
   theme(
     panel.grid.major = element_blank(),
@@ -577,9 +580,9 @@ ggplot(neighborhood_heat_change_sf) +
 tmap_mode("plot")
 
 tm_shape(neighborhood_heat_change_sf) +
-  tm_fill("hw_2day_85_diff",
-          palette = "-RdYlBu",
-          title = "Change in 2-Day 85th perecentile  (2000–2020)",
+  tm_fill("hw_2day_97_5_diff",
+          palette = "magma",
+          title = "Change in 2-Day 97.5th perecentile  (2000–2020)",
           midpoint = 0,
           colorNA = "lightgray") +
   tm_borders() +
@@ -611,7 +614,7 @@ neighborhood_heat_change_long <- neighborhood_heat_change_sf %>%
 
 ggplot(neighborhood_heat_change_long) +
   geom_sf(aes(fill = change), color = "white", size = 0.2) +
-  scale_fill_viridis_c(option = "plasma", na.value = "grey90") +
+  scale_fill_viridis_c(option = "magma", na.value = "grey90") +
   facet_wrap(~ definition, ncol = 2) +
   labs(
     title = "Change in Heatwave Events by Census Tract (2000–2020)",
@@ -632,7 +635,7 @@ tmap_mode("plot")
 
 tm_shape(neighborhood_heat_change_long) +
   tm_fill("change",
-          palette = "-RdYlBu",
+          palette = "magma",
           title = "Change (2000–2020)",
           midpoint = 0,
           colorNA = "lightgray") +
@@ -735,6 +738,7 @@ tm_shape(neighborhood_trend) +
     frame = FALSE
   )
 
+#plotting change over time 
 
 ```
 
