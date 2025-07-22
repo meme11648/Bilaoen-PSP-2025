@@ -783,9 +783,9 @@ main_map <- ggplot(neighborhood_bivar_all) +
   scale_fill_manual(values = bivar_palette, guide = "none") + # legend removed
 # if you want to facet wrap facet_wrap(~ definition, ncol = 2) +
   labs(
-    title = "Bivariate Map of Social Vulnerability and Heat Exposure",
+    title = "Bivariate Map of Social Vulnerability and Heat Exposure from 2000-2020",
     subtitle = "Quartile Classification of SVI and Heatwave Metrics",  
-    caption = "Figure 2: Spatial distribution of heatwave exposure events (2-day 97.5th percentile) and social vulnerability across San Francisco districts.\n Darker colors indicate areas with higher social vulnerability and greater increases in heat exposure" ) +
+    caption = "Figure 2: Spatial distribution of heatwave exposure events (2-day 97.5th percentile) from 2000-2020 and social vulnerability across\n San Francisco census tracts. Darker colors indicate areas with higher social vulnerability and greater increases in heat exposure." ) +
   theme_void() +
   theme(
     plot.title = element_text(face = "bold", hjust = 0.5),
